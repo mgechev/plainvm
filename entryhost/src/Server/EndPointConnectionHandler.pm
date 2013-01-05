@@ -27,12 +27,10 @@ sub new {
     my ($class, $endpoints) = @_;
     my $self = {
         _server => undef,
-        _port => undef,
         _endpoint_connections => {},
         _endpoints => undef
     };
     $self->{_endpoints} = $endpoints;
-    $self->{_port} = Config::get_option('endpoint_port');
     bless($self, $class);
     return $self;
 }
@@ -99,22 +97,24 @@ sub push_command($ $ $) {
 
 sub _connect_to_endpoint {
     my ($self, $endpoint) = @_;
-    $command_queue{$endpoint} = &share([]);
+    my $host = $endpoint->{host};
+    my $port = $endpoint->{port} || Config::get_option('endpoint_port');
     my $fh;
+    $command_queue{$host} = &share([]);
     threads->new(sub () {
         my $cv = AnyEvent->condvar();
         my $timeout;
         my $screenshot_timeout;
         my $command_timeout;
-        AnyEvent::Socket::tcp_connect($endpoint, $self->{_port}, sub {
+        AnyEvent::Socket::tcp_connect($host, $port, sub {
             $fh = shift;
             $fh = AnyEvent::Handle->new(fh => $fh);
-            $self->_endpoint_connection_established($fh, $endpoint);
+            $self->_endpoint_connection_established($fh, $host);
             $timeout = AnyEvent->timer(after => 0, interval => Config::get_option('poll_interval'), cb => sub {
                 my @to_write = ();
                 lock(%command_queue);
-                while (scalar(@{$command_queue{$endpoint}}) > 0) {
-                    my $command = pop(@{$command_queue{$endpoint}});
+                while (scalar(@{$command_queue{$host}}) > 0) {
+                    my $command = pop(@{$command_queue{$host}});
                     my $parsed_command = JSON::from_json($command);
                     push(@to_write, $parsed_command);
                 }

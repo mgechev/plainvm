@@ -9,7 +9,7 @@ my $config_file = 'config/config.conf';
 my $ep_file = 'config/endpoints.conf';
 
 my %config;
-my @endpoints;
+my $endpoints;
 
 sub load_config {
    die('The configuration file does not exists') if (not -e $config_file); 
@@ -24,12 +24,24 @@ sub load_config {
 }
 
 sub load_endpoints {
+    my @endpoints;
+    my @socket;
+    $endpoints = [];
     die('The end points configuration file does not exists!') if (not -e $ep_file);
     open(FH, $ep_file);
     my $ep = '';
     $ep .= $_ while (<FH>);
     @endpoints = split(/,/, $ep);
-    map { $endpoints[$_] =~ s/\s//g } 0..$#endpoints;
+    for (@endpoints) {
+        next unless length > 1; #if there's extra comma
+        @socket = split(/:/, $_);
+        $socket[0] =~ s/\s//g;
+        $socket[1] =~ s/\s//g if defined $socket[1]; #the port may not be specified
+        push($endpoints, {
+            host => $socket[0],
+            port => $socket[1]
+        });
+    }
 }
 
 sub get_option($) {
@@ -38,7 +50,7 @@ sub get_option($) {
 }
 
 sub get_endpoints {
-    my @result = @endpoints;
+    my @result = @$endpoints;
     return \@result;
 }
 
