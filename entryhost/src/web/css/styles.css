@@ -1,0 +1,262 @@
+.plainvm-header {
+    background-image: url('images/header.gif');
+    background-repeat: repeat-x;
+    width: 100%;
+    height: 98px;
+    border-bottom: 1px solid #ccc;
+    margin: 0px;
+    min-width: 716px;
+}
+.plainvm-header-logo {
+    font-size: 50px;
+    color: #fff;
+    font-weight: bold;
+    font-family: Verdana;
+    margin-left: 15%;
+    position: relative;
+    top: 15px;
+}
+.plainvm-logo-image {
+    width: 72px;
+    height: 72px;
+    margin-top: 5px;
+    background-image: url('images/plainvm-logo.png');
+    float: left;
+    margin-right: 10px;
+}
+.plainvm-header-text {
+    cursor: pointer;
+}
+.plainvm-header-textvm {
+    color: #A3EEFF;
+}
+.plainvm-subheader {
+    background-image: url('images/subheader.png');
+    background-repeat: repeat-x;
+    border-bottom: 1px solid #ccc;
+    height: 10px;
+    width: 100%;
+}
+.plainvm-content {
+    background-color: #DBDBDB;
+    margin-left: 15%;
+    width: 70%;
+    -webkit-box-shadow: 0px 4px 20px rgba(50, 50, 50, 0.69);
+    -moz-box-shadow: 0px 4px 20px rgba(50, 50, 50, 0.69);
+    box-shadow: 0px 4px 20px rgba(50, 50, 50, 0.69);
+    padding: 5px;
+    min-width: 768px;
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+.plainvm-vms {
+    float: left;
+    width: 65%;
+    height: 100%;
+}
+.plainvm-vminfo {
+    float: right;
+    width: 35%;
+    height: 100%;
+}
+.plainvm-vm-item {
+    background-color: #ccc;
+    border: 1px solid #999;
+    height: 80px;
+    margin: 5px;
+    margin-right: 0px;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    background: #e9e9e9; /* Old browsers */
+    background: -moz-linear-gradient(top,  #e9e9e9 0%, #e6e6e6 0%, #d5d5d5 42%, #d4d4d4 44%, #e6e6e6 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e9e9e9), color-stop(0%,#e6e6e6), color-stop(42%,#d5d5d5), color-stop(44%,#d4d4d4), color-stop(100%,#e6e6e6));
+    background: -webkit-linear-gradient(top,  #e9e9e9 0%,#e6e6e6 0%,#d5d5d5 42%,#d4d4d4 44%,#e6e6e6 100%);
+    background: -o-linear-gradient(top,  #e9e9e9 0%,#e6e6e6 0%,#d5d5d5 42%,#d4d4d4 44%,#e6e6e6 100%);
+    background: -ms-linear-gradient(top,  #e9e9e9 0%,#e6e6e6 0%,#d5d5d5 42%,#d4d4d4 44%,#e6e6e6 100%);
+    background: linear-gradient(to bottom,  #e9e9e9 0%,#e6e6e6 0%,#d5d5d5 42%,#d4d4d4 44%,#e6e6e6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e9e9e9', endColorstr='#e6e6e6',GradientType=0 );
+
+}
+.plainvm-vm-item-hover {
+    -webkit-box-shadow: 0px 0px 18px rgba(170, 170, 170, 1);
+    -moz-box-shadow: 0px 0px 18px rgba(170, 170, 170, 1);
+    box-shadow: 0px 0px 18px rgba(170, 170, 170, 1);
+}
+.plainvm-vm-item-menu {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+.plainvm-vm-menu-icon {
+    width: 32px;
+    height: 32px;
+    float: left;
+    cursor: pointer;
+}
+.plainvm-vm-menu-icon-hover {
+    box-shadow: 1px 1px 7px 1px rgba(180, 180, 180, 1);
+    border-radius: 16px;
+}
+.plainvm-vm-menu-icon-mousedown {
+    box-shadow: 1px 1px 7px 1px rgba(100, 100, 100, 1);
+    border-radius: 16px;
+}
+.plainvm-vm-menu-icon-mousedown-disabled {
+    box-shadow: 1px 1px 7px 1px rgba(255, 100, 100, 1);
+    border-radius: 16px;
+}
+.plainvm-vm-menu-icon-start {
+    background-image: url(images/startvm.png);
+}
+.plainvm-vm-menu-icon-poweroff {
+    background-image: url(images/poweroffvm.png);
+}
+.plainvm-vm-menu-icon-shutdown {
+    background-image: url(images/shutdownvm.png);
+}
+.plainvm-vm-menu-icon-menu {
+    background-image: url(images/menuvm.png);
+}
+.plainvm-vm-item-selected {
+    -webkit-box-shadow: 0px 0px 18px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 18px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 18px rgba(0, 0, 0, 1);
+}
+.plainvm-os-icon {
+    margin: 15px;
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    float: left;
+}
+.plainvm-os-icon-running {
+    -webkit-box-shadow: 0px 0px 18px rgba(0, 100, 200, 1);
+    -moz-box-shadow: 0px 0px 18px rgba(0, 100, 200, 1);
+    box-shadow: 0px 0px 18px rgba(0, 100, 200, 1);
+    background-color: rgba(0, 100, 200, 0.5);
+}
+.plainvm-win-icon {
+    background-image: url(images/windows-icon.png);
+}
+.plainvm-linux-icon {
+    background-image: url(images/linux-icon.png);
+}
+.plainvm-vm-item-name {
+    font-size: 26px;
+    color: #333;
+    margin-top: 22px;
+    margin-left: 110px;
+    font-family: Verdana;
+}
+.plainvm-vm-item-os {
+    color: #aaa;
+    font-size: 23px;
+}
+.plainvm-vm-item-ep {
+    color: #888;
+    font-size: 12px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.plainvm-machine-screenshot {
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;                
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}            
+.plainvm-vm-item-id {
+    font-size: 13px;
+    font-family: Verdana;
+}
+.plainvm-vm-parameters {
+    width: 100%;
+    font-size: 14px;
+    color: #333;
+    font-family: Calibri;
+}
+.plainvm-vm-parameters td {
+    border: 1px solid #ddd;
+}
+body, html {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    background-color: #EDEDED;
+}
+
+.plainvm-preloader {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    opacity: 0.9;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 99999;
+}
+
+.plainvm-preloader-label {
+    position: absolute;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+.plainvm-preloader-icon {
+    width: 32px;
+    height: 32px;
+    background-image: url(images/loading.gif);
+    float: left;
+    margin-top: 5px;
+    margin-right: 15px;
+}
+.plainvm-edit-vm-table {
+    width: 300px;
+    height: 150px;
+    margin-left: 50px;
+    margin-top: 15px;
+}
+.plainvm-edit-vm-table input {
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 3px;
+    width: 150px;
+    height: 20px;
+}
+.plainvm-edit-vm-table input:focus {
+    border-color: #555;
+}
+.plainvm-edit-vm-button-holder {
+    padding: 5px;
+    text-align: center;
+}
+
+.plainvm-content-tabs-sections {
+    background-color: #DBDBDB;
+}
+
+.plainvm-content-tabs {
+    background-color: #DBDBDB;
+}
+.plainvm-content-tabs-title {
+    background-color: #DBDBDB;
+}
+.plainvm-chart {
+    float: left;
+    margin: 1%;
+}
+/* jqWidgets classes */
+.jqx-tabs-content {
+    background-color: #DBDBDB;
+}
+.jqx-tabs-title-selected-top {
+    background-color: #DBDBDB;
+    border-bottom-color: #DBDBDB;
+}
+.plainvm-vm-statistics {
+    min-height: 400px;
+}

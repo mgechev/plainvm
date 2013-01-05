@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="css/jqx.base.css" />
+        <link rel="stylesheet" type="text/css" href="css/jqx.fresh.css" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link rel="shortcut icon" href="css/images/favicon.ico"/>
+        <title>plainvm client</title>
+    </head>
+    <body>
+        <div class="plainvm-header">
+            <div class="plainvm-header-logo">
+                <div class="plainvm-logo-image"></div>
+                <span class="plainvm-header-text">
+                    <span class="plainvm-header-textplain">plain</span><span class="plainvm-header-textvm">vm</span>
+                </span>
+            </div>
+        </div>
+        <div class="plainvm-subheader"></div>
+        <div class="plainvm-content">
+            <div class="plainvm-content-tabs" id="plainvm-tabs">
+                <ul style="margin-left: 3px;">
+                    <li class="plainvm-content-tabs-title">Virtual Machines</li>
+                    <li class="plainvm-content-tabs-title">Statistics</li>
+                </ul>
+                <div class="plainvm-content-tabs-sections">
+                    <div class="plainvm-vminfo">
+                        <div id="plainvm-info-container">
+                            <div>
+                                <div>
+                                    <div>Current state</div>
+                                    <div style="height: 200px;">
+                                        <div class="plainvm-machine-screenshot" id="plainvm-machine-screenshot"></div>
+                                        <script type="text/template" id="vm-remoting-template">
+                                            <div id="plainvm-machine-control"><div>Controlling {{name}}</div>
+                                            <div><iframe width="800" height="600" frameborder="0" style="border-width: 0px"
+                                            src="{{remotingUrl}}"></iframe></div>
+                                        </script>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>Parameters</div>
+                                    <div style="height: 210px;" id="plainvm-vm-state">
+                                    <script type="text/template" id="vm-details-template">
+                                        <table class="plainvm-vm-parameters"><tbody>
+                                        <tr><td>Operating system</td><td>{{os}}</td></tr><tr><td>Name</td><td>{{name}}</td></tr>
+                                        <tr><td>CPU exec cap</td><td>{{cpu}} %</td></tr>
+                                        <tr><td>RAM</td><td>{{ram}} MB</td></tr><tr><td>Video</td><td>{{vram}} MB</td></tr>
+                                        <tr><td>Is running</td><td>{{is_running}}</td></tr><tr><td>Remoting port</td><td>{{vrde_port}}</td></tr>
+                                        <tr><td>Host</td><td>{{endpoint}}</td></tr></tbody></table>
+                                    </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/template" id="vm-edit-template">
+                        <div><div>Configuration of {{name}}</div>
+                        <div><table id="plainvm-edit-vm-form" class="plainvm-edit-vm-table"><tbody>
+                        <tr><td>Name</td><td><input type="text" id="machine-name" value="{{name}}" /></td></tr>
+                        <tr><td>CPU exec cap</td><td><div id="cpu-slider"></td></tr>
+                        <tr><td>RAM</td><td><div id="ram-slider"></div></td></tr>
+                        <tr><td>Video</td><td><div id="video-slider"></div></td></tr>
+                        <tr><td>VRDE port</td><td><div id="port-input"></div></td></tr>
+                        <tr><td>VRDE address</td><td><input type="text" id="address-input" value="{{vrde_address}}" /></td></tr>
+                        <tr><td class="plainvm-edit-vm-button-holder"><button id="save-changes">Save</button></td>
+                        <td class="plainvm-edit-vm-button-holder"><button id="cancel-changes">Cancel</button></td></tr>
+                        </tbody></table></div></div>
+                    </script>
+                    <div class="plainvm-vms" id="plainvm-vms">
+                        <script type="text/template" id="vms-list-template">
+                            <div class="plainvm-vm-item" id="{{uid}}">
+                            <div class="plainvm-os-icon plainvm-{{abr}}-icon 
+                            {{#is_running}}plainvm-os-icon-running{{/is_running}}"></div>
+                            <div class="plainvm-vm-item-name">{{name}} <span class="plainvm-vm-item-os">{{os}}
+                            </span><span class="plainvm-vm-item-ep">{{endpoint}}</span></div>
+                            <div class="plainvm-vm-item-menu">
+                            <div class="plainvm-vm-menu-icon plainvm-vm-menu-icon-start" data-type="start"></div>
+                            <div class="plainvm-vm-menu-icon plainvm-vm-menu-icon-shutdown" data-type="shutdown"></div>
+                            <div class="plainvm-vm-menu-icon plainvm-vm-menu-icon-poweroff" data-type="poweroff"></div>
+                            <div class="plainvm-vm-menu-icon plainvm-vm-menu-icon-menu" data-type="menu"></div>
+                            </div></div>
+                        </script>
+                    </div>
+                </div>
+                <div id="plainvm-vm-statistics"></div>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <script src="js/jquery-1.8.2.min.js"></script>
+        <script src="js/jqxcore.js"></script>
+        <script src="js/jqxwindow.js"></script>
+        <script src="js/jqxdocking.js"></script>
+        <script src="js/jqxtooltip.js"></script>
+        <script src="js/jqxbuttons.js"></script>
+        <script src="js/jqxslider.js"></script>
+        <script src="js/jqxnumberinput.js"></script>
+        <script src="js/jqxvalidator.js"></script>
+        <script src="js/jqxtabs.js"></script>
+        <script src="js/jqxdata.js"></script>
+        <script src="js/jqxchart.js"></script>
+        <script src="js/plainvm.js"></script>
+        <script src="js/mustache.js"></script>
+    </body>
+</html>

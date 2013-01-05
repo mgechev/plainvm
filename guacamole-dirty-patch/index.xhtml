@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<!--
+    Guacamole - Clientless Remote Desktop
+    Copyright (C) 2010  Michael Jumper
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <link rel="icon" type="image/png" href="images/guacamole-logo-64.png"/>
+        <link rel="apple-touch-icon" type="image/png" href="images/guacamole-logo-144.png"/>
+        <link rel="stylesheet" type="text/css" href="styles/login.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi"/>
+        <title>Guacamole 0.7.0</title>
+    </head>
+
+    <body>
+
+        <div id="login-ui" style="display: none">
+            <div id="login-dialog-middle">
+
+                <div id="login-dialog">
+
+                    <p id="login-error"></p>
+
+                    <form id="login-form" action="#" method="post">
+
+                        <div id="login-fields">
+                            <table>
+                                <tr>
+                                    <th>Username</th>
+                                    <td><input type="text" name="username" id="username" autofocus="autofocus"/></td>
+                                </tr>
+                                <tr>
+                                    <th>Password</th>
+                                    <td><input type="password" name="password" id="password"/></td>
+                                </tr>
+                            </table>
+
+                            <img class="logo" src="images/guac-mono-192.png" alt=""/>
+                        </div>
+
+                        <div id="buttons">
+                            <input type="submit" name="login" id="login" value="Login"/>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Connection list UI -->
+        <div id="connection-list-ui" style="display: none">
+
+            <div id="logout-panel">
+                <button id="logout">Logout</button>
+            </div>
+           
+            <h2>Recent Connections</h2>
+            <div id="recent-connections">
+                <p id="no-recent">No recent connections.</p>
+            </div>
+
+            <h2>All Connections</h2>
+            <div id="all-connections">
+            </div>
+
+            <h2>Clipboard</h2>
+            <div id="clipboardDiv">
+                <p>
+                Text copied/cut within Guacamole will appear here. Changes to the text will affect the remote clipboard, and will be pastable within the remote desktop. Use the textbox below as an interface between the client and server clipboards.
+                </p>
+                <textarea rows="10" cols="40" id="clipboard"></textarea>
+            </div>
+
+            <h2>Settings</h2>
+            <div id="settings">
+
+                <dl>
+                    <!-- Auto-fit display -->
+                    <dt>
+                        <input type="checkbox" id="auto-fit"/>
+                        Auto-fit display to browser window
+                    </dt>
+                    <dd>
+                        <p>
+                            If checked, remote displays are automatically
+                            scaled to exactly fit within the browser window. If
+                            unchecked, remote displays are always shown at their
+                            natural resolution, even if doing so causes the
+                            display to extend beyond the bounds of the window.
+                        </p>
+                    </dd>
+
+                    <!-- Enable/disable sound -->
+                    <dt>
+                        <input type="checkbox" id="disable-sound"/>
+                        Disable sound
+                    </dt>
+                    <dd>
+                        <p>
+                            If on a device or network where bandwidth usage must
+                            be kept to a minimum, you may wish to check this box
+                            and disable sound. This can also be necessary if a
+                            device doesn't actually support sound, but claims
+                            to, resulting in wasted bandwidth.
+                        </p>
+                        <p>
+                            <strong>Changing this setting will only affect
+                            future connections.</strong>
+                        </p>
+                    </dd>
+                </dl>
+
+            </div>
+
+        </div>
+
+        <div id="version-dialog">
+            Guacamole 0.7.0
+        </div>
+
+        <script type="text/javascript" src="scripts/connections.js"></script>
+        <script type="text/javascript" src="scripts/session.js"></script>
+        <script type="text/javascript" src="scripts/history.js"></script>
+        <script type="text/javascript" src="scripts/root-ui.js"></script>
+        <script type="text/javascript" src="scripts/plainvm.js"></script>
+
+    </body>
+
+</html>
