@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #plainvm
 
 ##What is plainvm?
@@ -36,7 +35,3 @@ Just fork the project. Here are some ideas what can be improved:
 5. Installation of virtual machines through the browser
 
 For more ideas and essential features you can check the issue tracker or the project's [wiki](https://github.com/mgechev/plainvm/wiki).
-=======
-PlainVM
-=======
->>>>>>> df3036b32dcb97f86501f532b4ef0f69bdc5e919
