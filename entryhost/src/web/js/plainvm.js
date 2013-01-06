@@ -1093,6 +1093,12 @@ plainvm.register('ui.vm-control', (function () {
         });
     }
 
+    /**
+     * Logouts from Guacamole
+     *
+     * @private
+     * @param {function} callback A callback to be invoked after the logout is proceed
+     */
     function logout(callback) {
         var iframe = $('<iframe/>');
         iframe.css('visibility', 'hidden');
@@ -1137,6 +1143,12 @@ plainvm.register('ui.vm-control', (function () {
         }
     }
 
+    /**
+     * Gets the object which will populate the template
+     *
+     * @param {object} machine The virtual machine which should be controlled
+     * @return {object} An object which can populate the template
+     */
     function getTemplateObject(machine) {
         var result = {};
         $.extend(result, machine);

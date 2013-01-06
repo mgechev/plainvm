@@ -1,7 +1,7 @@
 #plainvm
 
 ##What is plainvm?
-[plainvm](http://plainvm.mgechev.com/) allows you to control multiple virtual machines which are distributed among many hosts. The only thing you need is plainvm installed and browser which supports HTML5. For the virtualization you can use any platform (currently only Virtualbox is supported). Everything is done real-time through the websocket protocol so multiple clients can access the environment simultaneously. If all dependencies of plainvm are installed the client can establish direct access to any virtual machine and control its' desktop. As the project is in it's first release there are some limitations which can be found in the next sections. plainvm is distributed under the terms of the GPL 3.0
+[plainvm](http://plainvm.mgechev.com/) allows you to control multiple virtual machines which are distributed among many hosts through your browser. The only thing you need is plainvm installed and browser which supports HTML5. For the virtualization you can use any platform (currently only Virtualbox is supported). Everything is done real-time through the websocket protocol so multiple clients can access the environment simultaneously. If all dependencies of plainvm are installed the client can establish direct access to any virtual machine and control its' desktop. As the project is in it's first release there are some limitations which can be found in the next sections. plainvm is distributed under the terms of the GPL 3.0
 
 Extra information can be found in the project's [wiki](https://github.com/mgechev/plainvm/wiki).
 Project video can be found [here](https://www.youtube.com/watch?v=KkLaXagCj9Q).
