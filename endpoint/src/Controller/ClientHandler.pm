@@ -14,15 +14,15 @@ my $INSTANCE = undef;
 
 #Gets the instance
 sub instance($) {
-	unless (defined($INSTANCE)) {
-		my ($class, $vmm) = @_;
-		my $self = {
-			_vmm => $vmm,
-			_vm_status_verifier => VMStatusVerifier->instance($vmm)
-		};
-		$INSTANCE = bless($self, $class);
-		$self->_subscribe();
-	}
+    unless (defined($INSTANCE)) {
+        my ($class, $vmm) = @_;
+        my $self = {
+            _vmm => $vmm,
+            _vm_status_verifier => VMStatusVerifier->instance($vmm)
+        };
+        $INSTANCE = bless($self, $class);
+        $self->_subscribe();
+    }
     return $INSTANCE;
 }
 

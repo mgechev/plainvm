@@ -15,9 +15,9 @@ sub trim($) {
 }
 
 sub log($) {
-	my $theResult = "LOG: " . $_[0] . "\n";
-	print $theResult;
-	return $theResult;
+    my $theResult = "LOG: " . $_[0] . "\n";
+    print $theResult;
+    return $theResult;
 }
 
 sub warn($) {

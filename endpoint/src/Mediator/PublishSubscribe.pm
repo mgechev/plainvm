@@ -13,27 +13,27 @@ package PublishSubscribe;
 my %_topics = ();
 
 sub publish($ $) {
-	my ($event, $args) = @_;
+    my ($event, $args) = @_;
     if (exists($_topics{$event})) {
-    	my @callbacks = @{$_topics{$event}};
-    	if (@callbacks) {
-    		for (@callbacks) {
-    			$_->($args);
-    		}
-    	}
+        my @callbacks = @{$_topics{$event}};
+        if (@callbacks) {
+            for (@callbacks) {
+                $_->($args);
+            }
+        }
         return 1;
     }
     return 0;
 }
 
 sub subscribe($ $) {
-	my ($event, $callback) = @_;
-	my $callbacks = $_topics{$event};
-	if (!$callbacks) {
-		$callbacks = [];
-	}
-	push(@{$callbacks}, $callback);
-	$_topics{$event} = $callbacks;
+    my ($event, $callback) = @_;
+    my $callbacks = $_topics{$event};
+    if (!$callbacks) {
+        $callbacks = [];
+    }
+    push(@{$callbacks}, $callback);
+    $_topics{$event} = $callbacks;
 }
 
 1;

@@ -100,7 +100,7 @@ sub take_screenshots($) {
     for my $id (keys(%vms)) {
         $current_vm = $vms{$id};
         $current_screenshot = $current_vm->take_screenshot();
-		$current_screenshot = ($current_screenshot) ? "\"$current_screenshot\"" : "null";
+        $current_screenshot = ($current_screenshot) ? "\"$current_screenshot\"" : "null";
         $screenshots .= "{ \"id\": \"$id\", \"pic\": $current_screenshot },";
     }
     chop($screenshots);
