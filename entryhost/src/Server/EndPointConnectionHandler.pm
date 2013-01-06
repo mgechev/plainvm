@@ -43,7 +43,7 @@ sub connect_to_endpoints($) {
             $self->_connect_to_endpoint($_);
         };
         if ($@) {
-            Common::error("Error while connecting to the endpoint $_");
+            Common::error("Error while connecting to the endpoint");
         }
     }
 }
@@ -99,33 +99,50 @@ sub _connect_to_endpoint {
     my ($self, $endpoint) = @_;
     my $host = $endpoint->{host};
     my $port = $endpoint->{port} || Config::get_option('endpoint_port');
-    my $fh;
     $command_queue{$host} = &share([]);
     threads->new(sub () {
-        my $cv = AnyEvent->condvar();
-        my $timeout;
-        my $screenshot_timeout;
-        my $command_timeout;
-        AnyEvent::Socket::tcp_connect($host, $port, sub {
-            $fh = shift;
-            $fh = AnyEvent::Handle->new(fh => $fh);
-            $self->_endpoint_connection_established($fh, $host);
-            $timeout = AnyEvent->timer(after => 0, interval => Config::get_option('poll_interval'), cb => sub {
-                my @to_write = ();
-                lock(%command_queue);
-                while (scalar(@{$command_queue{$host}}) > 0) {
-                    my $command = pop(@{$command_queue{$host}});
-                    my $parsed_command = JSON::from_json($command);
-                    push(@to_write, $parsed_command);
-                }
-                push(@to_write, { type => 'update' });
-                $fh->push_write(json => @to_write);
-            });
-            $screenshot_timeout = AnyEvent->timer(after => 0, interval => Config::get_option('screenshot_poll_interval'), cb => sub {
-                $fh->push_write(json => { type => 'screenshot-update' });
-            });
-        });
-        $cv->wait();
+        $self->_create_tcp_connection($host, $port);
+    });
+}
+
+#Creates a TCP connection to the End point and starts polling
+sub _create_tcp_connection($ $ $) {
+    my ($self, $host, $port) = @_;
+    my $cv = AnyEvent->condvar();
+    my ($timeout, $screenshot_timeout, $command_timeout, $fh);
+    AnyEvent::Socket::tcp_connect($host, $port, sub {
+        $fh = shift;
+        $fh = AnyEvent::Handle->new(fh => $fh);
+        $self->_endpoint_connection_established($fh, $host);
+        $timeout = $self->_start_poll(Config::get_option('poll_interval'), $host, $fh);
+        $screenshot_timeout = 
+            $self->_start_screenshot_poll(Config::get_option('screenshot_poll_interval'), $fh);
+    });
+    $cv->wait();
+}
+
+#This method polls for updates of the virtual machines (their properties and state)
+#It also push commands sent by any client when there are any in the queue.
+sub _start_poll($ $ $) {
+    my ($self, $interval, $host, $fh) = @_;
+    return AnyEvent->timer(after => 0, interval => $interval, cb => sub {
+        my @to_write = ();
+        lock(%command_queue);
+        while (scalar(@{$command_queue{$host}}) > 0) {
+            my $command = pop(@{$command_queue{$host}});
+            my $parsed_command = JSON::from_json($command);
+            push(@to_write, $parsed_command);
+        }
+        push(@to_write, { type => 'update' });
+        $fh->push_write(json => @to_write);
+    });
+}
+
+#Polls for screenshot updates
+sub _start_screenshot_poll($ $ $) {
+    my ($self, $interval, $fh) = @_;
+    return AnyEvent->timer(after => 0, interval => $interval, cb => sub {
+        $fh->push_write(json => { type => 'screenshot-update' });
     });
 }
 

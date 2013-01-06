@@ -57,7 +57,12 @@ sub _subscribe_to_events {
 #Sends a message to the client
 sub _send_frame($ $ $) {
     my ($self, $handle, $message) = @_;
-    $handle->push_write($message);
+    eval {
+        $handle->push_write($message);
+    };
+    if ($@) {
+        Common::error('Unable to send message to the client.');
+    }
 }
 
 sub _handle_error ($ $) {

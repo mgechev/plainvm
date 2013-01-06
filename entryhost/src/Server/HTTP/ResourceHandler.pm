@@ -107,4 +107,4 @@ sub get_not_found {
 	return $content;
 }
 
-return 1;
+1;

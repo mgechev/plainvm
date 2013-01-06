@@ -102,4 +102,4 @@ sub _modify_machine($ $) {
     $current->save_state();
 }
 
-return 1;
+1;
