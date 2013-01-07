@@ -10,7 +10,7 @@ my @config_files = ('config/endpoint-config.conf', '/etc/plainvm/endpoint-config
 my %config;
 
 sub load_config {
-    my $file = get_config_file();
+    my $file = _get_config_file();
     open(FH, '<' . $file);
     while (<FH>) {
         my @key_value = split /=/, $_;
@@ -21,12 +21,12 @@ sub load_config {
     close(FH);
 }
 
-sub get_config_file {
+sub _get_config_file {
     my $file = undef;
     for (@config_files) {
         $file = $_ if -e $_;
     }
-    die('The configuration file does not exists') if not defined($file); 
+    die 'The configuration file does not exists' if not defined $file; 
     return $file;
 }
 

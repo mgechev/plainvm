@@ -49,7 +49,7 @@ sub _get_file($ $) {
     for (@$files) {
         $file = $_ if -e $_;
     }
-    die('Configuration file does not exists') if not defined($file);
+    die 'Configuration file does not exists' if not defined $file;
     return $file;
 }
 

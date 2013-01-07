@@ -38,7 +38,6 @@ my %_resources = (
     'css/images/icon-up-white.png' => 'image/png',
     'css/images/icon-down-white.png' => 'image/png',
     'css/images/not-running.png' => 'image/png',
-    'css/images/loading.gif' => 'image/gif',
 
     'css/images/404.jpg' => 'image/jpg',
     'css/images/plainvm-logo.png' => 'image/png',
