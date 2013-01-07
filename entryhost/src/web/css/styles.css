@@ -249,13 +249,13 @@ body, html {
     float: left;
     margin: 1%;
 }
-/* jqWidgets classes */
-.jqx-tabs-content {
-    background-color: #DBDBDB;
-}
+/* jQWidgets classes */
 .jqx-tabs-title-selected-top {
-    background-color: #DBDBDB;
-    border-bottom-color: #DBDBDB;
+    background: #DBDBDB !important;
+    border-bottom-color: #DBDBDB !important;
+}
+.jqx-tabs, .jqx-tabs-content {
+    background: #DBDBDB !important;
 }
 .plainvm-vm-statistics {
     min-height: 400px;

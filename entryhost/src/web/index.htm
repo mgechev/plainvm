@@ -2,15 +2,19 @@
 <html lang="en">
     <head>
         <meta charset="utf-8"/>
+        <!-- Application's theme -->
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <script src="js/jquery-1.8.2.min.js"></script>
+        <!-- Application's main JavaScript file -->
+        <script src="js/plainvm.js"></script>
+        <!-- Widget's theme -->
         <link rel="stylesheet" type="text/css" href="css/jqx.base.css" />
         <link rel="stylesheet" type="text/css" href="css/jqx.fresh.css" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <link rel="shortcut icon" href="css/images/favicon.ico"/>
         <title>plainvm client</title>
-        <script src="js/jquery-1.8.2.min.js"></script>
-        <script src="js/plainvm.js"></script>
     </head>
     <body>
+        <!-- Header -->
         <div class="plainvm-header">
             <div class="plainvm-header-logo">
                 <div class="plainvm-logo-image"></div>
@@ -20,16 +24,24 @@
             </div>
         </div>
         <div class="plainvm-subheader"></div>
+
+        <!-- Content of the page -->
         <div class="plainvm-content">
             <div class="plainvm-content-tabs" id="plainvm-tabs">
+
+                <!-- Tab's sections -->
                 <ul style="margin-left: 3px;">
                     <li class="plainvm-content-tabs-title">Virtual Machines</li>
                     <li class="plainvm-content-tabs-title">Statistics</li>
                 </ul>
+
+                <!-- Tab home section -->
                 <div class="plainvm-content-tabs-sections">
                     <div class="plainvm-vminfo">
                         <div id="plainvm-info-container">
                             <div>
+
+                                <!-- Screenshot of the machine -->
                                 <div>
                                     <div>Current state</div>
                                     <div style="height: 200px;">
@@ -41,6 +53,9 @@
                                         </script>
                                     </div>
                                 </div>
+                                <!-- End of the screenshot -->
+
+                                <!-- Machine's properties -->
                                 <div>
                                     <div>Parameters</div>
                                     <div style="height: 210px;" id="plainvm-vm-state">
@@ -54,9 +69,11 @@
                                     </script>
                                     </div>
                                 </div>
+                                <!-- End of the properties -->
                             </div>
                         </div>
                     </div>
+                    <!-- Configuration menu -->
                     <script type="text/template" id="vm-edit-template">
                         <div><div>Configuration of {{name}}</div>
                         <div><table id="plainvm-edit-vm-form" class="plainvm-edit-vm-table"><tbody>
@@ -70,6 +87,9 @@
                         <td class="plainvm-edit-vm-button-holder"><button id="cancel-changes">Cancel</button></td></tr>
                         </tbody></table></div></div>
                     </script>
+                    <!-- End of the configuration menu -->
+
+                    <!-- VMs list -->
                     <div class="plainvm-vms" id="plainvm-vms">
                         <script type="text/template" id="vms-list-template">
                             <div class="plainvm-vm-item" id="{{uid}}">
@@ -85,9 +105,17 @@
                             </div></div>
                         </script>
                     </div>
+                    <!-- End of the list -->
+
                 </div>
+                <!-- End of the home section -->
+
+                <!-- Statistics section -->
                 <div id="plainvm-vm-statistics"></div>
+                <!-- End of the statistics section -->
+
             </div>
+            <!-- End of the tab -->
             <div style="clear:both;"></div>
         </div>
         <script src="js/jqxcore.js"></script>
