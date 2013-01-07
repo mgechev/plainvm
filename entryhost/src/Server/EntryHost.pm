@@ -85,7 +85,7 @@ sub start($ $) {
         $self->{_ep_handler} = $ep_handler;
    
         my $timer = $self->_start_endpoint_data_check($ep_handler, $client_handler);
-        $client_handler->listen(Config::get_option('http_port'));
+        $client_handler->listen(Config::get_option('http_port'), Config::get_option('address'));
 
     })->join;
 }

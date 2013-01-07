@@ -22,6 +22,7 @@ sub new {
     my $self = {
         _server => undef,
         _port => undef,
+        _address => undef,
         _handles => {},
         _websocket_connections => {},
         _observer => $observer
@@ -39,10 +40,11 @@ sub update_clients($) {
 }
 
 sub listen($ $) {
-    my ($self, $port) = @_;
+    my ($self, $port, $address) = @_;
     $self->{_port} = $port;
+    $self->{_address} = $address;
     my $cv = AnyEvent->condvar();
-    AnyEvent::Socket::tcp_server('0.0.0.0', $self->{_port}, sub {
+    AnyEvent::Socket::tcp_server($address, $port, sub {
         $self->_client_connection_callback(@_);
     });
     $cv->wait();
