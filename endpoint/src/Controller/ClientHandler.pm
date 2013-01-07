@@ -85,9 +85,24 @@ sub _handle_request {
             $current_vm->shutdown();
         }
     } elsif ($type eq 'machine-edited') {
-        $self->_modify_machine($msg->{data});
+        my $vm = $self->_validate_data($msg->{data});
+        $self->_modify_machine($vm);
     }
 
+}
+
+sub _validate_data($ $) {
+    my ($self, $vm) = @_;
+    $vm->{id} = $self->_escape_quotes($vm->{id}); 
+    $vm->{name} = $self->_escape_quotes($vm->{name}); 
+    $vm->{vrde_address} = $self->_escape_quotes($vm->{vrde_address});
+    return $vm;
+}
+
+sub _escape_quotes($ $) {
+    my ($self, $data) = @_;
+    $data =~ s/"/\\"/g;
+    return $data;
 }
 
 sub _modify_machine($ $) {

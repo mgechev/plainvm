@@ -1160,12 +1160,18 @@ plainvm.register('ui.vm-control', (function () {
      * Gets the URL of the logout
      *
      * @private
-     * @returns {string} The url of the Guacamole logout
+     * @return {string} The url of Guacamole's logout page
      */
     function getLogoutUrl() {
         return 'http://' + selectedMachine.endpoint + ':' + sandbox.getRemotingPort() + '/guacamole/logout';
     }
 
+    /**
+     * Gets the remoting URL
+     *
+     * @private
+     * @return {string} The url of Guacamole's index page
+     */
     function getRemotingUrl() {
         return 'http://' + selectedMachine.endpoint + ':' + sandbox.getRemotingPort() + 
                 '/guacamole/index.xhtml?autologin=1&username=' + selectedMachine.id;
