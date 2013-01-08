@@ -528,6 +528,36 @@ plainvm.register('ui.vms-list', (function () {
         $('.plainvm-vms').on('mouseleave', '.plainvm-vm-item', function () {
             $(this).removeClass('plainvm-vm-item-hover');
         });
+        $(document).on('keydown', function (e) {
+            var handled = false,
+                id,
+                keyCode = e.keyCode;
+            if (keyCode === 38) {
+                id = getIdByDiv($('#' + selectedMachine).prev());
+                handled = true;
+            } else if (keyCode === 40) {
+                id = getIdByDiv($('#' + selectedMachine).next());
+                handled = true;
+            }
+            if (id !== undefined)
+                selectVM(id);
+            if (handled)
+                e.preventDefault();
+        });
+    }
+
+    /**
+     * Gets VM id by it's div list item
+     *
+     * @private
+     * @param {object} div Div which is the actual list item corresponding to the vm
+     * @return {string} Returns the VM id or undefined if the div is not of type .plainvm-vm-item
+     */
+    function getIdByDiv(div) {
+        if (!div.is('.plainvm-vm-item')) {
+            return undefined;
+        }
+        return div.attr('id');
     }
 
     /**

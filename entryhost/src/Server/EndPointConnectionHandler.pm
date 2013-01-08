@@ -115,7 +115,7 @@ sub _create_tcp_connection($ $ $) {
                 $self->_start_screenshot_poll(Config::get_option('screenshot_poll_interval'), $fh);
         };
         if ($@) {
-            Common::error("Error while connecting to the endpoint");
+            Common::error("Error while connecting to the endpoint $host");
         }
     });
     $cv->wait();

@@ -182,6 +182,7 @@
 }
 .plainvm-vm-parameters td {
     border: 1px solid #ddd;
+    width: 50%;
 }
 body, html {
     margin: 0px;
