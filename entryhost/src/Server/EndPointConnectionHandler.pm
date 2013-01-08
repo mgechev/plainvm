@@ -39,12 +39,7 @@ sub connect_to_endpoints($) {
     my $self = shift;
     my @endpoints = @{$self->{_endpoints}};
     for (@endpoints) {
-        eval {
-            $self->_connect_to_endpoint($_);
-        };
-        if ($@) {
-            Common::error("Error while connecting to the endpoint");
-        }
+        $self->_connect_to_endpoint($_);
     }
 }
 
@@ -112,11 +107,16 @@ sub _create_tcp_connection($ $ $) {
     my ($timeout, $screenshot_timeout, $command_timeout, $fh);
     AnyEvent::Socket::tcp_connect($host, $port, sub {
         $fh = shift;
-        $fh = AnyEvent::Handle->new(fh => $fh);
-        $self->_endpoint_connection_established($fh, $host);
-        $timeout = $self->_start_poll(Config::get_option('poll_interval'), $host, $fh);
-        $screenshot_timeout = 
-            $self->_start_screenshot_poll(Config::get_option('screenshot_poll_interval'), $fh);
+        eval {
+            $fh = AnyEvent::Handle->new(fh => $fh);
+            $self->_endpoint_connection_established($fh, $host);
+            $timeout = $self->_start_poll(Config::get_option('poll_interval'), $host, $fh);
+            $screenshot_timeout = 
+                $self->_start_screenshot_poll(Config::get_option('screenshot_poll_interval'), $fh);
+        };
+        if ($@) {
+            Common::error("Error while connecting to the endpoint");
+        }
     });
     $cv->wait();
 }
