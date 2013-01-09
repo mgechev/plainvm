@@ -43,7 +43,7 @@ sub listen($ $) {
 sub _subscribe_to_events {
     my $self = shift;
     PublishSubscribe::subscribe('update-client', sub {
-        my $ref = shift;
+        my ($ref = shift;
         my %data = %{$ref};
         $self->_send_frame($data{client}, $data{data});
     });

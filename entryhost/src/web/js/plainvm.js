@@ -144,7 +144,7 @@ var plainvm = (function () {
     }
     
     /**
-     * Sets the current theme. The method notifies with "ui.theme-changed" event.
+     * Sets the current theme. The method notifies with "ui-theme-changed" event.
      *
      * @public
      * @param {string} theme The theme name.
@@ -152,7 +152,7 @@ var plainvm = (function () {
     function setTheme(theme) {
         if (theme) {
             currentTheme = theme;
-            pubSub.publish('ui.theme-changed', theme);
+            pubSub.publish('ui-theme-changed', theme);
         }
     }
 
@@ -301,25 +301,25 @@ var plainvm = (function () {
             return vms;
         };
 
-        pubSub.subscribe('system.startup-init', function (hosts) {
+        pubSub.subscribe('system-startup-init', function (hosts) {
             vms = parseHosts(hosts);
-            pubSub.publish('ui.startup-init', getVmsArray(vms));
+            pubSub.publish('ui-startup-init', getVmsArray(vms));
         });
 
-        pubSub.subscribe('system.update', function (hosts) {
+        pubSub.subscribe('system-update', function (hosts) {
             var updatedVms = parseHosts(hosts);
             for (var uid in updatedVms) {
                 vms[uid] = updatedVms[uid];
             }
-            pubSub.publish('ui.update-vms', getVmsArray(updatedVms));
+            pubSub.publish('ui-update-vms', getVmsArray(updatedVms));
         });
 
-        pubSub.subscribe('system.screenshot-update', function (data) {
+        pubSub.subscribe('system-screenshot-update', function (data) {
             var screens = parseHosts(data);
             for (var uid in screens) {
                 screenshots[uid] = screens[uid];
             }
-            pubSub.publish('ui.screenshot-update', getVmsArray(screenshots));
+            pubSub.publish('ui-screenshot-update', getVmsArray(screenshots));
         });
     }
 
@@ -359,7 +359,7 @@ plainvm.register('ui.preloader', function () {
             });
         }
 
-        sandbox.subscribe('system.loading-completed', function () {
+        sandbox.subscribe('system-loading-completed', function () {
             hide();
         });
     }
@@ -402,7 +402,7 @@ plainvm.register('ui.preloader', function () {
 /**
  * Module for websocket communication with the plainvm server.
  */
-plainvm.register('system.connection-handler', (function () {
+plainvm.register('system.connection_handler', (function () {
 
     var schema = 'ws://',
         ws,
@@ -419,7 +419,7 @@ plainvm.register('system.connection-handler', (function () {
         ws = new WebSocket(connectionUrl);
         console.log('Connecting to ' + connectionUrl);
         addWebSocketHandlers();
-        sandbox.subscribe('system.send-command', function (command) {
+        sandbox.subscribe('system-send-command', function (command) {
             if (!isValidCommand(command)) {
                 console.log('Invalid command ' + command);
             } else {
@@ -458,7 +458,7 @@ plainvm.register('system.connection-handler', (function () {
         };
         ws.onmessage = function (e) {
             var data = JSON.parse(e.data);
-            sandbox.publish('system.response-received', data);
+            sandbox.publish('system-response-received', data);
             console.log('Message received');
         };
         ws.onerror = function (error) {
@@ -567,7 +567,7 @@ plainvm.register('ui.vms-list', (function () {
      */
     function subscribeToSystemEvents() {
 
-        sandbox.subscribe('ui.startup-init', function (data) {
+        sandbox.subscribe('ui-startup-init', function (data) {
             if (data) {
                 data.sort(function (a, b) {
                     if (a.endpoint > b.endpoint) {
@@ -580,11 +580,11 @@ plainvm.register('ui.vms-list', (function () {
                 renderMachines(data);
                 selectVM(data[0].uid);
                 addTooltipToAll();
-                sandbox.publish('system.loading-completed');
+                sandbox.publish('system-loading-completed');
             }
         });
 
-        sandbox.subscribe('ui.update-vms', function (data) {
+        sandbox.subscribe('ui-update-vms', function (data) {
             data = data || [];
             for (var i = 0; i < data.length; i += 1) {
                 var vmItem = $(renderMachine(data[i])),
@@ -618,7 +618,7 @@ plainvm.register('ui.vms-list', (function () {
                 eventType;
             if (isButtonDisabled(vmId, this.className)) return;
             if (type === 'menu') {
-                sandbox.publish('ui.show-menu-clicked', vmId);
+                sandbox.publish('ui-show-menu-clicked', vmId);
             } else {
                 eventType = 'change-vm-state';
                 vm = sandbox.getVmByUid(vmId)
@@ -734,7 +734,7 @@ plainvm.register('ui.vms-list', (function () {
     function selectVM(vmId) {
        $('.plainvm-vm-item').removeClass('plainvm-vm-item-selected');
        $('#' + vmId).addClass('plainvm-vm-item-selected'); 
-       sandbox.publish('ui.vm-selected', vmId);
+       sandbox.publish('ui-vm-selected', vmId);
        selectedMachine = vmId;
     }
 
@@ -774,7 +774,7 @@ plainvm.register('ui.vms-list', (function () {
 /**
  * A module which is showing the VM details (like RAM, CPU, etc.)
  */
-plainvm.register('ui.vm-details', (function () {
+plainvm.register('ui.vm_details', (function () {
     
     var template, 
         container,
@@ -790,7 +790,7 @@ plainvm.register('ui.vm-details', (function () {
         template = $('#vm-details-template').html();
         sandbox = sndbx;
         container = $('#plainvm-vm-state');
-        sandbox.subscribe('ui.vm-selected', function (id) {
+        sandbox.subscribe('ui-vm-selected', function (id) {
             renderVmInfo(id);
         });
     }
@@ -811,7 +811,7 @@ plainvm.register('ui.vm-details', (function () {
     };
 }()));
 
-plainvm.register('ui.vm-status-pic', (function () {
+plainvm.register('ui.vm_status_pic', (function () {
 
     var sandbox,
         selectedMachine,
@@ -840,12 +840,12 @@ plainvm.register('ui.vm-status-pic', (function () {
      */
     function subscribeToSystemEvents() {
 
-        sandbox.subscribe('ui.vm-selected', function (data) {
+        sandbox.subscribe('ui-vm-selected', function (data) {
             selectedMachine = data;
             updateMachineStatus();
         });
 
-        sandbox.subscribe('ui.screenshot-update', function (data) {
+        sandbox.subscribe('ui-screenshot-update', function (data) {
             if (data) {
                 updateMachineStatus();
             }
@@ -903,7 +903,7 @@ plainvm.register('ui.vm-status-pic', (function () {
 /**
  * Shows the virtual machine's settings editing dialog.
  */
-plainvm.register('ui.vm-settings', (function () {
+plainvm.register('ui.vm_settings', (function () {
 
     var sandbox,
         validator,
@@ -919,7 +919,7 @@ plainvm.register('ui.vm-settings', (function () {
     function init(sndbx) {
         template = $('#vm-edit-template').html();
         sandbox = sndbx;
-        sandbox.subscribe('ui.show-menu-clicked', function (id) {
+        sandbox.subscribe('ui-show-menu-clicked', function (id) {
             renderMenu(id);
         });
     }
@@ -1064,7 +1064,7 @@ plainvm.register('ui.vm-settings', (function () {
         currentVm.vrde_address = $('#address-input').val();
         currentVm.name = $('#machine-name').val();
         currentVm.vram = $('#video-slider').jqxSlider('value');
-        sandbox.publish('ui.update-vms', [currentVm]);
+        sandbox.publish('ui-update-vms', [currentVm]);
         sandbox.publish('machine-edited', currentVm);
     }
 
@@ -1076,7 +1076,7 @@ plainvm.register('ui.vm-settings', (function () {
 /**
  * Virtual machine remoting. This module is responsible for the virtual machines realtime control.
  */
-plainvm.register('ui.vm-control', (function () {
+plainvm.register('ui.vm_control', (function () {
 
     var selectedMachine,
         template,
@@ -1118,7 +1118,7 @@ plainvm.register('ui.vm-control', (function () {
                 window.open(getRemotingUrl());
             });
         });
-        sandbox.subscribe('ui.vm-selected', function (machine) {
+        sandbox.subscribe('ui-vm-selected', function (machine) {
             selectedMachine = sandbox.getVmByUid(machine);
         });
     }
@@ -1219,7 +1219,7 @@ plainvm.register('ui.vm-control', (function () {
  * deciding which published message will be delivered to the server and
  * the other modules are not coupled with the message format.
  */
-plainvm.register('system.remote-command-bridge', (function () {
+plainvm.register('system.remote_command_bridge', (function () {
 
     var sandbox;
 
@@ -1237,7 +1237,7 @@ plainvm.register('system.remote-command-bridge', (function () {
         sandbox.subscribe('change-vm-state', function (data) {
             publishCommand('change-vm-state', data);
         });
-        sandbox.subscribe('system.response-received', function (data) {
+        sandbox.subscribe('system-response-received', function (data) {
             sandbox.publish(data.type, data.data);
         });
     }
@@ -1256,7 +1256,7 @@ plainvm.register('system.remote-command-bridge', (function () {
         if (data) {
             command.data = data;
         }
-        sandbox.publish('system.send-command', JSON.stringify(command));
+        sandbox.publish('system-send-command', JSON.stringify(command));
     }
 
     return {
@@ -1285,10 +1285,10 @@ plainvm.register('ui.vm-statistics', (function () {
      */
     function init(sndbx) {
         sandbox = sndbx;
-        sandbox.subscribe('system.loading-completed', function () {
+        sandbox.subscribe('system-loading-completed', function () {
             container = $('#plainvm-vm-statistics');
         });
-        sandbox.subscribe('ui.statistics-opened', function () {
+        sandbox.subscribe('ui-statistics-opened', function () {
             destroyCharts();
             initCharts();
         });
@@ -1528,7 +1528,7 @@ plainvm.register('ui.vm-statistics', (function () {
  * The content of the plainvm home page. This module defines a tab control which allows switching
  * between different structures.
  */
-plainvm.register('layout.main-content-structure', (function () {
+plainvm.register('layout.main_content_structure', (function () {
 
     var sandbox,
         tabs;
@@ -1547,7 +1547,7 @@ plainvm.register('layout.main-content-structure', (function () {
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
                     case 1:
-                        sandbox.publish('ui.statistics-opened');
+                        sandbox.publish('ui-statistics-opened');
                         break;
                     default:
                         console.log('Unknown tab section');
@@ -1566,7 +1566,7 @@ plainvm.register('layout.main-content-structure', (function () {
  * Initializes the right side panel of the index page. It's a docking containing the
  * vm current status picture and data about the machine parameters.
  */
-plainvm.register('layout.index-side-panel-structure', (function () {
+plainvm.register('layout.index_side_panel_structure', (function () {
 
     var sandbox,
         docking;
@@ -1597,14 +1597,14 @@ plainvm.start('ui.preloader');
 
 $(window).load(function () {
     plainvm.start('ui.vm-statistics');
-    plainvm.start('system.remote-command-bridge');
-    plainvm.start('ui.vm-status-pic');
+    plainvm.start('system.remote_command_bridge');
+    plainvm.start('ui.vm_status_pic');
     plainvm.start('ui.vms-list');
-    plainvm.start('ui.vm-control');
-    plainvm.start('ui.vm-details');
-    plainvm.start('ui.vm-settings');
-    plainvm.start('system.connection-handler');
+    plainvm.start('ui.vm_control');
+    plainvm.start('ui.vm_details');
+    plainvm.start('ui.vm_settings');
+    plainvm.start('system.connection_handler');
 });
 
-plainvm.start('layout.index-side-panel-structure');
-plainvm.start('layout.main-content-structure');
+plainvm.start('layout.index_side_panel_structure');
+plainvm.start('layout.main_content_structure');

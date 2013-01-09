@@ -17,7 +17,9 @@ sub publish($ $) {
     if (exists($_topics{$event})) {
         my @callbacks = @{$_topics{$event}};
         if (@callbacks) {
-            $_->($args) for (@callbacks);
+             {
+                $_->($args) for (@callbacks);
+            }
         }
         return 1;
     }

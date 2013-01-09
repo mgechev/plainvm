@@ -95,7 +95,8 @@ sub take_screenshots($) {
     my $self = shift;
     my %vms = $self->get_all_vms();
     my $screenshots = '[ ';
-    my ($current_vm, $current_screenshot);
+    my $current_vm;
+    my $current_screenshot;
     for my $id (keys(%vms)) {
         $current_vm = $vms{$id};
         $current_screenshot = $current_vm->take_screenshot();

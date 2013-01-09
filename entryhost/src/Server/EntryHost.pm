@@ -40,7 +40,7 @@ sub new {
 #Sends update message to the clients with all changed virtual machines
 sub update_clients($ $) {
     my ($self, $current_vms) = @_;
-    my $response = $self->_prepare_client_response($current_vms, 'system.update');
+    my $response = $self->_prepare_client_response($current_vms, 'system-update');
     $self->{_client_handler}->update_clients($response);
 }
 
@@ -62,14 +62,14 @@ sub send_command($ $ $) {
 sub get_vms($) {
     my $self = shift;
     my $vms = $self->{_ep_handler}->get_vms;
-    return $self->_prepare_client_response($vms, 'system.startup-init');
+    return $self->_prepare_client_response($vms, 'system-startup-init');
 }
 
 #Gets the screenshots for all VMs.
 sub get_screenshots($) {
     my $self = shift;
     my $screenshots = $self->{_ep_handler}->get_screenshots;
-    return $self->_prepare_client_response($screenshots, 'system.screenshot-update');
+    return $self->_prepare_client_response($screenshots, 'system-screenshot-update');
 }
 
 #Starts the EntryHost.
@@ -95,12 +95,12 @@ sub _start_endpoint_data_check($ $ $) {
     return AnyEvent->timer(after => 0, interval => 1, cb => sub {
         if ($ep_handler->is_dirty) {
             my $res = $ep_handler->get_dirty;
-            $res = $self->_prepare_client_response($res, 'system.update');
+            $res = $self->_prepare_client_response($res, 'system-update');
             $client_handler->update_clients($res);
         }
         if ($ep_handler->is_screenshot_dirty) {
             my $res = $ep_handler->get_dirty_screenshots;
-            $res = $self->_prepare_client_response($res, 'system.screenshot-update');
+            $res = $self->_prepare_client_response($res, 'system-screenshot-update');
             $client_handler->update_clients($res);
         }
     });
