@@ -1,4 +1,4 @@
-
+//
 /*
  *  Guacamole - Clientless Remote Desktop
  *  Copyright (C) 2010  Michael Jumper
@@ -89,6 +89,7 @@ GuacamoleRootUI.login = function(username, password) {
     if (xhr.status != 200)
         throw new Error("Invalid login");
 
+    window.location = 'http://' + window.location.host + '/guacamole/client.xhtml?id=DEFAULT';
 };
 
 /**
