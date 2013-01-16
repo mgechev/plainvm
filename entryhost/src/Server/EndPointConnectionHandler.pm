@@ -21,6 +21,9 @@ my %current_screenshots : shared;
 my %all_screenshots : shared;
 my $dirty_screenshots : shared;
 
+#queue of all responses received by the end points
+my @responses : shared;
+
 my %command_queue : shared;
 
 sub new {
@@ -31,6 +34,7 @@ sub new {
         _endpoints => undef
     };
     $self->{_endpoints} = $endpoints;
+    @responses = ();
     bless($self, $class);
     return $self;
 }
@@ -88,6 +92,11 @@ sub push_command($ $ $) {
     lock(%command_queue);
     share($command);
     push($command_queue{$ep}, $command);
+}
+
+sub get_responses($) {
+    my $self = shift;
+    return \@responses;
 }
 
 sub _connect_to_endpoint {
@@ -166,13 +175,18 @@ sub _endpoint_connection_established($ $ $) {
     }
 }
 
+#Handles three types of packets received
+#   1. update of vms
+#   2. update of vms' screenshots
+#   3. response to a request (contains uid property)
 sub _handle_message($ $ $) {
     my ($self, $message, $endpoint) = @_;
     if ($message->{type} eq 'update') {
         $self->_validate_vms($message->{data}, $endpoint);
-    }
-    if ($message->{type} eq 'screenshot-update') {
+    } elsif ($message->{type} eq 'screenshot-update') {
         $self->_validate_screenshots($message->{data}, $endpoint);
+    } else {
+        push(@responses, JSON::to_json($message));
     }
 }
 

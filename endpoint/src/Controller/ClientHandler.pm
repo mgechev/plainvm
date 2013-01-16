@@ -6,6 +6,9 @@ use warnings;
 use Mediator::PublishSubscribe;
 use Controller::VMStatusVerifier;
 
+use JSON;
+use Data::Dumper;
+
 #Manages the clients (in this case the EntryHosts)
 package ClientHandler;
 
@@ -65,6 +68,7 @@ sub _subscribe($) {
 }
 
 #Handles a specific request by the client
+#If the property uid is define then the client waits for response
 sub _handle_request {
     my ($self, $request) = @_;
     my $msg = $request->{message};
@@ -88,7 +92,15 @@ sub _handle_request {
         my $vm = $self->_validate_data($msg->{data});
         $self->_modify_machine($vm);
     }
-
+#    if (defined $msg->{'need-response'}) {
+#        my $theData = {
+#            type => 'response',
+#            uid => $msg->{uid},
+#            data => "Some data"
+#        };
+#        PublishSubscribe::publish('update-client', 
+#        { client => $client, data => JSON::to_json($theData) });
+#    }
 }
 
 sub _validate_data($ $) {

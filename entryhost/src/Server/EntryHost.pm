@@ -27,13 +27,19 @@ use Common::Config;
 #using the ClientHandler.
 package EntryHost;
 
+my $uid;
+my %responses;
+
 sub new {
     my ($class) = @_;
     my $self = {
         _server => undef,
         _port => undef,
+        _client_response => {}
     };
     bless($self, $class);
+    $uid = 0;
+    %responses = ();
     return $self;
 }
 
@@ -47,11 +53,22 @@ sub update_clients($ $) {
 #Sends command to any end point.
 #Actually the command is not explicitly send, it's being pushed into a
 #queue and send when the EndPointConnectionHandler is ready.
+#The method checks whether the request will wait for response (if the need-response
+#flag is set) if so we generate unique id for the request and put it into a hash
 sub send_command($ $ $) {
-    my ($self, $command) = @_;
+    my ($self, $command, $client) = @_;
     eval {
         my $parsed_command = JSON::from_json($command);
-        $self->{_ep_handler}->push_command($parsed_command->{data}{endpoint}, $command);
+        if (defined $parsed_command->{'need-response'}) {
+            $responses{$uid} = {
+                timeout => 0,
+                client => $client
+            };
+            $parsed_command->{uid} = $uid;
+            $uid += 1;
+        }
+        $self->{_ep_handler}->push_command($parsed_command->{data}{endpoint}, 
+                JSON::to_json($parsed_command));
     };
     if ($@) {
         Common::error("Error while parsing the command: $@");
@@ -90,6 +107,7 @@ sub start($ $) {
     })->join;
 }
 
+#Checks for updates and responses
 sub _start_endpoint_data_check($ $ $) {
     my ($self, $ep_handler, $client_handler) = @_;
     return AnyEvent->timer(after => 0, interval => 1, cb => sub {
@@ -103,7 +121,59 @@ sub _start_endpoint_data_check($ $ $) {
             $res = $self->_prepare_client_response($res, 'system-screenshot-update');
             $client_handler->update_clients($res);
         }
+        $self->_handle_responses($ep_handler->get_responses);
     });
+}
+
+#This method is called when a response handling is required
+#It loop over all responses by the end points and sends them to the client
+sub _handle_responses($ $) {
+    my ($self, $responses) = @_;
+    my @responses = @$responses;
+    my $parsed;
+    for (@responses) {
+        eval {
+            $parsed = JSON::from_json($_);
+            if (defined $responses{$parsed->{uid}}) {
+                $self->_send_client_message($responses{$parsed->{uid}}->{client}, {
+                    type => $parsed->{type},
+                    data => $parsed->{data}
+                });
+                delete $responses{$parsed->{uid}};
+            } else {
+                Common::warn('No response waiting for' . $parsed->{uid});
+            }
+        };
+        if ($@) {
+            Common::error('Error while handling the responses ' . $@);
+        }
+    }
+    $self->_update_responses_timeout;
+}
+
+#This method updates the timeout of all waiting responses
+#If the timeout is greater then RESPONSE_TIMEOUT in the configuration
+#the response is dropped and an error message is returned to the client
+sub _update_responses_timeout($) {
+    my $self = shift;
+    my $timeout;
+    for my $key (keys %responses) {
+        $timeout = $responses{$key}->{timeout};
+        if ($timeout > Config::get_option('response_timeout')) {
+            $self->_send_client_message($responses{$key}->{client}, {
+                type => 'error-response',
+                data => 'No response by the end point'
+            });
+            delete $responses{$key};
+        } else {
+            $responses{$key}->{timeout} = $timeout + 1;
+        }
+    }
+}
+
+sub _send_client_message($ $ $) {
+    my ($self, $client, $message) = @_;
+    $self->{_client_handler}->send_frame($client, JSON::to_json($message));
 }
 
 #Translates the data which comes from the EndPointConnectionHandler

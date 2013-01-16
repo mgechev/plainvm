@@ -17,8 +17,8 @@ sub new {
 }
 
 sub command_received {
-    my ($self, $command) = @_;
-    $self->{_entryhost}->send_command($command);
+    my ($self, $command, $handle) = @_;
+    $self->{_entryhost}->send_command($command, $handle);
 }
 
 sub client_init_vms {

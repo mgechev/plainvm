@@ -35,7 +35,7 @@ sub update_clients($) {
     my ($self, $current_vms) = @_;
     my $websocket_connections = $self->{_websocket_connections};
     for my $client_key (keys($websocket_connections)) {
-        $self->_send_frame($websocket_connections->{$client_key}, $current_vms);
+        $self->send_frame($websocket_connections->{$client_key}, $current_vms);
     }
 }
 
@@ -51,7 +51,7 @@ sub listen($ $) {
 }
 
 #Sends websocket frame
-sub _send_frame($ $ $) {
+sub send_frame($ $ $) {
     my ($self, $handle, $message) = @_;
     my $frame = Protocol::WebSocket::Frame->new;
     $handle->push_write($frame->new($message)->to_bytes);
@@ -168,7 +168,7 @@ sub _handle_websocket_frame($ $ $) {
     my $frame = Protocol::WebSocket::Frame->new;
     $frame->append($request);
     while (my $message = $frame->next) {
-        $self->{_observer}->command_received($message);
+        $self->{_observer}->command_received($message, $handle);
     }
 }
 
@@ -184,8 +184,8 @@ sub _handle_websocket_handshake($ $ $) {
             $handle->push_write($handshake_response);
             $self->{_websocket_connections}->{$handle} = $handle;
             $self->_release_handle($handle);
-            $self->_send_frame($handle, $init_vms);
-            $self->_send_frame($handle, $init_screens);
+            $self->send_frame($handle, $init_vms);
+            $self->send_frame($handle, $init_screens);
         }
     }
 }
