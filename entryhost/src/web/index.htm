@@ -36,6 +36,7 @@
                 <ul style="margin-left: 3px;">
                     <li class="plainvm-content-tabs-title">Virtual Machines</li>
                     <li class="plainvm-content-tabs-title">Statistics</li>
+                    <li class="plainvm-content-tabs-title">Install VM</li>
                 </ul>
 
                 <!-- Tab home section -->
@@ -119,21 +120,111 @@
                 <div id="plainvm-vm-statistics"></div>
                 <!-- End of the statistics section -->
 
+                <!-- Installation section -->
+                <div>
+
+                    <div id="plainvm-vm-installation" class="plainvm-vm-installation-wizard">
+
+                        <!-- Wizard titles -->
+                        <ul style="margin-left: 3px">
+                            <li class="plainvm-install-tab-title">Name and OS type</li>
+                            <li class="plainvm-install-tab-title">Hard drive and RAM</li>
+                            <li class="plainvm-install-tab-title">Operaing system</li>
+                        </ul>
+                        <!-- End of the wizard titles -->
+
+                        <!-- Wizard content -->
+                        <div>
+                            <table>
+                                <tr>
+                                    <td colspan="2">
+                                        <h2>Name and OS type</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Name of the VM
+                                    </td>
+                                    <td>
+                                        <input type="text" id="plainvm-install-wizard-vm-name" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Operating System
+                                    </td>
+                                    <td>
+                                        <div id="plainvm-install-wizard-vm-os"></div>
+                                    </td>
+                                </tr>
+                            </table>
+                             <button id="plainvm-install-wizard-first-next"
+                            class="plainvm-install-wizard-button">Next</button>
+                        </div>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td colspan="2">
+                                        <h2>Hard drive and RAM</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Select RAM size (MB)</td>
+                                    <td><div id="plainvm-install-wizard-ram-slider"></div></td>
+                                </tr>
+                                <tr>
+                                    <td>Select HDD size (MB)</td>
+                                    <td><div id="plainvm-install-wizard-hdd-slider"></div></td>
+                                </tr>
+                            </table>
+                            <button id="plainvm-install-wizard-second-next"
+                            class="plainvm-install-wizard-button">Next</button>
+                        </div>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td colspan="2">
+                                        <h2>Operating system</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ISO file</td>
+                                    <td><input type="file" id="plainvm-install-wizard-file" /></td>
+                                </tr>
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </table> 
+                            <button id="plainvm-install-wizard-finish"
+                            class="plainvm-install-wizard-button">Finish</button>
+                        </div>
+                        <!-- End of the wizard's content -->
+
+                    </div>
+                
+                </div>
+                <!-- End of the installation section -->
+
             </div>
             <!-- End of the tab -->
 
             <div style="clear:both;"></div>
+
         </div>
         <script src="js/jqxcore.js"></script>
+        <script src="js/jqxdata.js"></script>
+        <script src="js/jqxbuttons.js"></script>
+        <script src="js/jqxscrollbar.js"></script>
+        <script src="js/jqxlistbox.js"></script>
+        <script src="js/jqxcombobox.js"></script>
         <script src="js/jqxwindow.js"></script>
         <script src="js/jqxdocking.js"></script>
         <script src="js/jqxtooltip.js"></script>
-        <script src="js/jqxbuttons.js"></script>
         <script src="js/jqxslider.js"></script>
         <script src="js/jqxnumberinput.js"></script>
         <script src="js/jqxvalidator.js"></script>
         <script src="js/jqxtabs.js"></script>
-        <script src="js/jqxdata.js"></script>
         <script src="js/jqxchart.js"></script>
         <script src="js/mustache.js"></script>
     </body>

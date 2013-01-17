@@ -1543,11 +1543,17 @@ plainvm.register('layout.main_content_structure', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-tabs');
-            tabs.jqxTabs({ theme: sandbox.getTheme() });
+            tabs.jqxTabs({ theme: sandbox.getTheme(), selectedItem: 2 });
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
+                    case 0:
+                        sandbox.publish('ui-home-opened');
+                        break;
                     case 1:
                         sandbox.publish('ui-statistics-opened');
+                        break;
+                    case 2:
+                        sandbox.publish('ui-installation-wizard-opened');
                         break;
                     default:
                         console.log('Unknown tab section');
@@ -1560,6 +1566,123 @@ plainvm.register('layout.main_content_structure', (function () {
     return {
         init: init
     };
+}()));
+
+/**
+ * The content of the install page. This module defines a tab control which
+ * is the actual installation wizard
+ */
+plainvm.register('layout.install_wizard', (function () {
+    var OPERATING_SYSTEMS = [
+            'Windows 3.1',
+            'Windows 95',
+            'Windows 98',
+            'Windows ME',
+            'Windows NT 4',
+            'Windows 2000',
+            'Windows XP',
+            'Windows XP (64)',
+            'Windows 2003',
+            'Windows 2003 (64 bit)',
+            'Windows Vista',
+            'Windows Vista (64 bit)',
+            'Windows 2008',
+            'Windows 2008 (64 bit)',
+            'Windows 7',
+            'Windows 7 (64 bit)',
+            'Windows 8',
+            'Windows 8 (64 bit)',
+            'Linux 2.2',
+            'Linux 2.4',
+            'Linux 2.4 (64 bit)',
+            'Linux 2.6',
+            'Linux 2.6 (64 bit)',
+            'Arch Linux',
+            'Arch Linux (64 bit)',
+            'Debian',
+            'Debian (64 bit)',
+            'openSUSE',
+            'openSUSE (64 bit)',
+            'Fedora',
+            'Fedora (64 bit)',
+            'Gentoo',
+            'Gentoo (64 bit)',
+            'Mandriva',
+            'Mandriva (64 bit)',
+            'Red Hat',
+            'Red Hat (64 bit)',
+            'Turbolinux',
+            'Turbolinux (64 bit)',
+            'Ubuntu',
+            'Ubuntu (64 bit)',
+            'Xandros',
+            'Xandros (64 bit)',
+            'Oracle',
+            'Oracle (64 bit)',
+            'Other Linux'
+        ],
+        sandbox,
+        tabs;
+
+    function init(sndbx) {
+        sandbox = sndbx;
+        $(window).load(function () {
+            tabs = $('#plainvm-vm-installation');
+            tabs.jqxTabs({ 
+                theme: sandbox.getTheme(), 
+                width: '600',
+                height: '400',
+                selectedItem: 2
+            });
+            $('#plainvm-install-wizard-vm-os').jqxComboBox({
+                theme: sandbox.getTheme(),
+                source: OPERATING_SYSTEMS,
+                width: 200,
+                height: 25
+            });
+            $('#plainvm-install-wizard-first-next').jqxButton({
+                theme: sandbox.getTheme(),
+                width: 60,
+                height: 30
+            });
+            $('#plainvm-install-wizard-ram-slider').jqxSlider({
+                min: 50,
+                max: 2048,
+                value: 256,
+                step: 50,
+                ticksFrequency: 100,
+                mode: 'fixed',
+                width: 280,
+                theme: sandbox.getTheme()
+            });
+            $('#plainvm-install-wizard-hdd-slider').jqxSlider({
+                min: 2000,
+                max: 50000,
+                step: 500,
+                value: 10000,
+                ticksFrequency: 2000,
+                mode: 'fixed',
+                width: 280,
+                theme: sandbox.getTheme()
+            });
+            $('#plainvm-install-wizard-second-next').jqxButton({
+                theme: sandbox.getTheme(),
+                width: 60,
+                height: 30
+            });
+            $('#plainvm-install-wizard-finish').jqxButton({
+                theme: sandbox.getTheme(),
+                width: 60,
+                height: 30
+            });
+        });
+    }
+
+    return {
+        init: init
+    };
+
+
 }()));
 
 /**
@@ -1608,3 +1731,4 @@ $(window).load(function () {
 
 plainvm.start('layout.index_side_panel_structure');
 plainvm.start('layout.main_content_structure');
+plainvm.start('layout.install_wizard');

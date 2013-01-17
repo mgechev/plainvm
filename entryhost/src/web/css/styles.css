@@ -257,9 +257,69 @@ body, html {
     background: #DBDBDB !important;
     border-bottom-color: #DBDBDB !important;
 }
-.jqx-tabs, .jqx-tabs-content {
+.plainvm-content .jqx-tabs {
+    background: #DBDBDB !important;
+}
+.plainvm-content .jqx-tabs-content {
     background: #DBDBDB !important;
 }
 .plainvm-vm-statistics {
     min-height: 400px;
+}
+.plainvm-vm-installation-wizard {
+    margin: auto !important;
+    margin-top: 2% !important;
+    margin-bottom: 2% !important;
+    background-color: #fff;
+}
+.plainvm-vm-installation-wizard {
+    box-shadow: 0px 0px 15px #888;
+}
+.plainvm-vm-installation-wizard .jqx-tabs-content {
+    background-color: #eee !important;
+    margin-top: -2px;
+    position: relative;
+}
+.plainvm-vm-installation-wizard .jqx-tabs-title-selected-top {
+    background-color: #eee !important;
+    border-bottom-color: #eee !important;
+}
+.plainvm-vm-installation-wizard h2 {
+    text-shadow: 0px 0px 2px #777;
+    color: #555;
+    text-align: center;
+}
+.plainvm-vm-installation-wizard table {
+    margin: auto;
+    margin-top: 50px;
+}
+
+.plainvm-vm-installation-wizard input {
+    width: 200px;
+    height: 20px;
+    border: 1px solid #999;
+    border-radius: 2px;
+    outline: none;
+    padding: 2px;
+}
+.plainvm-vm-installation-wizard input:focus {
+    border-color: #000;
+}
+.plainvm-vm-installation-wizard td {
+    padding: 10px;
+    margin: 10px;
+}
+.plainvm-install-wizard-next {
+    position: relative;
+    top: 50px;
+    left: 410px;
+}
+.plainvm-install-wizard-button {
+    position: absolute;
+    bottom: 50px;
+    left: 410px;
+}
+#plainvm-install-wizard-file {
+    width: 300px;
+    border-width: 0px;
 }
