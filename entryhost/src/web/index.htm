@@ -135,67 +135,75 @@
 
                         <!-- Wizard content -->
                         <div>
-                            <table>
-                                <tr>
-                                    <td colspan="2">
-                                        <h2>Name and OS type</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Name of the VM
-                                    </td>
-                                    <td>
-                                        <input type="text" id="plainvm-install-wizard-vm-name" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Operating System
-                                    </td>
-                                    <td>
-                                        <div id="plainvm-install-wizard-vm-os"></div>
-                                    </td>
-                                </tr>
-                            </table>
+                            <form id="plainvm-vm-install-wizard-section-1">
+                                <table>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h2>Name and OS type</h2>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Name of the VM
+                                        </td>
+                                        <td>
+                                            <input type="text" id="plainvm-install-wizard-vm-name" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Operating System
+                                        </td>
+                                        <td>
+                                            <div id="plainvm-install-wizard-vm-os"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                             </form>
                              <button id="plainvm-install-wizard-first-next"
                             class="plainvm-install-wizard-button">Next</button>
                         </div>
                         <div>
-                            <table>
-                                <tr>
-                                    <td colspan="2">
-                                        <h2>Hard drive and RAM</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Select RAM size (MB)</td>
-                                    <td><div id="plainvm-install-wizard-ram-slider"></div></td>
-                                </tr>
-                                <tr>
-                                    <td>Select HDD size (MB)</td>
-                                    <td><div id="plainvm-install-wizard-hdd-slider"></div></td>
-                                </tr>
-                            </table>
+                            <form id="plainvm-vm-install-wizard-section-2">
+                                <table>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h2>Hard drive and RAM</h2>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Select RAM size (MB)</td>
+                                        <td><div id="plainvm-install-wizard-ram-slider"></div></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Select HDD size (MB)</td>
+                                        <td><div id="plainvm-install-wizard-hdd-slider"></div></td>
+                                    </tr>
+                                </table>
+                            </form>
                             <button id="plainvm-install-wizard-second-next"
                             class="plainvm-install-wizard-button">Next</button>
                         </div>
                         <div>
-                            <table>
-                                <tr>
-                                    <td colspan="2">
-                                        <h2>Operating system</h2>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>ISO file</td>
-                                    <td><input type="file" id="plainvm-install-wizard-file" /></td>
-                                </tr>
-                                <tr>
-                                    <td>&nbsp;</td>
-                                    <td>&nbsp;</td>
-                                </tr>
-                            </table> 
+                            <form id="plainvm-vm-install-wizard-section-3">
+                                <table>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h2>Operating system</h2>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISO file</td>
+                                        <td>
+                                            <input type="file" id="plainvm-install-wizard-file" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                </table> 
+                            </form>
                             <button id="plainvm-install-wizard-finish"
                             class="plainvm-install-wizard-button">Finish</button>
                         </div>

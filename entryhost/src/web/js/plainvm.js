@@ -15,7 +15,55 @@ var plainvm = (function () {
         VM_SERVER = window.location.hostname,
         VM_SERVER_PORT = parseInt(window.location.port, 10),
         REMOTING_PORT = 8080,
-        currentTheme = 'fresh';
+        currentTheme = 'fresh',
+        OPERATING_SYSTEMS = [
+            'Windows 3.1',
+            'Windows 95',
+            'Windows 98',
+            'Windows ME',
+            'Windows NT 4',
+            'Windows 2000',
+            'Windows XP',
+            'Windows XP (64)',
+            'Windows 2003',
+            'Windows 2003 (64 bit)',
+            'Windows Vista',
+            'Windows Vista (64 bit)',
+            'Windows 2008',
+            'Windows 2008 (64 bit)',
+            'Windows 7',
+            'Windows 7 (64 bit)',
+            'Windows 8',
+            'Windows 8 (64 bit)',
+            'Linux 2.2',
+            'Linux 2.4',
+            'Linux 2.4 (64 bit)',
+            'Linux 2.6',
+            'Linux 2.6 (64 bit)',
+            'Arch Linux',
+            'Arch Linux (64 bit)',
+            'Debian',
+            'Debian (64 bit)',
+            'openSUSE',
+            'openSUSE (64 bit)',
+            'Fedora',
+            'Fedora (64 bit)',
+            'Gentoo',
+            'Gentoo (64 bit)',
+            'Mandriva',
+            'Mandriva (64 bit)',
+            'Red Hat',
+            'Red Hat (64 bit)',
+            'Turbolinux',
+            'Turbolinux (64 bit)',
+            'Ubuntu',
+            'Ubuntu (64 bit)',
+            'Xandros',
+            'Xandros (64 bit)',
+            'Oracle',
+            'Oracle (64 bit)',
+            'Other Linux'
+        ];
 
     /* * * * * * * * * *  Initializing the modules' sandbox * * * * * * * * * */
 
@@ -187,6 +235,16 @@ var plainvm = (function () {
             return undefined;
         }
     }
+
+    /**
+     * This method returns an array with all supported OS
+     *
+     * @public
+     * @return {array} list of all operating systems.
+     */
+    function getOperatingSystems() {
+        return OPERATING_SYSTEMS;
+    }
  
     var sandbox = pubSub;
     sandbox.getVMServer = getVMServer;
@@ -198,6 +256,7 @@ var plainvm = (function () {
     sandbox.getVmsArray = getVmsArray;
     sandbox.getScreenshotById = getScreenshotById;
     sandbox.getRemotingPort = getRemotingPort;
+    sandbox.getOperatingSystems = getOperatingSystems;
 //    sandbox.setTheme = setTheme;
 
 
@@ -1543,7 +1602,7 @@ plainvm.register('layout.main_content_structure', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-tabs');
-            tabs.jqxTabs({ theme: sandbox.getTheme(), selectedItem: 2 });
+            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme(), selectedItem: 2 });
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
                     case 0:
@@ -1573,55 +1632,7 @@ plainvm.register('layout.main_content_structure', (function () {
  * is the actual installation wizard
  */
 plainvm.register('layout.install_wizard', (function () {
-    var OPERATING_SYSTEMS = [
-            'Windows 3.1',
-            'Windows 95',
-            'Windows 98',
-            'Windows ME',
-            'Windows NT 4',
-            'Windows 2000',
-            'Windows XP',
-            'Windows XP (64)',
-            'Windows 2003',
-            'Windows 2003 (64 bit)',
-            'Windows Vista',
-            'Windows Vista (64 bit)',
-            'Windows 2008',
-            'Windows 2008 (64 bit)',
-            'Windows 7',
-            'Windows 7 (64 bit)',
-            'Windows 8',
-            'Windows 8 (64 bit)',
-            'Linux 2.2',
-            'Linux 2.4',
-            'Linux 2.4 (64 bit)',
-            'Linux 2.6',
-            'Linux 2.6 (64 bit)',
-            'Arch Linux',
-            'Arch Linux (64 bit)',
-            'Debian',
-            'Debian (64 bit)',
-            'openSUSE',
-            'openSUSE (64 bit)',
-            'Fedora',
-            'Fedora (64 bit)',
-            'Gentoo',
-            'Gentoo (64 bit)',
-            'Mandriva',
-            'Mandriva (64 bit)',
-            'Red Hat',
-            'Red Hat (64 bit)',
-            'Turbolinux',
-            'Turbolinux (64 bit)',
-            'Ubuntu',
-            'Ubuntu (64 bit)',
-            'Xandros',
-            'Xandros (64 bit)',
-            'Oracle',
-            'Oracle (64 bit)',
-            'Other Linux'
-        ],
-        sandbox,
+    var sandbox,
         tabs;
 
     function init(sndbx) {
@@ -1629,14 +1640,15 @@ plainvm.register('layout.install_wizard', (function () {
         $(window).load(function () {
             tabs = $('#plainvm-vm-installation');
             tabs.jqxTabs({ 
+                keyboardNavigation: false,
                 theme: sandbox.getTheme(), 
                 width: '600',
                 height: '400',
-                selectedItem: 2
+                enabledHover: false
             });
             $('#plainvm-install-wizard-vm-os').jqxComboBox({
                 theme: sandbox.getTheme(),
-                source: OPERATING_SYSTEMS,
+                source: sandbox.getOperatingSystems(),
                 width: 200,
                 height: 25
             });
@@ -1685,6 +1697,93 @@ plainvm.register('layout.install_wizard', (function () {
 
 }()));
 
+plainvm.register('ui.install_wizard', (function () {
+
+    var tabs,
+        firstForm,
+        sandbox;
+
+    function init(sndbx) {
+        sandbox = sndbx;
+        tabs = $('#plainvm-vm-installation');
+        sandbox.subscribe('system-loading-completed', function () {
+            tabs.jqxTabs('disableAt', 1);
+            tabs.jqxTabs('disableAt', 2);
+            firstSectionHandlers();
+            secondSectionHandlers();
+            thirdSectionHandlers();
+        });
+    }
+
+    function firstSectionHandlers() {
+        var sectionOne = $('#plainvm-vm-install-wizard-section-1').jqxValidator();
+        sectionOne.jqxValidator({
+            rules: [
+                { 
+                    input: '#plainvm-install-wizard-vm-name',
+                    message: 'Invalid name.',
+                    action: 'keyup,blur',
+                    rule: function (input) {
+                        return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._-]{1,}$/).test(input.val());
+                    }
+                },
+                {
+                    input: $('#plainvm-install-wizard-vm-os .jqx-combobox-input'),
+                    message: 'Invalid OS',
+                    action: 'blur',
+                    position: 'right:20,0',
+                    rule: function (input) {
+                        return sandbox.getOperatingSystems().indexOf(input.val()) >= 0;
+                    }
+                }
+            ]
+        });
+        $('#plainvm-install-wizard-first-next').bind('click', function () {
+            if (sectionOne.jqxValidator('validate')) {
+                tabs.jqxTabs('enableAt', 1);
+                tabs.jqxTabs('selectedItem', 1);
+            }
+        });
+        tabs.bind('selecting', function (e) {
+            if (!sectionOne.jqxValidator('validate')) {
+                e.cancel = true;
+                tabs.jqxTabs('disableAt', 1);
+                tabs.jqxTabs('disableAt', 2);
+                tabs.jqxTabs('selectedItem', 0);
+            }
+        });
+    }
+
+    function secondSectionHandlers() {
+        $('#plainvm-install-wizard-second-next').bind('click', function () {
+            tabs.jqxTabs('enableAt', 2);
+            tabs.jqxTabs('selectedItem', 2);
+        });
+    }
+
+    function thirdSectionHandlers() {
+        var sectionThree = $('#plainvm-vm-install-wizard-section-3');
+        sectionThree.jqxValidator({
+            rules: [{
+                input: '#plainvm-install-wizard-file',
+                message: 'The ISO file is required',
+                rule: function (input) {
+                    return !!input.val().length;
+                }
+            }]
+        });
+        $('#plainvm-install-wizard-finish').bind('click', function () {
+            if (sectionThree.jqxValidator('validate')) {
+                sandbox.publish('system-install-vm');
+            }
+        });
+    }
+
+    return {
+        init: init
+    };
+}()));
+
 /**
  * Initializes the right side panel of the index page. It's a docking containing the
  * vm current status picture and data about the machine parameters.
@@ -1726,6 +1825,7 @@ $(window).load(function () {
     plainvm.start('ui.vm_control');
     plainvm.start('ui.vm_details');
     plainvm.start('ui.vm_settings');
+    plainvm.start('ui.install_wizard');
     plainvm.start('system.connection_handler');
 });
 
