@@ -1635,6 +1635,77 @@ plainvm.register('layout.install_wizard', (function () {
     var sandbox,
         tabs;
 
+    /**
+     * Renders the first section of the wizard
+     *
+     * @private
+     */
+    function renderFirstSection() {
+        $('#plainvm-install-wizard-vm-os').jqxComboBox({
+            theme: sandbox.getTheme(),
+            source: sandbox.getOperatingSystems(),
+            width: 200,
+            height: 25
+        });
+        $('#plainvm-install-wizard-first-next').jqxButton({
+            theme: sandbox.getTheme(),
+            width: 60,
+            height: 30
+        });
+    }
+
+    /**
+     * Returns the second section of the wizard
+     *
+     * @private
+     */
+    function renderSecondSection() {
+        $('#plainvm-install-wizard-ram-slider').jqxSlider({
+            min: 50,
+            max: 2048,
+            value: 256,
+            step: 50,
+            ticksFrequency: 100,
+            mode: 'fixed',
+            width: 280,
+            theme: sandbox.getTheme()
+        });
+        $('#plainvm-install-wizard-hdd-slider').jqxSlider({
+            min: 2000,
+            max: 50000,
+            step: 500,
+            value: 10000,
+            ticksFrequency: 2000,
+            mode: 'fixed',
+            width: 280,
+            theme: sandbox.getTheme()
+        });
+        $('#plainvm-install-wizard-second-next').jqxButton({
+            theme: sandbox.getTheme(),
+            width: 60,
+            height: 30
+        });
+    }
+
+    /**
+     * Renders the third section of the wizard
+     *
+     * @private
+     */
+    function renderThirdSection() {
+        $('#plainvm-install-wizard-finish').jqxButton({
+            theme: sandbox.getTheme(),
+            width: 60,
+            height: 30
+        });
+    }
+
+    /**
+     * Renders the wizard
+     *
+     * @public
+     * @param {object} sndbx The sandbox.
+     */
     function init(sndbx) {
         sandbox = sndbx;
         $(window).load(function () {
@@ -1646,47 +1717,13 @@ plainvm.register('layout.install_wizard', (function () {
                 height: '400',
                 enabledHover: false
             });
-            $('#plainvm-install-wizard-vm-os').jqxComboBox({
-                theme: sandbox.getTheme(),
-                source: sandbox.getOperatingSystems(),
-                width: 200,
-                height: 25
+            //Because the event bubbles and is caught by the parent tab
+            tabs.bind('selected', function () {
+                return false;
             });
-            $('#plainvm-install-wizard-first-next').jqxButton({
-                theme: sandbox.getTheme(),
-                width: 60,
-                height: 30
-            });
-            $('#plainvm-install-wizard-ram-slider').jqxSlider({
-                min: 50,
-                max: 2048,
-                value: 256,
-                step: 50,
-                ticksFrequency: 100,
-                mode: 'fixed',
-                width: 280,
-                theme: sandbox.getTheme()
-            });
-            $('#plainvm-install-wizard-hdd-slider').jqxSlider({
-                min: 2000,
-                max: 50000,
-                step: 500,
-                value: 10000,
-                ticksFrequency: 2000,
-                mode: 'fixed',
-                width: 280,
-                theme: sandbox.getTheme()
-            });
-            $('#plainvm-install-wizard-second-next').jqxButton({
-                theme: sandbox.getTheme(),
-                width: 60,
-                height: 30
-            });
-            $('#plainvm-install-wizard-finish').jqxButton({
-                theme: sandbox.getTheme(),
-                width: 60,
-                height: 30
-            });
+            renderFirstSection();
+            renderSecondSection();
+            renderThirdSection();
         });
     }
 
@@ -1703,6 +1740,12 @@ plainvm.register('ui.install_wizard', (function () {
         firstForm,
         sandbox;
 
+    /**
+     * Adds UI handlers to the wizard
+     *
+     * @public
+     * @param {object} sndbx The sandbox.
+     */
     function init(sndbx) {
         sandbox = sndbx;
         tabs = $('#plainvm-vm-installation');
@@ -1715,6 +1758,11 @@ plainvm.register('ui.install_wizard', (function () {
         });
     }
 
+    /**
+     * Adds validation logic for the first section of the wizard
+     *
+     * @private
+     */
     function firstSectionHandlers() {
         var sectionOne = $('#plainvm-vm-install-wizard-section-1').jqxValidator();
         sectionOne.jqxValidator({
@@ -1753,7 +1801,12 @@ plainvm.register('ui.install_wizard', (function () {
             }
         });
     }
-
+    
+    /**
+     * Adds event handlers to the second section of the wizard
+     *
+     * @private
+     */
     function secondSectionHandlers() {
         $('#plainvm-install-wizard-second-next').bind('click', function () {
             tabs.jqxTabs('enableAt', 2);
@@ -1761,6 +1814,11 @@ plainvm.register('ui.install_wizard', (function () {
         });
     }
 
+    /**
+     * Adds event handler to the third section of the wizard
+     *
+     * @private
+     */
     function thirdSectionHandlers() {
         var sectionThree = $('#plainvm-vm-install-wizard-section-3');
         sectionThree.jqxValidator({
