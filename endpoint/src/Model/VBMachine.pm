@@ -229,9 +229,11 @@ sub _get_vm_property($ $) {
         my @propsAry = split(/\n/, $props);
         @propsAry = map { split(/:/, $_, 2) } @propsAry;
         for (my $i = 0; $i < scalar(@propsAry); $i += 2) {
-            $propsAry[$i] = Common::trim($propsAry[$i]);
-            $propsAry[$i + 1] = Common::trim($propsAry[$i + 1]);
-            $propsHash{$propsAry[$i]} = $propsAry[$i + 1];
+            unless (defined $propsHash{$property}) {
+                $propsAry[$i] = Common::trim($propsAry[$i]);
+                $propsAry[$i + 1] = Common::trim($propsAry[$i + 1]);
+                $propsHash{$propsAry[$i]} = $propsAry[$i + 1];
+            }
         }
         return $propsHash{$property};
     }
