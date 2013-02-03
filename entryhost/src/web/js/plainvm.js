@@ -12,6 +12,7 @@ var plainvm = (function () {
     var modules = {},
         vms = {},
         screenshots = {},
+        endpoints = [],
         VM_SERVER = window.location.hostname,
         VM_SERVER_PORT = parseInt(window.location.port, 10),
         REMOTING_PORT = 8080,
@@ -219,6 +220,16 @@ var plainvm = (function () {
     }
 
     /**
+     * Gets list of all end points
+     *
+     * @public
+     * @returns {array} Array with all end points
+     */
+    function getEndPoints() {
+        return endpoints;
+    }
+
+    /**
      * The method puts specific operating system into two (currently) groups - linux/win.
      *
      * @public
@@ -257,6 +268,7 @@ var plainvm = (function () {
     sandbox.getScreenshotById = getScreenshotById;
     sandbox.getRemotingPort = getRemotingPort;
     sandbox.getOperatingSystems = getOperatingSystems;
+    sandbox.getEndPoints = getEndPoints;
 //    sandbox.setTheme = setTheme;
 
 
@@ -358,10 +370,18 @@ var plainvm = (function () {
                 }
             }
             return vms;
+        },
+
+        getEndPoints = function (hosts) {
+            var ep = [];
+            for (var i = 0; i < hosts.length; i += 1)
+                ep.push(hosts[i][0]);
+            return ep;
         };
 
         pubSub.subscribe('system-startup-init', function (hosts) {
             vms = parseHosts(hosts);
+            endpoints = getEndPoints(hosts);
             pubSub.publish('ui-startup-init', getVmsArray(vms));
         });
 
@@ -1660,6 +1680,12 @@ plainvm.register('layout.install_wizard', (function () {
      * @private
      */
     function renderSecondSection() {
+        $('#plainvm-install-wizard-endpoint').jqxComboBox({
+            theme: sandbox.getTheme(),
+            source: [],
+            width: 280,
+            height: 25
+        });
         $('#plainvm-install-wizard-ram-slider').jqxSlider({
             min: 50,
             max: 2048,
@@ -1718,12 +1744,21 @@ plainvm.register('layout.install_wizard', (function () {
                 enabledHover: false
             });
             //Because the event bubbles and is caught by the parent tab
-            tabs.bind('selected', function () {
+            tabs.bind('selected', function (e) {
+                if (e.args.item === 1) {
+                    var ramSlider = $('#plainvm-install-wizard-ram-slider'),
+                        hddSlider = $('#plainvm-install-wizard-hdd-slider'); 
+                    ramSlider.jqxSlider('value', ramSlider.jqxSlider('value'));
+                    hddSlider.jqxSlider('value', hddSlider.jqxSlider('value'));
+                }
                 return false;
             });
             renderFirstSection();
             renderSecondSection();
             renderThirdSection();
+        });
+        sandbox.subscribe('ui-startup-init', function () {
+            $('#plainvm-install-wizard-endpoint').jqxComboBox('source', sandbox.getEndPoints());
         });
     }
 
@@ -1755,6 +1790,11 @@ plainvm.register('ui.install_wizard', (function () {
             firstSectionHandlers();
             secondSectionHandlers();
             thirdSectionHandlers();
+        });
+        tabs.bind('selected', function () {
+            $('#plainvm-vm-install-wizard-section-1').jqxValidator('hide');
+            $('#plainvm-vm-install-wizard-section-2').jqxValidator('hide');
+            $('#plainvm-vm-install-wizard-section-3').jqxValidator('hide');
         });
     }
 
@@ -1808,9 +1848,32 @@ plainvm.register('ui.install_wizard', (function () {
      * @private
      */
     function secondSectionHandlers() {
+        var sectionTwo = $('#plainvm-vm-install-wizard-section-2').jqxValidator();
+        sectionTwo.jqxValidator({
+            rules: [
+                {
+                    input: $('#plainvm-install-wizard-endpoint .jqx-combobox-input'),
+                    message: 'Invalid end point',
+                    action: 'blur',
+                    position: 'right:20,0',
+                    rule: function (input) {
+                        return sandbox.getEndPoints().indexOf(input.val()) >= 0;
+                    }
+                }
+            ]
+        });
         $('#plainvm-install-wizard-second-next').bind('click', function () {
-            tabs.jqxTabs('enableAt', 2);
-            tabs.jqxTabs('selectedItem', 2);
+            if (sectionTwo.jqxValidator('validate')) {
+                tabs.jqxTabs('enableAt', 2);
+                tabs.jqxTabs('selectedItem', 2);
+            }
+        });
+        tabs.bind('selecting', function (e) {
+            if (!sectionTwo.jqxValidator('validate') && e.args.item === 2) {
+                e.cancel = true;
+                tabs.jqxTabs('disableAt', 2);
+                tabs.jqxTabs('selectedItem', 1);
+            }
         });
     }
 
