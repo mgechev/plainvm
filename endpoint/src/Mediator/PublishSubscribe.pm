@@ -11,6 +11,7 @@ use warnings;
 package PublishSubscribe;
 
 my %_topics = ();
+our $test = 0;
 
 sub publish($ $) {
     my ($event, $args) = @_;
@@ -22,6 +23,14 @@ sub publish($ $) {
         return 1;
     }
     return 0;
+}
+
+sub get {
+    return $test;
+}
+
+sub set {
+    $test = shift;
 }
 
 sub subscribe($ $) {

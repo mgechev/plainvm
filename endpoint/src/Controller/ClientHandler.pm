@@ -8,7 +8,6 @@ use Controller::VMStatusVerifier;
 use Controller::VMInstaller;
 
 use JSON;
-use Data::Dumper;
 
 #Manages the clients (in this case the EntryHosts)
 package ClientHandler;
@@ -22,6 +21,7 @@ sub instance($) {
         my ($class, $vmm) = @_;
         my $self = {
             _vmm => $vmm,
+            _installer => VMInstaller->new,
             _vm_status_verifier => VMStatusVerifier->instance($vmm)
         };
         $INSTANCE = bless($self, $class);
@@ -93,8 +93,7 @@ sub _handle_request {
         my $vm = $self->_validate_data($msg->{data});
         $self->_modify_machine($vm);
     } elsif ($type eq 'system-iso-chunk') {
-        my $installer = VMInstaller->new($client);
-        $installer->handle_request($msg);
+        $self->{_installer}->handle_request($msg, $client);
     }
 }
 

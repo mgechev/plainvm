@@ -494,10 +494,7 @@ plainvm.register('system.connection_handler', (function () {
      */
     function init(sndbx) {
         sandbox = sndbx;
-        var connectionUrl = schema + sandbox.getVMServer() + ':' + sandbox.getVMServerPort();
-        ws = new WebSocket(connectionUrl);
-        console.log('Connecting to ' + connectionUrl);
-        addWebSocketHandlers();
+        connect();
         sandbox.subscribe('system-send-command', function (command) {
             if (!isValidCommand(command)) {
                 console.log('Invalid command ' + command);
@@ -505,6 +502,18 @@ plainvm.register('system.connection_handler', (function () {
                 sendData(command);
             }
         });
+    }
+
+    /**
+     * Connects to the server
+     *
+     * @private
+     */
+    function connect() {
+        var connectionUrl = schema + sandbox.getVMServer() + ':' + sandbox.getVMServerPort();
+        ws = new WebSocket(connectionUrl);
+        console.log('Connecting to ' + connectionUrl);
+        addWebSocketHandlers();
     }
 
     /**
@@ -546,6 +555,7 @@ plainvm.register('system.connection_handler', (function () {
         };
         ws.onclose = function () {
             console.log('Connection closed!');
+            connect();
         };
     }
 
@@ -2165,15 +2175,15 @@ plainvm.register('system.install_vm', (function () {
             filename: config.filename,
             id: config.id,
             endpoint: config.destination,
+            force: true,
             'need-response': true
         };
-        setTimeout(function () {
-            sandbox.publish('system-send-frame', {
-                type: 'system-iso-chunk', 
-                data: data,
-                needResponse: true
-            });
-        }, 20);
+        sandbox.publish('system-send-frame', {
+            type: 'system-iso-chunk', 
+            data: data,
+            needResponse: true
+        });
+        console.log('Sending chunk #' + config.id);
     }
 
     return {
