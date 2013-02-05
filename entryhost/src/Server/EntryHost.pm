@@ -123,7 +123,7 @@ sub start($ $) {
 #Checks for updates and responses
 sub _start_endpoint_data_check($ $ $) {
     my ($self, $ep_handler, $client_handler) = @_;
-    return AnyEvent->timer(after => 0, interval => 0.01, cb => sub {
+    return AnyEvent->timer(after => 0, interval => Config::get_option('poll_interval'), cb => sub {
         if ($ep_handler->is_dirty) {
             my $res = $ep_handler->get_dirty;
             $res = $self->_prepare_client_response($res, 'system-update');

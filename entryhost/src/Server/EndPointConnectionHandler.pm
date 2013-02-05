@@ -139,7 +139,7 @@ sub _create_tcp_connection($ $ $) {
 #It also push commands sent by any client when there are any in the queue.
 sub _start_poll($ $ $) {
     my ($self, $interval, $host, $fh) = @_;
-    return AnyEvent->timer(after => 0, interval => 0.01, cb => sub {
+    return AnyEvent->timer(after => 0, interval => $interval, cb => sub {
         lock(%command_queue);
         while (scalar(@{$command_queue{$host}}) > 0) {
             my $command = pop(@{$command_queue{$host}});
