@@ -1628,7 +1628,7 @@ plainvm.register('layout.main_content_structure', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-tabs');
-            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme(), selectedItem: 2 });
+            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme() });
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
                     case 0:
@@ -1736,6 +1736,7 @@ plainvm.register('layout.install_wizard', (function () {
             min: 0,
             max: 100,
             value: 0,
+            animationDuration: 0,
             theme: sandbox.getTheme()
         });
     }
@@ -1970,18 +1971,36 @@ plainvm.register('system.install_vm', (function () {
         installData,
         transferers = [],
 
+        /**
+         * The object used for prototype of all
+         * instances which will be used for file transfer.
+         *
+         * @private
+         */
         FileTransfer = {
 
-            CHUNK_SIZE: 5004,
+            //Size of the chunks which should be send
+            CHUNK_SIZE: 10008,
 
+            //The file which should be transfered
             file: undefined,
 
+            //Size of the file
             size: undefined,
 
+            //End point where the file should be delivered
             destination: undefined,
 
+            //Current chunk
             current: 0,
 
+            /**
+             * Initialize the instance with specific options
+             *
+             * @public
+             * @param {object} data The configuration used
+             * @param {function} send The method which will be used for sending chunks
+             */
             init: function (data, send) {
                 this.file = data.file;
                 this.filename = data.filename;
@@ -1991,7 +2010,14 @@ plainvm.register('system.install_vm', (function () {
                 this.sendChunk = this.sendChunk || send;
             },
 
-            nextChunk: function () {
+            /**
+             * Sends next chunk.
+             *
+             * @public
+             * @param {function} callback A callback which should be called when the chunk is loaded
+             * @return {number} The chunk sequence number
+             */
+            nextChunk: function (callback) {
                 var currentStart = this.current * this.CHUNK_SIZE,
                     currentEnd = currentStart + this.CHUNK_SIZE;
                 if (this.size < currentStart) {
@@ -2001,25 +2027,48 @@ plainvm.register('system.install_vm', (function () {
                     self = this,
                     fileReader = new FileReader(); 
                 fileReader.onload = function (e) {
-                    var chunk = e.target.result;
-                    sendChunk({
-                        data: chunk.substr(13, chunk.length),
-                        filename: self.filename,
-                        id: self.current,
-                        destination: self.destination
-                    });
+                    self._chunkLoaded(e, callback);
                 };
                 fileReader.readAsDataURL(blob);
-                self.current += 1;
                 return this.current;
             },
 
+            /**
+             * Callback called when a chunk is loaded
+             *
+             * @private
+             * @param {object} e The event object
+             */
+            _chunkLoaded: function (e, callback) {
+                var chunk = e.target.result;
+                sendChunk({
+                    data: chunk.substr(13, chunk.length),
+                    filename: this.filename,
+                    id: this.current,
+                    destination: this.destination
+                });
+                if (typeof callback === 'function') {
+                    callback();
+                }
+                this.current += 1;
+            },
+
+            /**
+             * The default method used for sending chunks.
+             * It's implementation is dummy because it should be override.
+             *
+             * @public
+             */
             sendChunk: function (config) {
                 console.log('Sending...');
             }
         };
 
-
+    /**
+     * Initializes the install module
+     *
+     * @public
+     */
     function init(sndbx) {
         sandbox = sndbx;
         sandbox.subscribe('ui-install-wizard-first-section', function (data) {
@@ -2031,24 +2080,30 @@ plainvm.register('system.install_vm', (function () {
         });
         sandbox.subscribe('ui-install-wizard-finish-section', function (data) {
             $.extend(installData, data);
-            console.log(installData);
             installVm();
         });
         sandbox.subscribe('response-iso-chunk', function (d) {
             var t = transferers[d.filename],
                 progress;
 
+            console.log("Ready " + d.id);
+            progress = (t.transfer.CHUNK_SIZE * d.id * 100) / t.transfer.size;
+            clearTimeout(t.active[d.id]);
+            sandbox.publish('system-vm-install-progress', progress);
+
             if (d.id * t.transfer.CHUNK_SIZE >= t.transfer.size) {
                 transferFinished(d.filename);
             } else {
                 nextChunk(d.filename);
             }
-            progress = (t.transfer.CHUNK_SIZE * d.id * 100) / t.transfer.size;
-            clearTimeout(t.active[d.id]);
-            sandbox.publish('system-vm-install-progress', progress);
         });
     }
 
+    /**
+     * Callback which will be called when the wizad's finish button is pressed
+     *
+     * @private
+     */
     function installVm() {
         var data = {},
             transfer = Object.create(FileTransfer),
@@ -2061,16 +2116,33 @@ plainvm.register('system.install_vm', (function () {
         nextChunk(data.os);
     }
 
+    /**
+     * Sends new chunk and sets a timeout which will trigger new call of this
+     * method for sending the same chunk. This timeout should be cleared
+     * when response by the endpoint is received.
+     *
+     * @private
+     * @param {string} filename The name of the file
+     */
     function nextChunk(filename) {
-        var transfer = transferers[filename].transfer,
-            current = transfer.nextChunk();
-        transferers[filename].active[current] = setTimeout(function () {
-            transfer.current = current;
-            nextChunk(filename);
-        }, 1000);
-        return current;
+        var transfer = transferers[filename].transfer;
+        transfer.nextChunk(function () {
+            var current = transfer.current;
+            transferers[filename].active[current] = setTimeout(function () {
+                console.log("Timeouted " + current);
+                transfer.current = current;
+                nextChunk(filename);
+            }, 2000);
+        });
     }
 
+    /**
+     * Function called when the transfer finish. It resets the
+     * variables used by the current transfer.
+     *
+     * @private
+     * @param {string} filename File name
+     */
     function transferFinished(filename) {
         console.log('The transfer of ' + filename + ' is finished');
         var active = transferers[filename].active;
@@ -2078,8 +2150,15 @@ plainvm.register('system.install_vm', (function () {
             clearTimeout(active[a]);
         }
         delete transferers[filename];
+        sandbox.publish('system-vm-install-progress', 100);
     }
 
+    /**
+     * Sends new chunk
+     *
+     * @private
+     * @param {object} config A configuration object
+     */
     function sendChunk(config) {
         var data = {
             chunk: config.data,
@@ -2088,11 +2167,13 @@ plainvm.register('system.install_vm', (function () {
             endpoint: config.destination,
             'need-response': true
         };
-        sandbox.publish('system-send-frame', {
-            type: 'system-iso-chunk', 
-            data: data,
-            needResponse: true
-        });
+        setTimeout(function () {
+            sandbox.publish('system-send-frame', {
+                type: 'system-iso-chunk', 
+                data: data,
+                needResponse: true
+            });
+        }, 20);
     }
 
     return {
