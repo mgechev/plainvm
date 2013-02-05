@@ -128,7 +128,7 @@
                         <!-- Wizard titles -->
                         <ul style="margin-left: 3px">
                             <li class="plainvm-install-tab-title">Name and OS type</li>
-                            <li class="plainvm-install-tab-title">Hard drive and RAM</li>
+                            <li class="plainvm-install-tab-title">Hardware and host</li>
                             <li class="plainvm-install-tab-title">Operaing system</li>
                         </ul>
                         <!-- End of the wizard titles -->
@@ -168,8 +168,12 @@
                                 <table>
                                     <tr>
                                         <td colspan="2">
-                                            <h2>Hard drive and RAM</h2>
+                                            <h2>Hardware and host</h2>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td>End point</td>
+                                        <td><div id="plainvm-install-wizard-endpoint"></div></td>
                                     </tr>
                                     <tr>
                                         <td>Select RAM size (MB)</td>
@@ -199,8 +203,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
+                                        <td>Progress</td>
+                                        <td><div id="plainvm-install-wizard-progress"></div></td>
                                     </tr>
                                 </table> 
                             </form>
@@ -230,6 +234,7 @@
         <script src="js/jqxdocking.js"></script>
         <script src="js/jqxtooltip.js"></script>
         <script src="js/jqxslider.js"></script>
+        <script src="js/jqxprogressbar.js"></script>
         <script src="js/jqxnumberinput.js"></script>
         <script src="js/jqxvalidator.js"></script>
         <script src="js/jqxtabs.js"></script>

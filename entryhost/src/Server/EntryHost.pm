@@ -14,6 +14,8 @@ use Server::EndPointConnectionHandler;
 use Server::ClientHandler;
 use Server::ClientObserver;
 
+use Data::Dumper;
+
 use JSON;
 
 use threads;
@@ -22,6 +24,8 @@ use threads::shared;
 use Common::Common;
 use Common::Config;
 
+use Thread::Semaphore;
+
 #This class is the Entry host.
 #It manages the end points via EndPointConnectionHandler and the clients
 #using the ClientHandler.
@@ -29,13 +33,15 @@ package EntryHost;
 
 my $uid;
 my %responses;
+use constant MAX_UID => 100000000;
 
 sub new {
     my ($class) = @_;
     my $self = {
         _server => undef,
         _port => undef,
-        _client_response => {}
+        _client_response => {},
+        _s => Thread::Semaphore->new()
     };
     bless($self, $class);
     $uid = 0;
@@ -59,13 +65,13 @@ sub send_command($ $ $) {
     my ($self, $command, $client) = @_;
     eval {
         my $parsed_command = JSON::from_json($command);
+        my $unique_id = $self->_get_uid();
         if (defined $parsed_command->{'need-response'}) {
-            $responses{$uid} = {
+            $responses{$unique_id} = {
                 timeout => 0,
                 client => $client
             };
-            $parsed_command->{uid} = $uid;
-            $uid += 1;
+            $parsed_command->{uid} = $unique_id;
         }
         $self->{_ep_handler}->push_command($parsed_command->{data}{endpoint}, 
                 JSON::to_json($parsed_command));
@@ -73,6 +79,13 @@ sub send_command($ $ $) {
     if ($@) {
         Common::error("Error while parsing the command: $@");
     }
+}
+
+sub _get_uid($) {
+    if ($uid >= MAX_UID) {
+        $uid = 0;
+    }
+    return $uid++;
 }
 
 #Gets all VMs for startup initialization of a client.
@@ -128,10 +141,10 @@ sub _start_endpoint_data_check($ $ $) {
 #This method is called when a response handling is required
 #It loop over all responses by the end points and sends them to the client
 sub _handle_responses($ $) {
-    my ($self, $responses) = @_;
-    my @responses = @$responses;
+    my ($self, $ep_resp) = @_;
+    my @ep_resp = @$ep_resp;
     my $parsed;
-    for (@responses) {
+    for (@ep_resp) {
         eval {
             $parsed = JSON::from_json($_);
             if (defined $responses{$parsed->{uid}}) {
@@ -141,7 +154,7 @@ sub _handle_responses($ $) {
                 });
                 delete $responses{$parsed->{uid}};
             } else {
-                Common::warn('No response waiting for' . $parsed->{uid});
+                Common::warn('No response waiting for ' . $parsed->{uid});
             }
         };
         if ($@) {

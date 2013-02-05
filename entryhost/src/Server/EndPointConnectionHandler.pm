@@ -11,6 +11,8 @@ use threads::shared;
 use Common::Common;
 use Common::Config;
 
+use Data::Dumper;
+
 use Test::Deep;
 
 my %current_vms : shared;
@@ -25,6 +27,7 @@ my $dirty_screenshots : shared;
 my @responses : shared;
 
 my %command_queue : shared;
+my @to_write = ();
 
 sub new {
     my ($class, $endpoints) = @_;
@@ -96,7 +99,9 @@ sub push_command($ $ $) {
 
 sub get_responses($) {
     my $self = shift;
-    return \@responses;
+    my @result = @responses;
+    @responses = ();
+    return \@result;
 }
 
 sub _connect_to_endpoint {
@@ -135,7 +140,7 @@ sub _create_tcp_connection($ $ $) {
 sub _start_poll($ $ $) {
     my ($self, $interval, $host, $fh) = @_;
     return AnyEvent->timer(after => 0, interval => $interval, cb => sub {
-        my @to_write = ();
+#        my @to_write = ();
         lock(%command_queue);
         while (scalar(@{$command_queue{$host}}) > 0) {
             my $command = pop(@{$command_queue{$host}});
@@ -143,7 +148,7 @@ sub _start_poll($ $ $) {
             push(@to_write, $parsed_command);
         }
         push(@to_write, { type => 'update' });
-        $fh->push_write(json => @to_write);
+        $fh->push_write(json => pop @to_write);
     });
 }
 
@@ -159,6 +164,13 @@ sub _endpoint_connection_established($ $ $) {
     my ($self, $fh, $endpoint) = @_;
     if ($fh) {
         Common::log('Connected to endpoint');
+        $fh->on_drain(sub {
+            if (scalar @to_write > 0) {
+                my $jsn = pop @to_write;
+                $fh->wbuf_max(length JSON::to_json($jsn));
+                $fh->push_write(json => $jsn);
+            }
+        });
         $fh->on_read(sub {
             $fh->push_read(json => sub {
                 my ($fh, $json) = @_;
@@ -185,7 +197,7 @@ sub _handle_message($ $ $) {
         $self->_validate_vms($message->{data}, $endpoint);
     } elsif ($message->{type} eq 'screenshot-update') {
         $self->_validate_screenshots($message->{data}, $endpoint);
-    } else {
+    } elsif ($message->{type} eq 'response-iso-chunk') {
         push(@responses, JSON::to_json($message));
     }
 }

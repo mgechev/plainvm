@@ -15,6 +15,7 @@ my %_resources = (
     'css/images/subheader.png' => 'image/png',
 
     'js/jqxcore.js' => 'application/x-javascript',
+    'js/jqxprogressbar.js' => 'application/x-javascript',
     'js/jqxwindow.js' => 'application/x-javascript',
     'js/jqxdocking.js' => 'application/x-javascript',
     'js/jqxtooltip.js' => 'application/x-javascript',

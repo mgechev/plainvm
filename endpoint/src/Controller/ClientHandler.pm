@@ -5,6 +5,7 @@ use warnings;
 
 use Mediator::PublishSubscribe;
 use Controller::VMStatusVerifier;
+use Controller::VMInstaller;
 
 use JSON;
 use Data::Dumper;
@@ -91,16 +92,10 @@ sub _handle_request {
     } elsif ($type eq 'machine-edited') {
         my $vm = $self->_validate_data($msg->{data});
         $self->_modify_machine($vm);
+    } elsif ($type eq 'system-iso-chunk') {
+        my $installer = VMInstaller->new($client);
+        $installer->handle_request($msg);
     }
-#    if (defined $msg->{'need-response'}) {
-#        my $theData = {
-#            type => 'response',
-#            uid => $msg->{uid},
-#            data => "Some data"
-#        };
-#        PublishSubscribe::publish('update-client', 
-#        { client => $client, data => JSON::to_json($theData) });
-#    }
 }
 
 sub _validate_data($ $) {

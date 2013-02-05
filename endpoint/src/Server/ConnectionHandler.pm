@@ -83,18 +83,20 @@ sub _client_connection_callback($) {
     $self->{_handles}->{$currentHandle} = 1;
     Common::log("Client with socket $host:$port connected.");
     PublishSubscribe::publish('client-connected', { client => $currentHandle });
+    my $parser = new JSON::XS;
     $currentHandle->on_read(sub {
-        $currentHandle->push_read(json => sub {
-            my ($fh, $json) = @_;
-            $self->_handle_request($fh, $json);
-        });
+        my $fh = shift;
+        my @obj = $parser->incr_parse($fh->{rbuf});
+        $fh->{rbuf} = undef;
+        $self->_handle_request($fh, $_) for @obj;
     });
     $currentHandle->on_eof(sub {
         Common::warn('Unexpected end-of-file.');
         $self->_handle_error($currentHandle);
     });
     $currentHandle->on_error(sub {
-        Common::error('Error in the connection ocurred.');
+        my ($m, $f, $msg) = @_;
+        Common::error("Error in the connection ocurred: $msg");
         $self->_handle_error($currentHandle);
     });
 }

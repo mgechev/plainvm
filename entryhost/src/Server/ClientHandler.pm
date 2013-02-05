@@ -72,10 +72,9 @@ sub _client_connection_callback($) {
     my $handles = $self->{_handles};
     my $currentHandle = new AnyEvent::Handle(fh => $filehandler);
 
-    $self->{_handles}->{$currentHandle} = 1;
     Common::log("Client with socket $host:$port connected.");
     $currentHandle->on_read(sub {
-        $self->_request_callback(@_); 
+        $self->_request_callback($currentHandle); 
     });
     $currentHandle->on_eof(sub {
         Common::warn('Unexpected end-of-file.');
@@ -166,8 +165,10 @@ sub _is_http($ $) {
 sub _handle_websocket_frame($ $ $) {
     my ($self, $handle, $request) = @_;
     my $frame = Protocol::WebSocket::Frame->new;
+    my $parser = $self->{_handles}{$handle};
     $frame->append($request);
-    while (my $message = $frame->next) {
+    return unless $frame->is_text;
+    while (my $message = $frame->next_bytes) {
         $self->{_observer}->command_received($message, $handle);
     }
 }
@@ -186,6 +187,8 @@ sub _handle_websocket_handshake($ $ $) {
             $self->_release_handle($handle);
             $self->send_frame($handle, $init_vms);
             $self->send_frame($handle, $init_screens);
+            #This filehandle is the same for all websocket frames
+            $self->{_handles}{$handle} = new JSON::XS;
         }
     }
 }

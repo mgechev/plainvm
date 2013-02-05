@@ -537,11 +537,12 @@ plainvm.register('system.connection_handler', (function () {
         };
         ws.onmessage = function (e) {
             var data = JSON.parse(e.data);
-            sandbox.publish('system-response-received', data);
+            sandbox.publish('system-frame-received', data);
             console.log('Message received');
         };
         ws.onerror = function (error) {
             console.log('Error occured in the connection-handler.');
+            console.log(error);
         };
         ws.onclose = function () {
             console.log('Connection closed!');
@@ -693,13 +694,11 @@ plainvm.register('ui.vms-list', (function () {
             var type = $(this).data('type'),
                 vmId = this.parentNode.parentNode.id,
                 vm,
-                params = {},
-                eventType;
+                params = {};
             if (isButtonDisabled(vmId, this.className)) return;
             if (type === 'menu') {
                 sandbox.publish('ui-show-menu-clicked', vmId);
             } else {
-                eventType = 'change-vm-state';
                 vm = sandbox.getVmByUid(vmId)
                 params.vm = vm.id;
                 params.endpoint = vm.endpoint;
@@ -717,7 +716,10 @@ plainvm.register('ui.vms-list', (function () {
                         console.log('Unknown VM operation');
                         break;
                 }
-                sandbox.publish(eventType, params);
+                sandbox.publish('system-send-frame', {
+                    type: 'change-vm-state',
+                    data: params
+                });
             }
             e.stopImmediatePropagation();
         });
@@ -1144,7 +1146,10 @@ plainvm.register('ui.vm_settings', (function () {
         currentVm.name = $('#machine-name').val();
         currentVm.vram = $('#video-slider').jqxSlider('value');
         sandbox.publish('ui-update-vms', [currentVm]);
-        sandbox.publish('machine-edited', currentVm);
+        sandbox.publish('system-send-frame', {
+            type: 'machine-edited', 
+            data: currentVm
+        });
     }
 
     return {
@@ -1310,14 +1315,11 @@ plainvm.register('system.remote_command_bridge', (function () {
      */
     function init(sndbx) {
         sandbox = sndbx;
-        sandbox.subscribe('machine-edited', function (machine) {
-            publishCommand('machine-edited', machine);
-        });
-        sandbox.subscribe('change-vm-state', function (data) {
-            publishCommand('change-vm-state', data);
-        });
-        sandbox.subscribe('system-response-received', function (data) {
+        sandbox.subscribe('system-frame-received', function (data) {
             sandbox.publish(data.type, data.data);
+        });
+        sandbox.subscribe('system-send-frame', function (data) {
+            publishCommand(data.type, data.data, data.needResponse);
         });
     }
 
@@ -1328,12 +1330,16 @@ plainvm.register('system.remote_command_bridge', (function () {
      * @private
      * @param {string} type The type of the command
      * @param {object} data The data which will be send.
+     * @param {boolean} needResponse Defines whether this request expects a response
      */
-    function publishCommand(type, data) {
+    function publishCommand(type, data, needResponse) {
         var command = {};
         command.type = type;
         if (data) {
             command.data = data;
+        }
+        if (needResponse) {
+            command['need-response'] = true;
         }
         sandbox.publish('system-send-command', JSON.stringify(command));
     }
@@ -1724,6 +1730,14 @@ plainvm.register('layout.install_wizard', (function () {
             width: 60,
             height: 30
         });
+        $('#plainvm-install-wizard-progress').jqxProgressBar({
+            height: 25,
+            width: 280,
+            min: 0,
+            max: 100,
+            value: 0,
+            theme: sandbox.getTheme()
+        });
     }
 
     /**
@@ -1828,6 +1842,10 @@ plainvm.register('ui.install_wizard', (function () {
         });
         $('#plainvm-install-wizard-first-next').bind('click', function () {
             if (sectionOne.jqxValidator('validate')) {
+                sandbox.publish('ui-install-wizard-first-section', {
+                    name: $('#plainvm-install-wizard-vm-name').val(),
+                    os:   $('#plainvm-install-wizard-vm-os').jqxComboBox('val')
+                });
                 tabs.jqxTabs('enableAt', 1);
                 tabs.jqxTabs('selectedItem', 1);
             }
@@ -1864,6 +1882,11 @@ plainvm.register('ui.install_wizard', (function () {
         });
         $('#plainvm-install-wizard-second-next').bind('click', function () {
             if (sectionTwo.jqxValidator('validate')) {
+                sandbox.publish('ui-install-wizard-second-section', {
+                    endpoint: $('#plainvm-install-wizard-endpoint').jqxComboBox('val'),
+                    ram:      $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
+                    hdd:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value')
+                });
                 tabs.jqxTabs('enableAt', 2);
                 tabs.jqxTabs('selectedItem', 2);
             }
@@ -1883,7 +1906,8 @@ plainvm.register('ui.install_wizard', (function () {
      * @private
      */
     function thirdSectionHandlers() {
-        var sectionThree = $('#plainvm-vm-install-wizard-section-3');
+        var sectionThree = $('#plainvm-vm-install-wizard-section-3'),
+            progressBar = $('#plainvm-install-wizard-progress');
         sectionThree.jqxValidator({
             rules: [{
                 input: '#plainvm-install-wizard-file',
@@ -1895,8 +1919,13 @@ plainvm.register('ui.install_wizard', (function () {
         });
         $('#plainvm-install-wizard-finish').bind('click', function () {
             if (sectionThree.jqxValidator('validate')) {
-                sandbox.publish('system-install-vm');
+                sandbox.publish('ui-install-wizard-finish-section', {
+                    file: document.getElementById('plainvm-install-wizard-file').files[0]
+                });
             }
+        });
+        sandbox.subscribe('system-vm-install-progress', function (p) {
+            progressBar.jqxProgressBar('value', p);
         });
     }
 
@@ -1935,6 +1964,142 @@ plainvm.register('layout.index_side_panel_structure', (function () {
 
 }()));
 
+plainvm.register('system.install_vm', (function () {
+
+    var sandbox,
+        installData,
+        transferers = [],
+
+        FileTransfer = {
+
+            CHUNK_SIZE: 5004,
+
+            file: undefined,
+
+            size: undefined,
+
+            destination: undefined,
+
+            current: 0,
+
+            init: function (data, send) {
+                this.file = data.file;
+                this.filename = data.filename;
+                this.size = data.file.size;
+                this.destination = data.destination;
+                this.current = 0;
+                this.sendChunk = this.sendChunk || send;
+            },
+
+            nextChunk: function () {
+                var currentStart = this.current * this.CHUNK_SIZE,
+                    currentEnd = currentStart + this.CHUNK_SIZE;
+                if (this.size < currentStart) {
+                    return -1;
+                }
+                var blob = this.file.slice(currentStart, currentEnd),
+                    self = this,
+                    fileReader = new FileReader(); 
+                fileReader.onload = function (e) {
+                    var chunk = e.target.result;
+                    sendChunk({
+                        data: chunk.substr(13, chunk.length),
+                        filename: self.filename,
+                        id: self.current,
+                        destination: self.destination
+                    });
+                };
+                fileReader.readAsDataURL(blob);
+                self.current += 1;
+                return this.current;
+            },
+
+            sendChunk: function (config) {
+                console.log('Sending...');
+            }
+        };
+
+
+    function init(sndbx) {
+        sandbox = sndbx;
+        sandbox.subscribe('ui-install-wizard-first-section', function (data) {
+            installData = {};
+            $.extend(installData, data);
+        });
+        sandbox.subscribe('ui-install-wizard-second-section', function (data) {
+            $.extend(installData, data);
+        });
+        sandbox.subscribe('ui-install-wizard-finish-section', function (data) {
+            $.extend(installData, data);
+            console.log(installData);
+            installVm();
+        });
+        sandbox.subscribe('response-iso-chunk', function (d) {
+            var t = transferers[d.filename],
+                progress;
+
+            if (d.id * t.transfer.CHUNK_SIZE >= t.transfer.size) {
+                transferFinished(d.filename);
+            } else {
+                nextChunk(d.filename);
+            }
+            progress = (t.transfer.CHUNK_SIZE * d.id * 100) / t.transfer.size;
+            clearTimeout(t.active[d.id]);
+            sandbox.publish('system-vm-install-progress', progress);
+        });
+    }
+
+    function installVm() {
+        var data = {},
+            transfer = Object.create(FileTransfer),
+            current;
+        $.extend(data, installData);
+        data.filename = data.os;
+        data.destination = data.endpoint;
+        transfer.init(data, sendChunk);
+        transferers[data.os] = { transfer: transfer, active: [] };
+        nextChunk(data.os);
+    }
+
+    function nextChunk(filename) {
+        var transfer = transferers[filename].transfer,
+            current = transfer.nextChunk();
+        transferers[filename].active[current] = setTimeout(function () {
+            transfer.current = current;
+            nextChunk(filename);
+        }, 1000);
+        return current;
+    }
+
+    function transferFinished(filename) {
+        console.log('The transfer of ' + filename + ' is finished');
+        var active = transferers[filename].active;
+        for (var a in active) {
+            clearTimeout(active[a]);
+        }
+        delete transferers[filename];
+    }
+
+    function sendChunk(config) {
+        var data = {
+            chunk: config.data,
+            filename: config.filename,
+            id: config.id,
+            endpoint: config.destination,
+            'need-response': true
+        };
+        sandbox.publish('system-send-frame', {
+            type: 'system-iso-chunk', 
+            data: data,
+            needResponse: true
+        });
+    }
+
+    return {
+        init: init
+    };
+}()));
+
 
 plainvm.start('ui.preloader');
 
@@ -1948,6 +2113,7 @@ $(window).load(function () {
     plainvm.start('ui.vm_settings');
     plainvm.start('ui.install_wizard');
     plainvm.start('system.connection_handler');
+    plainvm.start('system.install_vm');
 });
 
 plainvm.start('layout.index_side_panel_structure');
