@@ -13,6 +13,7 @@ var plainvm = (function () {
         vms = {},
         screenshots = {},
         endpoints = [],
+        firstConnectionEstablished = false,
         VM_SERVER = window.location.hostname,
         VM_SERVER_PORT = parseInt(window.location.port, 10),
         REMOTING_PORT = 8080,
@@ -382,7 +383,10 @@ var plainvm = (function () {
         pubSub.subscribe('system-startup-init', function (hosts) {
             vms = parseHosts(hosts);
             endpoints = getEndPoints(hosts);
-            pubSub.publish('ui-startup-init', getVmsArray(vms));
+            if (!firstConnectionEstablished) {
+                pubSub.publish('ui-startup-init', getVmsArray(vms));
+            }
+            firstConnectionEstablished = true;
         });
 
         pubSub.subscribe('system-update', function (hosts) {
@@ -554,8 +558,10 @@ plainvm.register('system.connection_handler', (function () {
             console.log(error);
         };
         ws.onclose = function () {
+            setTimeout(function () {
+                connect();
+            }, 500);
             console.log('Connection closed!');
-            connect();
         };
     }
 
@@ -1038,14 +1044,6 @@ plainvm.register('ui.vm_settings', (function () {
         validator = $('#plainvm-edit-vm-form');
         validator.jqxValidator({
             rules: [
-                { 
-                    input: '#address-input', 
-                    message: 'Invalid IP address', 
-                    action: 'keyup,keydown', 
-                    rule: function (input) {
-                        return (/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/).test(input.val());
-                    }
-                },
                 {
                     input: '#machine-name', 
                     message: 'Invalid name', 
@@ -1109,7 +1107,7 @@ plainvm.register('ui.vm_settings', (function () {
             theme: theme
         });
         $('#port-input').jqxNumberInput({
-            decimal: parseInt(currentVm.vrde_port, 10),
+            decimal: parseInt(currentVm.remote_port, 10) || 0,
             max: 65535,
             min: 200,
             width: 150,
@@ -1119,6 +1117,10 @@ plainvm.register('ui.vm_settings', (function () {
             spinMode: 'advance',
             theme: theme,
             height: '25px'
+        });
+        $('#remoting-checkbox').jqxCheckBox({
+            checked: !!currentVm.remoting_enabled,
+            theme: theme
         });
         $('#save-changes').jqxButton({ theme: theme, width: 60 });
         $('#cancel-changes').jqxButton({ theme: theme, width: 60 });
@@ -1151,8 +1153,9 @@ plainvm.register('ui.vm_settings', (function () {
     function saveChanges() {
         currentVm.cpu = $('#cpu-slider').jqxSlider('value');
         currentVm.ram = $('#ram-slider').jqxSlider('value');
-        currentVm.vrde_port = parseInt($('#port-input').jqxNumberInput('decimal'), 10);
-        currentVm.vrde_address = $('#address-input').val();
+        currentVm.remote_port = parseInt($('#port-input').jqxNumberInput('decimal'), 10);
+        currentVm.remote_address = sandbox.getVmByUid(currentVm.uid).endpoint;
+        currentVm.remoting_enabled = $('#remoting-checkbox').jqxCheckBox('checked');
         currentVm.name = $('#machine-name').val();
         currentVm.vram = $('#video-slider').jqxSlider('value');
         sandbox.publish('ui-update-vms', [currentVm]);

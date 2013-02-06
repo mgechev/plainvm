@@ -101,7 +101,7 @@ sub _validate_data($ $) {
     my ($self, $vm) = @_;
     $vm->{id} = $self->_escape_quotes($vm->{id}); 
     $vm->{name} = $self->_escape_quotes($vm->{name}); 
-    $vm->{vrde_address} = $self->_escape_quotes($vm->{vrde_address});
+    $vm->{remote_address} = $self->_escape_quotes($vm->{remote_address});
     return $vm;
 }
 
@@ -117,8 +117,9 @@ sub _modify_machine($ $) {
     $current->ram($vm->{ram});
     $current->cpu($vm->{cpu});
     $current->vram($vm->{vram});
-    $current->vrde_port($vm->{vrde_port});
-    $current->vrde_address($vm->{vrde_address});
+    $current->remoting_enabled($vm->{remoting_enabled});
+    $current->remote_port($vm->{remote_port});
+    $current->remote_address($vm->{remote_address});
     $current->name($vm->{name});
     $current->save_state();
 }

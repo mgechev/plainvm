@@ -216,6 +216,10 @@ body, html {
     margin-top: 5px;
     margin-right: 15px;
 }
+.plainvm-remoting-toggle-checkbox {
+    margin: auto;
+    text-align: center;
+}
 .plainvm-edit-vm-table {
     width: 300px;
     height: 150px;
@@ -327,4 +331,10 @@ body, html {
 #plainvm-install-wizard-file {
     width: 300px;
     border-width: 0px;
+}
+#plainvm-vm-state {
+    height: 240px;
+}
+#plainvm-vm-screenstate {
+    height: 200px;
 }

@@ -197,7 +197,14 @@ sub _prepare_client_response($ $ $) {
     my $result = {};
     for my $ep (keys(%$hash)) {
         my @vms = ();
-        my $ep_vms = JSON::from_json($hash->{$ep});
+        my $ep_vms;
+        eval {
+            $ep_vms = JSON::from_json($hash->{$ep});
+        };
+        if ($@) {
+            Common::error('Error while parsing the virtual machines provided by the end point');
+            return;
+        }
         for my $vm_id (keys(%$ep_vms)) {
             push(@vms, $ep_vms->{$vm_id});
         }

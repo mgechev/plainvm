@@ -2,10 +2,12 @@
 
 use strict;
 use warnings;
+use MIME::Base64;
+use JSON;
+use Image::Imlib2;
+
 use Model::VirtualMachine;
 use Common::Common;
-use MIME::Base64;
-use Image::Imlib2;
 
 #Adapter for VirtualBox
 package VBMachine;
@@ -17,8 +19,8 @@ use constant MAX_IMAGE_WIDTH => 300;
 sub new($ $) {
     my ($class, $id) = @_;
     my $self = $class->SUPER::new();
-    $self->{_vrde_port} = undef;
-    $self->{_vrde_address} = undef;
+    $self->{_remote_port} = undef;
+    $self->{_remote_address} = undef;
     $self->{_status} = undef;
     die('Id haven\'t been provided!') if not defined($id);
     bless($self, $class);
@@ -44,10 +46,26 @@ sub shutdown($) {
     `vboxmanage controlvm $id acpipowerbutton` if defined $id;
 }
 
-sub enable_vrde($) {
-    my ($self) = @_;
+sub remoting_enabled($ $) {
+    my ($self, $enabled) = @_;
     my $id = $self->{_id};
-    `vboxmanage modifyvm $id --vrde on` if defined $id;
+    if (defined $enabled) {
+        if ($enabled) {
+            `vboxmanage modifyvm $id --vrde on` if defined $id;
+        } else {
+            `vboxmanage modifyvm $id --vrde off` if defined $id;
+        }
+        $self->SUPER::remoting_enabled($enabled);
+    } else {
+        $enabled = $self->_get_vm_property('VRDE');
+        if ($enabled =~ /enabled/i) {
+            $enabled = 1;
+        } else {
+            $enabled = 0;
+        }
+        $self->{_remoting_enabled} = $enabled;
+    }
+    return $self->{_remoting_enabled};
 }
 
 sub id($ $) {
@@ -88,17 +106,9 @@ sub cpu {
     return $self->SUPER::cpu($cpu);
 }
 
-sub disable_vrde($) {
-    my ($self) = @_;
-    my $id = $self->{_id};
-    `vboxmanage modifyvm $id --vrde off` if defined $id;
-}
-
-sub vrde_port($ $) {
+sub remote_port($ $) {
     my ($self, $port) = @_;
-    if (defined($port)) {
-        $self->{_vrde_port} = $port;
-    } else {
+    if (not defined $port) {
         my @vrdeStr = split(/ /, $self->_get_vm_property('VRDE'));
         if ($vrdeStr[4]) {
             chop $vrdeStr[4];
@@ -108,15 +118,12 @@ sub vrde_port($ $) {
         }
     }
     no warnings 'numeric';
-    $self->{_vrde_port} = int($port) if defined $port;
-    return $self->{_vrde_port};
+    return $self->SUPER::remote_port($port);
 }
 
-sub vrde_address($ $) {
+sub remote_address($ $) {
     my ($self, $address) = @_;
-    if (defined $address) {
-        $self->{_vrde_address} = $address;
-    } else {
+    if (not defined $address) {
         my @vrdeStr = split / /, $self->_get_vm_property('VRDE');
         if ($vrdeStr[2]) {
             chop $vrdeStr[2];
@@ -125,8 +132,7 @@ sub vrde_address($ $) {
             $address = 'null';
         }
     }
-    $self->{_vrde_address} = $address if defined $address;
-    return $self->{_vrde_address};
+    return $self->SUPER::remote_address($address);
 }
 
 sub is_running($) {
@@ -142,29 +148,27 @@ sub save_state($) {
     my $ram = $self->{_ram};
     my $vram = $self->{_vram};
     my $cpu = $self->{_cpu};
-    my $vrde_address = $self->{_vrde_address};
-    my $vrde_port = $self->{_vrde_port};
-    `vboxmanage modifyvm $id --name "$name" --memory $ram --vram $vram --cpuexecutioncap $cpu --vrdeport $vrde_port --vrdeaddress $vrde_address`;
+    my $remote_address = $self->{_remote_address};
+    my $remote_port = $self->{_remote_port};
+    `vboxmanage modifyvm $id --name "$name" --memory $ram --vram $vram --cpuexecutioncap $cpu --vrdeport $remote_port --vrdeaddress $remote_address`;
 }
 
 sub serialize($) {
     my ($self) = @_;
-    my $id = $self->id;
-    my $name = $self->name;
-    my $ram = $self->ram;
-    my $os = $self->os;
-    my $vram = $self->vram;
-    my $cpu = $self->cpu;
-    my $vrde_address = $self->vrde_address;
-    my $vrde_port = $self->vrde_port;
-    my $is_running = ($self->is_running) ? 'true' : 'false';
-    my $result = "{ \"id\": \"$id\", \"is_running\": $is_running, \"name\": \"$name\", \"ram\": \"$ram\" , \"cpu\": \"$cpu\", \"os\": \"$os\", \"vram\": \"$vram\", \"vrde_port\": $vrde_port, \"vrde_address\": ";
-    if ($vrde_address eq 'null') {
-        $result .= 'null }';
-    } else {
-        $result .= "\"$vrde_address\" }";
-    }
-    return $result;
+    my $data = {
+        id => $self->id,
+        is_running => ($self->is_running()) ? JSON::true : JSON::false,
+        name => $self->name,
+        ram => $self->ram,
+        cpu => $self->cpu,
+        os => $self->os,
+        vram => $self->vram,
+        remote_port => $self->remote_port,
+        remote_address => $self->remote_address,
+        remoting_enabled => ($self->remoting_enabled()) ? JSON::true : JSON::false 
+    };
+    $data = JSON::to_json($data);
+    return $data;
 }
 
 sub equals($ $) {

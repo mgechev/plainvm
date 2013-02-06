@@ -48,7 +48,7 @@
                                 <!-- Screenshot of the machine -->
                                 <div>
                                     <div>Current state</div>
-                                    <div style="height: 200px;">
+                                    <div id="plainvm-vm-screenstate">
                                         <div class="plainvm-machine-screenshot" id="plainvm-machine-screenshot"></div>
                                         <script type="text/template" id="vm-remoting-template">
                                             <div id="plainvm-machine-control"><div>Controlling {{name}}</div>
@@ -62,14 +62,16 @@
                                 <!-- Machine's properties -->
                                 <div>
                                     <div>Parameters</div>
-                                    <div style="height: 210px;" id="plainvm-vm-state">
+                                    <div id="plainvm-vm-state">
                                     <script type="text/template" id="vm-details-template">
                                         <table class="plainvm-vm-parameters"><tbody>
+                                        <tr><td>Is running</td><td>{{is_running}}</td></tr>
                                         <tr><td>Operating system</td><td>{{os}}</td></tr><tr><td>Name</td><td>{{name}}</td></tr>
                                         <tr><td>CPU exec cap</td><td>{{cpu}} %</td></tr>
                                         <tr><td>RAM</td><td>{{ram}} MB</td></tr><tr><td>Video</td><td>{{vram}} MB</td></tr>
-                                        <tr><td>Is running</td><td>{{is_running}}</td></tr><tr><td>Remoting port</td><td>{{vrde_port}}</td></tr>
-                                        <tr><td>Host</td><td>{{endpoint}}</td></tr></tbody></table>
+                                        <tr><td>Host</td><td>{{endpoint}}</td></tr>
+                                        <tr><td>Remoting enabled</td><td>{{remoting_enabled}}</td></tr>
+                                        <tr><td>Remoting port</td><td>{{remote_port}}</td></tr></tbody></table>
                                     </script>
                                     </div>
                                 </div>
@@ -87,8 +89,8 @@
                         <tr><td>CPU exec cap</td><td><div id="cpu-slider"></td></tr>
                         <tr><td>RAM</td><td><div id="ram-slider"></div></td></tr>
                         <tr><td>Video</td><td><div id="video-slider"></div></td></tr>
-                        <tr><td>VRDE port</td><td><div id="port-input"></div></td></tr>
-                        <tr><td>VRDE address</td><td><input type="text" id="address-input" value="{{vrde_address}}" /></td></tr>
+                        <tr><td>Remote port</td><td><div id="port-input"></div></td></tr>
+                        <tr><td>Enable remoting</td><td><div class="plainvm-remoting-toggle-checkbox" id="remoting-checkbox"></div></td></tr>
                         <tr><td class="plainvm-edit-vm-button-holder"><button id="save-changes">Save</button></td>
                         <td class="plainvm-edit-vm-button-holder"><button id="cancel-changes">Cancel</button></td></tr>
                         </tbody></table></div></div>
@@ -239,6 +241,5 @@
         <script src="js/jqxvalidator.js"></script>
         <script src="js/jqxtabs.js"></script>
         <script src="js/jqxchart.js"></script>
+        <script src="js/jqxcheckbox.js"></script>
         <script src="js/mustache.js"></script>
-    </body>
-</html>

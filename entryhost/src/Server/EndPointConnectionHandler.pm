@@ -27,7 +27,7 @@ my $dirty_screenshots : shared;
 my @responses : shared;
 
 my %command_queue : shared;
-my @to_write = ();
+#my @to_write = ();
 
 sub new {
     my ($class, $endpoints) = @_;
@@ -140,14 +140,14 @@ sub _create_tcp_connection($ $ $) {
 sub _start_poll($ $ $) {
     my ($self, $interval, $host, $fh) = @_;
     return AnyEvent->timer(after => 0, interval => $interval, cb => sub {
+        my @to_write = ();
         lock(%command_queue);
         while (scalar(@{$command_queue{$host}}) > 0) {
             my $command = pop(@{$command_queue{$host}});
-            my $parsed_command = JSON::from_json($command);
-            push(@to_write, $parsed_command);
+            push(@to_write, $command);
         }
-        push(@to_write, { type => 'update' });
-        $fh->push_write(json => pop @to_write);
+        push(@to_write, '{ "type":  "update" }');
+        $fh->push_write($_) for @to_write;
     });
 }
 
@@ -164,11 +164,10 @@ sub _endpoint_connection_established($ $ $) {
     if ($fh) {
         Common::log('Connected to endpoint');
         $fh->on_drain(sub {
-            if (scalar @to_write > 0) {
-                my $jsn = pop @to_write;
-                $fh->wbuf_max(length JSON::to_json($jsn));
-                $fh->push_write(json => $jsn);
-            }
+#            if (scalar @to_write > 0) {
+#                my $jsn = pop @to_write;
+#                $fh->push_write($jsn);
+#            }
         });
         $fh->on_read(sub {
             $fh->push_read(json => sub {
@@ -249,7 +248,14 @@ sub _validate($ $) {
 
     $all->{$endpoint} = '{}' if (!defined($all->{$endpoint}));
     $current->{$endpoint} = '{}' if (!defined($current->{$endpoint}));
-    my $last = JSON::from_json($all->{$endpoint});
+    my $last;
+    eval {
+        $last = JSON::from_json($all->{$endpoint});
+    };
+    if ($@) {
+        Common::error('Error while parsing response by the end point');
+        return 0;
+    }
     my $changed = {};
     my @vms = ();
     @vms = @$data if $data;
@@ -275,7 +281,14 @@ sub _validate($ $) {
 #in the changed in the current iteration.
 sub _update_current($ $ $ $) {
     my ($self, $current_stuff, $changed_stuff, $endpoint) = @_;
-    my $current = JSON::from_json($current_stuff->{$endpoint});
+    my $current;
+    eval {
+        $current = JSON::from_json($current_stuff->{$endpoint});
+    };
+    if ($@) {
+        Common::error('Error while parsing response by the end point');
+        return 0;
+    }
     for my $id (keys(%$changed_stuff)) {
         $current->{$id} = $changed_stuff->{$id};
     }
