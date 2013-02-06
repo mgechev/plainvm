@@ -21,7 +21,7 @@ sub instance($) {
         my ($class, $vmm) = @_;
         my $self = {
             _vmm => $vmm,
-            _installer => VMInstaller->new,
+            _installer => VMInstaller->new($vmm),
             _vm_status_verifier => VMStatusVerifier->instance($vmm)
         };
         $INSTANCE = bless($self, $class);
@@ -93,6 +93,8 @@ sub _handle_request {
         my $vm = $self->_validate_data($msg->{data});
         $self->_modify_machine($vm);
     } elsif ($type eq 'system-iso-chunk') {
+        $self->{_installer}->handle_request($msg, $client);
+    } elsif ($type eq 'system-create-vm') {
         $self->{_installer}->handle_request($msg, $client);
     }
 }

@@ -18,6 +18,17 @@ sub new($) {
     return $self;
 }
 
+sub create_vm($ $) {
+    my ($self, $conf) = @_;
+    my $vm = VBMachine::create_vm($conf->{name}, $conf->{os}, $conf->{hdds});
+    return 0 if not defined $vm;
+    $self->{_vms}{$vm->id} = $vm;
+    $vm->load_vm();
+    $vm->attach_storage($conf->{iso});
+    $vm->ram($conf->{ram});
+    return 1;
+}
+
 sub get_running_vms($) {
     my $self = shift;
     my @running_vms = ();

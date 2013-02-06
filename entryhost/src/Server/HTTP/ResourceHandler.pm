@@ -16,6 +16,7 @@ my %_resources = (
     'css/images/check_black.png' => 'image/png',
 
     'js/jqxcore.js' => 'application/x-javascript',
+    'js/jqxdropdownlist.js' => 'application/x-javascript',
     'js/jqxprogressbar.js' => 'application/x-javascript',
     'js/jqxcheckbox.js' => 'application/x-javascript',
     'js/jqxwindow.js' => 'application/x-javascript',

@@ -40,8 +40,7 @@ sub new {
     my $self = {
         _server => undef,
         _port => undef,
-        _client_response => {},
-        _s => Thread::Semaphore->new()
+        _client_response => {}
     };
     bless($self, $class);
     $uid = 0;

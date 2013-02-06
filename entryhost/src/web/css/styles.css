@@ -323,10 +323,25 @@ body, html {
     top: 50px;
     left: 410px;
 }
-.plainvm-install-wizard-button {
+.plainvm-install-wizard-next {
     position: absolute;
-    bottom: 50px;
-    left: 410px;
+    top: 300px;
+    left: 500px;
+}
+.plainvm-install-wizard-back {
+    position: absolute;
+    top: 300px;
+    left: 30px;
+}
+#plainvm-install-wizard-info {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #828282;
+    word-wrap:break-word;
+    width: 270px;
+}
+#plainvm-install-wizard-vm-name {
+    width: 280px;
 }
 #plainvm-install-wizard-file {
     width: 300px;

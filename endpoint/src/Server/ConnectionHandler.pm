@@ -63,7 +63,7 @@ sub _send_frame($ $ $) {
         $handle->push_write($message);
     };
     if ($@) {
-        Common::error('Unable to send message to the client.');
+        Common::error('Unable to send message to the client: ' . $@);
     }
 }
 

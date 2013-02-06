@@ -30,7 +30,7 @@ sub new($) {
     return $self;
 }
 
-sub get_filename($ $) {
+sub get_full_file_path($ $) {
     my ($self, $filename) = @_;
     my $base = $self->{_base};
     my $ext = $self->{_ext};
@@ -40,7 +40,7 @@ sub get_filename($ $) {
 
 sub append_base64_chunk($ $ $) {
     my ($self, $data) = @_;
-    my $filename = $self->get_filename($data->{filename});
+    my $filename = $self->get_full_file_path($data->{filename});
     my $id = $data->{id};
     $self->_init_file($filename) unless defined $self->{_files}{$filename};
     my $old_id = $self->{_chunks}{$filename};
@@ -63,12 +63,15 @@ sub _init_file($ $) {
 
 sub exists($ $) {
     my ($self, $filename) = @_;
-    return -e $self->get_filename($filename);
+    print $self->get_full_file_path($filename);
+    return -e $self->get_full_file_path($filename);
 }
 
 sub new_file($ $) {
     my ($self, $filename) = @_;
-    $filename = $self->get_filename($filename);
+    $filename = $self->get_full_file_path($filename);
+    Common::log('Removing the old ISO file...');
+    unlink($filename) if $self->exists($filename);
     my $file = $self->_init_file($filename);
     $file->create_empty_file;
 }

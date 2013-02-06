@@ -28,6 +28,30 @@ sub new($ $) {
     return $self;
 }
 
+#Creates new Virtual Machine and storage
+sub create_vm($ $ $) {
+    my ($name, $os, $hdds) = @_;
+    my $res = `vboxmanage createvm --name "$name" --ostype "$os" --register`;
+    my $uuid;
+    if ($res =~ /(\w+-(\w+-){3}\w+)/g) {
+        $uuid = $1;
+        Common::log("New virtual machine with UUID $uuid created");
+    } else {
+        Common::error('Unable to create new Virtual Machine.');
+        return undef;
+    }
+    my $hdd = Config::get_option('vms_location') . '/' . $name . '.vdi';
+    `vboxmanage createhd --filename "$hdd" --size $hdds`;
+    `vboxmanage storagectl "$name" --name "IDE Controller" --add ide --controller PIIX4`;
+    return VBMachine->new($uuid);
+}
+
+sub attach_storage($ $) {
+    my ($self, $storage) = @_;
+    my $name = $self->name;
+    `vboxmanage storageattach "$name" --storagectl "IDE Controller" --port 1 --device 0 --type dvddrive --medium "$storage"`;
+}
+
 sub start($) {
     my ($self) = @_;
     my $id = $self->{_id};
@@ -225,7 +249,7 @@ sub _get_vm_property($ $) {
     my ($self, $property) = @_;
     my $id = $self->{_id};
     if (not defined($self->{_status})) {
-        Common::warning("You must load the VM before getting any property (use load_vm)\n");
+        Common::warn("You must load the VM before getting any property (use load_vm)\n");
     }
     my $props = $self->{_status};
     if (defined $props) {

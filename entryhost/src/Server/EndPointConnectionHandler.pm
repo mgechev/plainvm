@@ -195,8 +195,10 @@ sub _handle_message($ $ $) {
         $self->_validate_vms($message->{data}, $endpoint);
     } elsif ($message->{type} eq 'screenshot-update') {
         $self->_validate_screenshots($message->{data}, $endpoint);
-    } elsif ($message->{type} eq 'response-iso-chunk') {
+    } elsif (defined $message->{uid}) {
         push(@responses, JSON::to_json($message));
+    } else {
+        Common::warn('Unknown message');
     }
 }
 

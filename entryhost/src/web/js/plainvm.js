@@ -19,52 +19,190 @@ var plainvm = (function () {
         REMOTING_PORT = 8080,
         currentTheme = 'fresh',
         OPERATING_SYSTEMS = [
-            'Windows 3.1',
-            'Windows 95',
-            'Windows 98',
-            'Windows ME',
-            'Windows NT 4',
-            'Windows 2000',
-            'Windows XP',
-            'Windows XP (64)',
-            'Windows 2003',
-            'Windows 2003 (64 bit)',
-            'Windows Vista',
-            'Windows Vista (64 bit)',
-            'Windows 2008',
-            'Windows 2008 (64 bit)',
-            'Windows 7',
-            'Windows 7 (64 bit)',
-            'Windows 8',
-            'Windows 8 (64 bit)',
-            'Linux 2.2',
-            'Linux 2.4',
-            'Linux 2.4 (64 bit)',
-            'Linux 2.6',
-            'Linux 2.6 (64 bit)',
-            'Arch Linux',
-            'Arch Linux (64 bit)',
-            'Debian',
-            'Debian (64 bit)',
-            'openSUSE',
-            'openSUSE (64 bit)',
-            'Fedora',
-            'Fedora (64 bit)',
-            'Gentoo',
-            'Gentoo (64 bit)',
-            'Mandriva',
-            'Mandriva (64 bit)',
-            'Red Hat',
-            'Red Hat (64 bit)',
-            'Turbolinux',
-            'Turbolinux (64 bit)',
-            'Ubuntu',
-            'Ubuntu (64 bit)',
-            'Xandros',
-            'Xandros (64 bit)',
-            'Oracle',
-            'Oracle (64 bit)',
-            'Other Linux'
+            {
+                "key": "Windows 3.1",
+                "value": "Windows31"
+            },
+            {
+                "key": "Windows 95",
+                "value": "Windows95"
+            },
+            {
+                "key": "Windows 98",
+                "value": "Windows98"
+            },
+            {
+                "key": "Windows ME",
+                "value": "WindowsME"
+            },
+            {
+                "key": "Windows NT 4",
+                "value": "WindowsNT4"
+            },
+            {
+                "key": "Windows 2000",
+                "value": "Windows2000"
+            },
+            {
+                "key": "Windows XP",
+                "value": "WindowsXP"
+            },
+            {
+                "key": "Windows XP (64)",
+                "value": "WindowsXP_64"
+            },
+            {
+                "key": "Windows 2003",
+                "value": "Windows2003"
+            },
+            {
+                "key": "Windows 2003 (64 bit)",
+                "value": "Windows2003_64"
+            },
+            {
+                "key": "Windows Vista",
+                "value": "WindowsVista"
+            },
+            {
+                "key": "Windows Vista (64 bit)",
+                "value": "WindowsVista_64"
+            },
+            {
+                "key": "Windows 2008",
+                "value": "Windows2008"
+            },
+            {
+                "key": "Windows 2008 (64 bit)",
+                "value": "Windows2008_64"
+            },
+            {
+                "key": "Windows 7",
+                "value": "Windows7"
+            },
+            {
+                "key": "Windows 7 (64 bit)",
+                "value": "Windows7_64"
+            },
+            {
+                "key": "Windows 8",
+                "value": "Windows8"
+            },
+            {
+                "key": "Windows 8 (64 bit)",
+                "value": "Windows8_64"
+            },
+            {
+                "key": "Linux 2.2",
+                "value": "Linux22"
+            },
+            {
+                "key": "Linux 2.4",
+                "value": "Linux24"
+            },
+            {
+                "key": "Linux 2.4 (64 bit)",
+                "value": "Linux24_64"
+            },
+            {
+                "key": "Linux 2.6",
+                "value": "Linux26"
+            },
+            {
+                "key": "Linux 2.6 (64 bit)",
+                "value": "Linux26_64"
+            },
+            {
+                "key": "Arch Linux",
+                "value": "ArchLinux"
+            },
+            {
+                "key": "Arch Linux (64 bit)",
+                "value": "ArchLinux_64"
+            },
+            {
+                "key": "Debian",
+                "value": "Debian"
+            },
+            {
+                "key": "Debian (64 bit)",
+                "value": "Debian_64"
+            },
+            {
+                "key": "openSUSE",
+                "value": "OpenSUSE"
+            },
+            {
+                "key": "openSUSE (64 bit)",
+                "value": "OpenSUSE_64"
+            },
+            {
+                "key": "Fedora",
+                "value": "Fedora"
+            },
+            {
+                "key": "Fedora (64 bit)",
+                "value": "Fedora_64"
+            },
+            {
+                "key": "Gentoo",
+                "value": "Gentoo"
+            },
+            {
+                "key": "Gentoo (64 bit)",
+                "value": "Gentoo_64"
+            },
+            {
+                "key": "Mandriva",
+                "value": "Mandriva"
+            },
+            {
+                "key": "Mandriva (64 bit)",
+                "value": "Mandriva_64"
+            },
+            {
+                "key": "Red Hat",
+                "value": "RedHat"
+            },
+            {
+                "key": "Red Hat (64 bit)",
+                "value": "RedHat_64"
+            },
+            {
+                "key": "Turbolinux",
+                "value": "Turbolinux"
+            },
+            {
+                "key": "Turbolinux (64 bit)",
+                "value": "Turbolinux_64"
+            },
+            {
+                "key": "Ubuntu",
+                "value": "Ubuntu"
+            },
+            {
+                "key": "Ubuntu (64 bit)",
+                "value": "Ubuntu_64"
+            },
+            {
+                "key": "Xandros",
+                "value": "Xandros"
+            },
+            {
+                "key": "Xandros (64 bit)",
+                "value": "Xandros_64"
+            },
+            {
+                "key": "Oracle",
+                "value": "Oracle"
+            },
+            {
+                "key": "Oracle (64 bit)",
+                "value": "Oracle_64"
+            },
+            {
+                "key": "Other Linux",
+                "value": "OtherLinux"
+            }
         ];
 
     /* * * * * * * * * *  Initializing the modules' sandbox * * * * * * * * * */
@@ -1334,6 +1472,9 @@ plainvm.register('system.remote_command_bridge', (function () {
         sandbox.subscribe('system-send-frame', function (data) {
             publishCommand(data.type, data.data, data.needResponse);
         });
+        sandbox.subscribe('system-create-vm', function (data) {
+            publishCommand(data.type, data.data, data.needResponse);
+        });
     }
 
     /**
@@ -1641,7 +1782,7 @@ plainvm.register('layout.main_content_structure', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-tabs');
-            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme() });
+            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme(), selectedItem: 2 });
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
                     case 0:
@@ -1680,31 +1821,35 @@ plainvm.register('layout.install_wizard', (function () {
      * @private
      */
     function renderFirstSection() {
-        $('#plainvm-install-wizard-vm-os').jqxComboBox({
+        $('#plainvm-install-wizard-vm-os').jqxDropDownList({
             theme: sandbox.getTheme(),
             source: sandbox.getOperatingSystems(),
-            width: 200,
-            height: 25
+            valueMember: 'value',
+            displayMember: 'key',
+            width: 280,
+            height: 25,
+            selectedIndex: 0
         });
         $('#plainvm-install-wizard-first-next').jqxButton({
             theme: sandbox.getTheme(),
             width: 60,
             height: 30
         });
+        $('#plainvm-install-wizard-endpoint').jqxDropDownList({
+            theme: sandbox.getTheme(),
+            source: [],
+            width: 280,
+            height: 25,
+            selectedIndex: 0
+        });
     }
 
     /**
-     * Returns the second section of the wizard
+     * Renders the second section of the wizard
      *
      * @private
      */
     function renderSecondSection() {
-        $('#plainvm-install-wizard-endpoint').jqxComboBox({
-            theme: sandbox.getTheme(),
-            source: [],
-            width: 280,
-            height: 25
-        });
         $('#plainvm-install-wizard-ram-slider').jqxSlider({
             min: 50,
             max: 2048,
@@ -1730,6 +1875,11 @@ plainvm.register('layout.install_wizard', (function () {
             width: 60,
             height: 30
         });
+        $('#plainvm-install-wizard-second-back').jqxButton({
+            theme: sandbox.getTheme(),
+            width: 60,
+            height: 30
+        });
     }
 
     /**
@@ -1739,6 +1889,11 @@ plainvm.register('layout.install_wizard', (function () {
      */
     function renderThirdSection() {
         $('#plainvm-install-wizard-finish').jqxButton({
+            theme: sandbox.getTheme(),
+            width: 60,
+            height: 30
+        });
+        $('#plainvm-install-wizard-third-back').jqxButton({
             theme: sandbox.getTheme(),
             width: 60,
             height: 30
@@ -1769,8 +1924,10 @@ plainvm.register('layout.install_wizard', (function () {
                 theme: sandbox.getTheme(), 
                 width: '600',
                 height: '400',
-                enabledHover: false
+                enabledHover: false,
+                disabled: true
             });
+            tabs.find('.jqx-tabs-title-disable').removeClass('jqx-fill-state-disabled');
             //Because the event bubbles and is caught by the parent tab
             tabs.bind('selected', function (e) {
                 if (e.args.item === 1) {
@@ -1786,7 +1943,7 @@ plainvm.register('layout.install_wizard', (function () {
             renderThirdSection();
         });
         sandbox.subscribe('ui-startup-init', function () {
-            $('#plainvm-install-wizard-endpoint').jqxComboBox('source', sandbox.getEndPoints());
+            $('#plainvm-install-wizard-endpoint').jqxDropDownList('source', sandbox.getEndPoints());
         });
     }
 
@@ -1812,12 +1969,21 @@ plainvm.register('ui.install_wizard', (function () {
     function init(sndbx) {
         sandbox = sndbx;
         tabs = $('#plainvm-vm-installation');
+        selectItem(0);
         sandbox.subscribe('system-loading-completed', function () {
-            tabs.jqxTabs('disableAt', 1);
-            tabs.jqxTabs('disableAt', 2);
             firstSectionHandlers();
             secondSectionHandlers();
             thirdSectionHandlers();
+        });
+        sandbox.subscribe('system-install-finished', function () {
+            tabs.find('input').val('');
+            $('#plainvm-install-wizard-ram-slider').jqxSlider('value', 256);
+            $('#plainvm-install-wizard-hdd-slider').jqxSlider('value', 10000);
+            $('#plainvm-install-wizard-third-back').jqxButton('disabled', false);
+            $('#plainvm-install-wizard-finish').jqxButton('disabled', false);
+        });
+        sandbox.subscribe('system-install-info', function (t) {
+            $('#plainvm-install-wizard-info').text(t);
         });
         tabs.bind('selected', function () {
             $('#plainvm-vm-install-wizard-section-1').jqxValidator('hide');
@@ -1843,33 +2009,17 @@ plainvm.register('ui.install_wizard', (function () {
                         return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._-]{1,}$/).test(input.val());
                     }
                 },
-                {
-                    input: $('#plainvm-install-wizard-vm-os .jqx-combobox-input'),
-                    message: 'Invalid OS',
-                    action: 'blur',
-                    position: 'right:20,0',
-                    rule: function (input) {
-                        return sandbox.getOperatingSystems().indexOf(input.val()) >= 0;
-                    }
-                }
             ]
         });
         $('#plainvm-install-wizard-first-next').bind('click', function () {
             if (sectionOne.jqxValidator('validate')) {
+                var os = $('#plainvm-install-wizard-vm-os').jqxDropDownList('selectedIndex');
+                os = sandbox.getOperatingSystems()[os].value;
                 sandbox.publish('ui-install-wizard-first-section', {
                     name: $('#plainvm-install-wizard-vm-name').val(),
-                    os:   $('#plainvm-install-wizard-vm-os').jqxComboBox('val')
+                    os: os
                 });
-                tabs.jqxTabs('enableAt', 1);
-                tabs.jqxTabs('selectedItem', 1);
-            }
-        });
-        tabs.bind('selecting', function (e) {
-            if (!sectionOne.jqxValidator('validate')) {
-                e.cancel = true;
-                tabs.jqxTabs('disableAt', 1);
-                tabs.jqxTabs('disableAt', 2);
-                tabs.jqxTabs('selectedItem', 0);
+                selectItem(1);
             }
         });
     }
@@ -1882,35 +2032,26 @@ plainvm.register('ui.install_wizard', (function () {
     function secondSectionHandlers() {
         var sectionTwo = $('#plainvm-vm-install-wizard-section-2').jqxValidator();
         sectionTwo.jqxValidator({
-            rules: [
-                {
-                    input: $('#plainvm-install-wizard-endpoint .jqx-combobox-input'),
-                    message: 'Invalid end point',
-                    action: 'blur',
-                    position: 'right:20,0',
-                    rule: function (input) {
-                        return sandbox.getEndPoints().indexOf(input.val()) >= 0;
-                    }
+            rules: [{
+                input: '#plainvm-install-wizard-file',
+                message: 'The ISO file is required',
+                rule: function (input) {
+                    return !!input.val().length;
                 }
-            ]
+            }]
         });
         $('#plainvm-install-wizard-second-next').bind('click', function () {
             if (sectionTwo.jqxValidator('validate')) {
                 sandbox.publish('ui-install-wizard-second-section', {
-                    endpoint: $('#plainvm-install-wizard-endpoint').jqxComboBox('val'),
+                    endpoint: $('#plainvm-install-wizard-endpoint').jqxDropDownList('val'),
                     ram:      $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
-                    hdd:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value')
+                    hdds:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value')
                 });
-                tabs.jqxTabs('enableAt', 2);
-                tabs.jqxTabs('selectedItem', 2);
+                selectItem(2);
             }
         });
-        tabs.bind('selecting', function (e) {
-            if (!sectionTwo.jqxValidator('validate') && e.args.item === 2) {
-                e.cancel = true;
-                tabs.jqxTabs('disableAt', 2);
-                tabs.jqxTabs('selectedItem', 1);
-            }
+        $('#plainvm-install-wizard-second-back').bind('click', function () {
+            selectItem(0);
         });
     }
 
@@ -1920,27 +2061,33 @@ plainvm.register('ui.install_wizard', (function () {
      * @private
      */
     function thirdSectionHandlers() {
-        var sectionThree = $('#plainvm-vm-install-wizard-section-3'),
-            progressBar = $('#plainvm-install-wizard-progress');
-        sectionThree.jqxValidator({
-            rules: [{
-                input: '#plainvm-install-wizard-file',
-                message: 'The ISO file is required',
-                rule: function (input) {
-                    return !!input.val().length;
-                }
-            }]
-        });
+        var progressBar = $('#plainvm-install-wizard-progress');
         $('#plainvm-install-wizard-finish').bind('click', function () {
-            if (sectionThree.jqxValidator('validate')) {
-                sandbox.publish('ui-install-wizard-finish-section', {
-                    file: document.getElementById('plainvm-install-wizard-file').files[0]
-                });
-            }
+            $('#plainvm-install-wizard-finish').jqxButton('disabled', true);
+            $('#plainvm-install-wizard-third-back').jqxButton('disabled', true);
+            sandbox.publish('ui-install-wizard-finish-section', {
+                file: document.getElementById('plainvm-install-wizard-file').files[0]
+            });
+        });
+        $('#plainvm-install-wizard-third-back').bind('click', function () {
+            selectItem(1);
         });
         sandbox.subscribe('system-vm-install-progress', function (p) {
             progressBar.jqxProgressBar('value', p);
         });
+    }
+
+    /**
+     * Selects specific tab item
+     *
+     * @private
+     * @param {number} idx Index which indicates the tab item which should be selected
+     */
+    function selectItem(idx) {
+        tabs.jqxTabs('disabled', true);
+        tabs.jqxTabs('enableAt', idx);
+        tabs.find('.jqx-tabs-title-disable').removeClass('jqx-fill-state-disabled');
+        tabs.jqxTabs('selectedItem', idx);
     }
 
     return {
@@ -2099,17 +2246,41 @@ plainvm.register('system.install_vm', (function () {
             var t = transferers[d.filename],
                 progress;
 
-            console.log("Ready " + d.id);
-            progress = (t.transfer.CHUNK_SIZE * d.id * 100) / t.transfer.size;
+            setInfo('Chunk #' + d.id + ' is successfully saved');
             clearTimeout(t.active[d.id]);
-            sandbox.publish('system-vm-install-progress', progress);
 
-            if (d.id * t.transfer.CHUNK_SIZE >= t.transfer.size) {
+            progress = (t.transfer.CHUNK_SIZE * d.id * 100) / t.transfer.size;
+            if (progress <= 95) {
+                sandbox.publish('system-vm-install-progress', progress);
+            }
+            if (t.transfer.CHUNK_SIZE * t.transfer.current >= t.transfer.size) {
                 transferFinished(d.filename);
             } else {
                 nextChunk(d.filename);
             }
         });
+        sandbox.subscribe('create-vm-success', function (d) {
+            var name = d.name;
+            setInfo(name + ' was successfully created.');
+            sandbox.publish('system-vm-install-progress', 100);
+            sandbox.publish('system-install-finished');
+        });
+        sandbox.subscribe('create-vm-fail', function (d) {
+            var name = d.name,
+                cause = d.cause;
+            setInfo('Error while creating ' + name + '. ' + cause);
+            sandbox.publish('system-install-finished');
+        });
+    }
+
+    /**
+     * Publish event which updates the install info text
+     *
+     * @private
+     * @param {string} t Text which should be displaied
+     */
+    function setInfo(t) {
+        sandbox.publish('system-install-info', t);
     }
 
     /**
@@ -2142,7 +2313,7 @@ plainvm.register('system.install_vm', (function () {
         transfer.nextChunk(function () {
             var current = transfer.current;
             transferers[filename].active[current] = setTimeout(function () {
-                console.log("Timeouted " + current);
+                setInfo('Chunk #' + current + ' timeouted. Retrying...');
                 transfer.current = current;
                 nextChunk(filename);
             }, 2000);
@@ -2157,13 +2328,32 @@ plainvm.register('system.install_vm', (function () {
      * @param {string} filename File name
      */
     function transferFinished(filename) {
-        console.log('The transfer of ' + filename + ' is finished');
+        setInfo('Transfer finished. Creation of the VM started Virtual Machine');
         var active = transferers[filename].active;
         for (var a in active) {
             clearTimeout(active[a]);
         }
         delete transferers[filename];
-        sandbox.publish('system-vm-install-progress', 100);
+        finalizeVMCreation();
+    }
+
+    /**
+     * Sends the final data required for the virtual machine creation.
+     *
+     * @private
+     */
+    function finalizeVMCreation() {
+        sandbox.publish('system-create-vm', {
+            type: 'system-create-vm',
+            data: {
+                hdds: installData.hdds,
+                ram: installData.ram,
+                name: installData.name,
+                os: installData.os,
+                endpoint: installData.endpoint
+            },
+            needResponse: true
+        });
     }
 
     /**
@@ -2186,7 +2376,7 @@ plainvm.register('system.install_vm', (function () {
             data: data,
             needResponse: true
         });
-        console.log('Sending chunk #' + config.id);
+        setInfo('Sending chunk #' + config.id + '.');
     }
 
     return {
