@@ -41,7 +41,6 @@ sub create_vm($ $ $) {
         return undef;
     }
     my $hdd = Config::get_option('vms_location') . '/' . $name . '.vdi';
-    print $hdd . "\n\n";
     `vboxmanage createhd --filename "$hdd" --size $hdds`;
     `vboxmanage storagectl "$name" --name "IDE Controller" --add ide --controller PIIX4`;
     return VBMachine->new($uuid);

@@ -18,7 +18,6 @@ my $update_interval;
 my $INSTANCE = undef;
 
 my $vms:shared = '';
-my @screenshots = ();
 
 sub instance($) {
     unless (defined($INSTANCE)) {
@@ -33,29 +32,30 @@ sub instance($) {
         $screenshot_update_interval = Config::get_option('screenshot_update_interval');
         $update_interval = Config::get_option('update_interval');
         $INSTANCE = bless($self, $class);
-        $self->_start_background_workers();
+#        $self->_start_background_workers();
     }
     return $INSTANCE;
 }
 
-sub _start_background_workers {
-    my $self = shift;
-    threads->create(sub {
-        while (1) {
-            $self->check_for_updates;
-            sleep(1);
-        }
-    });
-}
-
-sub get_updates($) {
-    my $res = $vms;
-    $vms = '';
-    return $res;
-}
-
-sub get_screenshot_updates($) {
-}
+#Could be used for further performance optimizations
+#sub _start_background_workers {
+#    my $self = shift;
+#    threads->create(sub {
+#        while (1) {
+#            $self->check_for_updates;
+#            sleep(1);
+#        }
+#    });
+#}
+#
+#sub get_updates($) {
+#    my $res = $vms;
+#    $vms = '';
+#    return $res;
+#}
+#
+#sub get_screenshot_updates($) {
+#}
 
 #Checks for updates and update the local cache.
 #This method handles the virtual machine's information (properties).
