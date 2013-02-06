@@ -1782,7 +1782,7 @@ plainvm.register('layout.main_content_structure', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-tabs');
-            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme(), selectedItem: 2 });
+            tabs.jqxTabs({ keyboardNavigation: false, theme: sandbox.getTheme() });
             tabs.bind('selected', function (e) {
                 switch(e.args.item) {
                     case 0:
@@ -2013,11 +2013,10 @@ plainvm.register('ui.install_wizard', (function () {
         });
         $('#plainvm-install-wizard-first-next').bind('click', function () {
             if (sectionOne.jqxValidator('validate')) {
-                var os = $('#plainvm-install-wizard-vm-os').jqxDropDownList('selectedIndex');
-                os = sandbox.getOperatingSystems()[os].value;
                 sandbox.publish('ui-install-wizard-first-section', {
                     name: $('#plainvm-install-wizard-vm-name').val(),
-                    os: os
+                    os: $('#plainvm-install-wizard-vm-os').jqxDropDownList('getSelectedItem').value,
+                    endpoint: $('#plainvm-install-wizard-endpoint').jqxDropDownList('getSelectedItem').value,
                 });
                 selectItem(1);
             }
@@ -2043,9 +2042,9 @@ plainvm.register('ui.install_wizard', (function () {
         $('#plainvm-install-wizard-second-next').bind('click', function () {
             if (sectionTwo.jqxValidator('validate')) {
                 sandbox.publish('ui-install-wizard-second-section', {
-                    endpoint: $('#plainvm-install-wizard-endpoint').jqxDropDownList('val'),
-                    ram:      $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
-                    hdds:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value')
+                    ram :      $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
+                    hdds:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value'),
+                    file: document.getElementById('plainvm-install-wizard-file').files[0]
                 });
                 selectItem(2);
             }
@@ -2065,9 +2064,7 @@ plainvm.register('ui.install_wizard', (function () {
         $('#plainvm-install-wizard-finish').bind('click', function () {
             $('#plainvm-install-wizard-finish').jqxButton('disabled', true);
             $('#plainvm-install-wizard-third-back').jqxButton('disabled', true);
-            sandbox.publish('ui-install-wizard-finish-section', {
-                file: document.getElementById('plainvm-install-wizard-file').files[0]
-            });
+            sandbox.publish('ui-install-wizard-finish-section');
         });
         $('#plainvm-install-wizard-third-back').bind('click', function () {
             selectItem(1);
@@ -2237,6 +2234,7 @@ plainvm.register('system.install_vm', (function () {
         });
         sandbox.subscribe('ui-install-wizard-second-section', function (data) {
             $.extend(installData, data);
+            console.log(installData);
         });
         sandbox.subscribe('ui-install-wizard-finish-section', function (data) {
             $.extend(installData, data);
