@@ -3,6 +3,8 @@
 use warnings;
 use strict;
 
+use Common::Common;
+
 package Config;
 
 my @config_files = ('config/endpoint-config.conf', '/etc/plainvm/endpoint-config.conf');
@@ -15,7 +17,8 @@ sub load_config {
     while (<FH>) {
         my @key_value = split /=/, $_;
         $key_value[0] =~ s/\s//g;
-        $key_value[1] =~ s/\s//g;
+        $key_value[1] = Common::trim($key_value[1]);
+        chomp $key_value[1];
         $config{lc $key_value[0]} = $key_value[1];
     }
     close(FH);

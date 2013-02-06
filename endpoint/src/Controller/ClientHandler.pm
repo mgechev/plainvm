@@ -32,6 +32,7 @@ sub instance($) {
 
 sub check_for_updates($ $) {
     my ($self, $client) = @_;
+    #my $theData = $self->{_vm_status_verifier}->get_updates();
     my $theData = $self->{_vm_status_verifier}->check_for_updates();
     if (defined($theData)) {
         $theData = "{ \"type\": \"update\", \"data\": $theData}";

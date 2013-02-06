@@ -41,6 +41,7 @@ sub create_vm($ $ $) {
         return undef;
     }
     my $hdd = Config::get_option('vms_location') . '/' . $name . '.vdi';
+    print $hdd . "\n\n";
     `vboxmanage createhd --filename "$hdd" --size $hdds`;
     `vboxmanage storagectl "$name" --name "IDE Controller" --add ide --controller PIIX4`;
     return VBMachine->new($uuid);
@@ -170,10 +171,10 @@ sub save_state($) {
     my $id = $self->{_id};
     my $name = $self->{_name};
     my $ram = $self->{_ram};
-    my $vram = $self->{_vram};
-    my $cpu = $self->{_cpu};
-    my $remote_address = $self->{_remote_address};
-    my $remote_port = $self->{_remote_port};
+    my $vram = $self->{_vram} || 8;
+    my $cpu = $self->{_cpu} || 100;
+    my $remote_address = $self->{_remote_address} || '0.0.0.0';
+    my $remote_port = $self->{_remote_port} || 111;
     `vboxmanage modifyvm $id --name "$name" --memory $ram --vram $vram --cpuexecutioncap $cpu --vrdeport $remote_port --vrdeaddress $remote_address`;
 }
 

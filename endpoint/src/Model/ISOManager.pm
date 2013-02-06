@@ -63,7 +63,6 @@ sub _init_file($ $) {
 
 sub exists($ $) {
     my ($self, $filename) = @_;
-    print $self->get_full_file_path($filename);
     return -e $self->get_full_file_path($filename);
 }
 

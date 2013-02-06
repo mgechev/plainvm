@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use threads;
+use threads::shared;
 
 use Model::VMManager;
 use Common::Common;
@@ -15,6 +16,9 @@ my $screenshot_update_interval;
 my $update_interval;
 
 my $INSTANCE = undef;
+
+my $vms:shared = '';
+my @screenshots = ();
 
 sub instance($) {
     unless (defined($INSTANCE)) {
@@ -29,9 +33,28 @@ sub instance($) {
         $screenshot_update_interval = Config::get_option('screenshot_update_interval');
         $update_interval = Config::get_option('update_interval');
         $INSTANCE = bless($self, $class);
-
+        $self->_start_background_workers();
     }
     return $INSTANCE;
+}
+
+sub _start_background_workers {
+    my $self = shift;
+    threads->create(sub {
+        while (1) {
+            $self->check_for_updates;
+            sleep(1);
+        }
+    });
+}
+
+sub get_updates($) {
+    my $res = $vms;
+    $vms = '';
+    return $res;
+}
+
+sub get_screenshot_updates($) {
 }
 
 #Checks for updates and update the local cache.
@@ -59,7 +82,8 @@ sub check_for_updates($) {
         $self->{_last_vms_state} = \%last_state;
         if (scalar(@changed) > 0) {
             Common::log(@changed . " vms changed since last check.");
-            return $self->_prepare_data(\@changed);
+            $vms = $self->_prepare_data(\@changed);
+            return $vms;
         }
     }
     return undef;

@@ -163,12 +163,6 @@ sub _endpoint_connection_established($ $ $) {
     my ($self, $fh, $endpoint) = @_;
     if ($fh) {
         Common::log('Connected to endpoint');
-        $fh->on_drain(sub {
-#            if (scalar @to_write > 0) {
-#                my $jsn = pop @to_write;
-#                $fh->push_write($jsn);
-#            }
-        });
         $fh->on_read(sub {
             $fh->push_read(json => sub {
                 my ($fh, $json) = @_;
@@ -176,7 +170,8 @@ sub _endpoint_connection_established($ $ $) {
             });
         });
         $fh->on_error(sub {
-            Common::error('Error in the connection with endpoint ' . $endpoint); 
+            my ($m, $f, $msg) = @_;
+            Common::error('Error in the connection with endpoint ' . $endpoint . ': ' . $msg); 
         });
         $fh->on_eof(sub {
             Common::warn('Unexpected end of file with endpoint ' . $endpoint); 

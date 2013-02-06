@@ -26,6 +26,7 @@ sub create_vm($ $) {
     $vm->load_vm();
     $vm->attach_storage($conf->{iso});
     $vm->ram($conf->{ram});
+    $vm->save_state;
     return 1;
 }
 

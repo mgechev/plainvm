@@ -376,10 +376,9 @@ var plainvm = (function () {
      * @return {string} operating system type.
      */
     function getVMOs(name) {
-        name = name.toLowerCase();
-        if (/(linux|ubuntu|fedora|debian|mandriva|gentoo)/.test(name)) {
+        if ((/(linux|ubuntu|fedora|debian|mandriva|gentoo|red\shat)/i).test(name)) {
             return 'linux';
-        } else if (/(windows)/.test(name)) {
+        } else if ((/(windows)/i).test(name)) {
             return 'win';
         } else {
             return undefined;
@@ -2314,7 +2313,7 @@ plainvm.register('system.install_vm', (function () {
                 setInfo('Chunk #' + current + ' timeouted. Retrying...');
                 transfer.current = current;
                 nextChunk(filename);
-            }, 2000);
+            }, 4000);
         });
     }
 

@@ -18,7 +18,7 @@ MAIN: {
     print " \033[93m EndPoint \033[0m1.0\n\n";
 
     Config::load_config();
-
+    
     my $vm_manager = new VMManager();
     $vm_manager->load_vms();
 
