@@ -14,7 +14,7 @@ MAIN: {
     print "| |_) | | (_| | | | | \\ V /| | | | | |\n";
     print "| .__/|_|\\__,_|_|_| |_|\\_/ |_| |_| |_|\n";
     print "|_|                                   \033[0m";
-    print " \033[93m EntryHost \033[0m1.0\n\n";
+    print " \033[93m EntryHost \033[0m1.1\n\n";
 
     Config::load_config();
     Config::load_endpoints();

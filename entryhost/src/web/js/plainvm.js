@@ -20,188 +20,188 @@ var plainvm = (function () {
         currentTheme = 'fresh',
         OPERATING_SYSTEMS = [
             {
-                "key": "Windows 3.1",
-                "value": "Windows31"
+                'key': 'Windows 3.1',
+                'value': 'Windows31'
             },
             {
-                "key": "Windows 95",
-                "value": "Windows95"
+                'key': 'Windows 95',
+                'value': 'Windows95'
             },
             {
-                "key": "Windows 98",
-                "value": "Windows98"
+                'key': 'Windows 98',
+                'value': 'Windows98'
             },
             {
-                "key": "Windows ME",
-                "value": "WindowsME"
+                'key': 'Windows ME',
+                'value': 'WindowsME'
             },
             {
-                "key": "Windows NT 4",
-                "value": "WindowsNT4"
+                'key': 'Windows NT 4',
+                'value': 'WindowsNT4'
             },
             {
-                "key": "Windows 2000",
-                "value": "Windows2000"
+                'key': 'Windows 2000',
+                'value': 'Windows2000'
             },
             {
-                "key": "Windows XP",
-                "value": "WindowsXP"
+                'key': 'Windows XP',
+                'value': 'WindowsXP'
             },
             {
-                "key": "Windows XP (64)",
-                "value": "WindowsXP_64"
+                'key': 'Windows XP (64)',
+                'value': 'WindowsXP_64'
             },
             {
-                "key": "Windows 2003",
-                "value": "Windows2003"
+                'key': 'Windows 2003',
+                'value': 'Windows2003'
             },
             {
-                "key": "Windows 2003 (64 bit)",
-                "value": "Windows2003_64"
+                'key': 'Windows 2003 (64 bit)',
+                'value': 'Windows2003_64'
             },
             {
-                "key": "Windows Vista",
-                "value": "WindowsVista"
+                'key': 'Windows Vista',
+                'value': 'WindowsVista'
             },
             {
-                "key": "Windows Vista (64 bit)",
-                "value": "WindowsVista_64"
+                'key': 'Windows Vista (64 bit)',
+                'value': 'WindowsVista_64'
             },
             {
-                "key": "Windows 2008",
-                "value": "Windows2008"
+                'key': 'Windows 2008',
+                'value': 'Windows2008'
             },
             {
-                "key": "Windows 2008 (64 bit)",
-                "value": "Windows2008_64"
+                'key': 'Windows 2008 (64 bit)',
+                'value': 'Windows2008_64'
             },
             {
-                "key": "Windows 7",
-                "value": "Windows7"
+                'key': 'Windows 7',
+                'value': 'Windows7'
             },
             {
-                "key": "Windows 7 (64 bit)",
-                "value": "Windows7_64"
+                'key': 'Windows 7 (64 bit)',
+                'value': 'Windows7_64'
             },
             {
-                "key": "Windows 8",
-                "value": "Windows8"
+                'key': 'Windows 8',
+                'value': 'Windows8'
             },
             {
-                "key": "Windows 8 (64 bit)",
-                "value": "Windows8_64"
+                'key': 'Windows 8 (64 bit)',
+                'value': 'Windows8_64'
             },
             {
-                "key": "Linux 2.2",
-                "value": "Linux22"
+                'key': 'Linux 2.2',
+                'value': 'Linux22'
             },
             {
-                "key": "Linux 2.4",
-                "value": "Linux24"
+                'key': 'Linux 2.4',
+                'value': 'Linux24'
             },
             {
-                "key": "Linux 2.4 (64 bit)",
-                "value": "Linux24_64"
+                'key': 'Linux 2.4 (64 bit)',
+                'value': 'Linux24_64'
             },
             {
-                "key": "Linux 2.6",
-                "value": "Linux26"
+                'key': 'Linux 2.6',
+                'value': 'Linux26'
             },
             {
-                "key": "Linux 2.6 (64 bit)",
-                "value": "Linux26_64"
+                'key': 'Linux 2.6 (64 bit)',
+                'value': 'Linux26_64'
             },
             {
-                "key": "Arch Linux",
-                "value": "ArchLinux"
+                'key': 'Arch Linux',
+                'value': 'ArchLinux'
             },
             {
-                "key": "Arch Linux (64 bit)",
-                "value": "ArchLinux_64"
+                'key': 'Arch Linux (64 bit)',
+                'value': 'ArchLinux_64'
             },
             {
-                "key": "Debian",
-                "value": "Debian"
+                'key': 'Debian',
+                'value': 'Debian'
             },
             {
-                "key": "Debian (64 bit)",
-                "value": "Debian_64"
+                'key': 'Debian (64 bit)',
+                'value': 'Debian_64'
             },
             {
-                "key": "openSUSE",
-                "value": "OpenSUSE"
+                'key': 'openSUSE',
+                'value': 'OpenSUSE'
             },
             {
-                "key": "openSUSE (64 bit)",
-                "value": "OpenSUSE_64"
+                'key': 'openSUSE (64 bit)',
+                'value': 'OpenSUSE_64'
             },
             {
-                "key": "Fedora",
-                "value": "Fedora"
+                'key': 'Fedora',
+                'value': 'Fedora'
             },
             {
-                "key": "Fedora (64 bit)",
-                "value": "Fedora_64"
+                'key': 'Fedora (64 bit)',
+                'value': 'Fedora_64'
             },
             {
-                "key": "Gentoo",
-                "value": "Gentoo"
+                'key': 'Gentoo',
+                'value': 'Gentoo'
             },
             {
-                "key": "Gentoo (64 bit)",
-                "value": "Gentoo_64"
+                'key': 'Gentoo (64 bit)',
+                'value': 'Gentoo_64'
             },
             {
-                "key": "Mandriva",
-                "value": "Mandriva"
+                'key': 'Mandriva',
+                'value': 'Mandriva'
             },
             {
-                "key": "Mandriva (64 bit)",
-                "value": "Mandriva_64"
+                'key': 'Mandriva (64 bit)',
+                'value': 'Mandriva_64'
             },
             {
-                "key": "Red Hat",
-                "value": "RedHat"
+                'key': 'Red Hat',
+                'value': 'RedHat'
             },
             {
-                "key": "Red Hat (64 bit)",
-                "value": "RedHat_64"
+                'key': 'Red Hat (64 bit)',
+                'value': 'RedHat_64'
             },
             {
-                "key": "Turbolinux",
-                "value": "Turbolinux"
+                'key': 'Turbolinux',
+                'value': 'Turbolinux'
             },
             {
-                "key": "Turbolinux (64 bit)",
-                "value": "Turbolinux_64"
+                'key': 'Turbolinux (64 bit)',
+                'value': 'Turbolinux_64'
             },
             {
-                "key": "Ubuntu",
-                "value": "Ubuntu"
+                'key': 'Ubuntu',
+                'value': 'Ubuntu'
             },
             {
-                "key": "Ubuntu (64 bit)",
-                "value": "Ubuntu_64"
+                'key': 'Ubuntu (64 bit)',
+                'value': 'Ubuntu_64'
             },
             {
-                "key": "Xandros",
-                "value": "Xandros"
+                'key': 'Xandros',
+                'value': 'Xandros'
             },
             {
-                "key": "Xandros (64 bit)",
-                "value": "Xandros_64"
+                'key': 'Xandros (64 bit)',
+                'value': 'Xandros_64'
             },
             {
-                "key": "Oracle",
-                "value": "Oracle"
+                'key': 'Oracle',
+                'value': 'Oracle'
             },
             {
-                "key": "Oracle (64 bit)",
-                "value": "Oracle_64"
+                'key': 'Oracle (64 bit)',
+                'value': 'Oracle_64'
             },
             {
-                "key": "Other Linux",
-                "value": "OtherLinux"
+                'key': 'Other Linux',
+                'value': 'OtherLinux'
             }
         ];
 
@@ -1349,7 +1349,7 @@ plainvm.register('ui.vm_control', (function () {
             while (clickTimeout.length) 
                 clearTimeout(clickTimeout.pop());
             logout(function () {
-                window.open(getRemotingUrl());
+                window.open(getRemotingUrl(), 'fullscreen=yes');
             });
         });
         sandbox.subscribe('ui-vm-selected', function (machine) {
@@ -1371,6 +1371,7 @@ plainvm.register('ui.vm_control', (function () {
             if (typeof callback === 'function') {
                 callback();
             }
+           $(iframe).remove();
         });
         iframe.attr('src', getLogoutUrl());
     }
@@ -1926,7 +1927,6 @@ plainvm.register('layout.install_wizard', (function () {
                 enabledHover: false,
                 disabled: true
             });
-            tabs.find('.jqx-tabs-title-disable').removeClass('jqx-fill-state-disabled');
             //Because the event bubbles and is caught by the parent tab
             tabs.bind('selected', function (e) {
                 if (e.args.item === 1) {
@@ -1975,11 +1975,11 @@ plainvm.register('ui.install_wizard', (function () {
             thirdSectionHandlers();
         });
         sandbox.subscribe('system-install-finished', function () {
-            tabs.find('input').val('');
-            $('#plainvm-install-wizard-ram-slider').jqxSlider('value', 256);
-            $('#plainvm-install-wizard-hdd-slider').jqxSlider('value', 10000);
-            $('#plainvm-install-wizard-third-back').jqxButton('disabled', false);
-            $('#plainvm-install-wizard-finish').jqxButton('disabled', false);
+            var finishButton = $('#plainvm-install-wizard-finish');
+            finishButton.jqxButton('disabled', false);
+            finishButton.text('Reset');
+            finishButton.bind('click', resetWizard);
+            finishButton.unbind('click', finishInstallation);
         });
         sandbox.subscribe('system-install-info', function (t) {
             $('#plainvm-install-wizard-info').text(t);
@@ -1989,6 +1989,26 @@ plainvm.register('ui.install_wizard', (function () {
             $('#plainvm-vm-install-wizard-section-2').jqxValidator('hide');
             $('#plainvm-vm-install-wizard-section-3').jqxValidator('hide');
         });
+    }
+
+    /**
+     * Resets the installation wizard
+     *
+     * @private
+     */
+    function resetWizard() {
+        var finishButton = $('#plainvm-install-wizard-finish');
+        tabs.jqxTabs('enableAt', 0);
+        tabs.jqxTabs('disableAt', 2);
+        tabs.jqxTabs('selectedItem', 0);
+        tabs.find('input').val('');
+        $('#plainvm-install-wizard-ram-slider').jqxSlider('value', 256);
+        $('#plainvm-install-wizard-hdd-slider').jqxSlider('value', 10000);
+        $('#plainvm-install-wizard-progress').jqxProgressBar('value', 0);
+        $('#plainvm-install-wizard-info').text('');
+        finishButton.text('Create');
+        finishButton.unbind('click', resetWizard);
+        finishButton.bind('click', finishInstallation);
     }
 
     /**
@@ -2060,17 +2080,24 @@ plainvm.register('ui.install_wizard', (function () {
      */
     function thirdSectionHandlers() {
         var progressBar = $('#plainvm-install-wizard-progress');
-        $('#plainvm-install-wizard-finish').bind('click', function () {
-            $('#plainvm-install-wizard-finish').jqxButton('disabled', true);
-            $('#plainvm-install-wizard-third-back').jqxButton('disabled', true);
-            sandbox.publish('ui-install-wizard-finish-section');
-        });
+        $('#plainvm-install-wizard-finish').bind('click', finishInstallation);
         $('#plainvm-install-wizard-third-back').bind('click', function () {
             selectItem(1);
         });
         sandbox.subscribe('system-vm-install-progress', function (p) {
             progressBar.jqxProgressBar('value', p);
         });
+    }
+
+    /**
+     * Handler of the button which triggers an installation start
+     *
+     * @private
+     */
+    function finishInstallation() {
+        $('#plainvm-install-wizard-finish').jqxButton('disabled', true);
+        $('#plainvm-install-wizard-third-back').jqxButton('disabled', true);
+        sandbox.publish('ui-install-wizard-finish-section');
     }
 
     /**
@@ -2082,7 +2109,6 @@ plainvm.register('ui.install_wizard', (function () {
     function selectItem(idx) {
         tabs.jqxTabs('disabled', true);
         tabs.jqxTabs('enableAt', idx);
-        tabs.find('.jqx-tabs-title-disable').removeClass('jqx-fill-state-disabled');
         tabs.jqxTabs('selectedItem', idx);
     }
 

@@ -19,7 +19,7 @@ sub new($) {
     my $class = shift;
     return $INSTANCE if defined $INSTANCE;
     my $self = {
-        _file => Config::get_option('guacamole_users_dir')
+        _file => Config::get_option('guacamole_users')
     };
     bless $self, $class;
     $INSTANCE = $self;
