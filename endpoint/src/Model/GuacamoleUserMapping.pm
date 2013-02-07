@@ -35,6 +35,7 @@ sub add_user($ $ $ $) {
     my $mapping = $self->get_user_mapping($user, $host, $port, $pass);
     my $xml = XML::Simple::XMLin($self->{_file}) or die('Cannot open!');
     push $xml->{authorize}, $mapping;
+    $xml->{authorize} = $self->_format_xml($xml->{authorize});
     $xml = { 'user-mapping' => $xml };
     $mapping = XML::Simple::XMLout($xml, KeepRoot => 1);
     open(FH, '>', $self->{_file}) or die("Cannot open $self->{_file} for writing.");
@@ -55,6 +56,16 @@ sub get_user_mapping($ $ $ $) {
         }
     };
     return $data, 
+}
+
+sub _format_xml($ $) {
+    my ($self, $auth) = @_;
+    for (@$auth) {
+        if (ref $_->{protocol} ne 'ARRAY') {
+            $_->{protocol} = [$_->{protocol}];
+        }
+    }
+    return $auth;
 }
 
 sub remove_user($ $ $) {
