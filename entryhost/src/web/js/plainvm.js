@@ -710,6 +710,7 @@ plainvm.register('system.connection_handler', (function () {
      * @return {boolean} true/false depending on the result of the close operation.
      */
     function sendData(data) {
+        console.log(data);
         return ws.send(data);
     }
 
