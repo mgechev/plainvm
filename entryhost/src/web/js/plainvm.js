@@ -710,7 +710,6 @@ plainvm.register('system.connection_handler', (function () {
      * @return {boolean} true/false depending on the result of the close operation.
      */
     function sendData(data) {
-        console.log(data);
         return ws.send(data);
     }
 
@@ -897,6 +896,15 @@ plainvm.register('ui.vms-list', (function () {
         });
     }
 
+    /**
+     * Checks whether the button for the options menu
+     * should be disabled. This depends on the machine state (powered on or off)
+     *
+     * @private
+     * @param {string} id Uid of the VM
+     * @param {string} className Class name of the list item
+     * @return {boolean} Returns whether the button should be disabled
+     */
     function isButtonDisabled(id, className) {
         var isRunning = sandbox.getVmByUid(id).is_running;
         return  (isRunning &&

@@ -35,6 +35,7 @@ sub add_user($ $ $ $) {
     my $mapping = $self->get_user_mapping($user, $host, $port, $pass);
     my $xml = XML::Simple::XMLin($self->{_file}) or die('Cannot open!');
     $xml->{authorize} = $xml->{authorize} || [];
+    $xml->{authorize} = [$xml->{authorize}] unless ref $xml->{authorize} eq 'ARRAY';
     push $xml->{authorize}, $mapping;
     $xml->{authorize} = $self->_format_xml($xml->{authorize});
     $xml = { 'user-mapping' => $xml };
@@ -73,6 +74,7 @@ sub remove_user($ $ $) {
     my ($self, $user) = @_;
     my $xml = XML::Simple::XMLin($self->{_file}) or die('Cannot open!');
     $xml->{authorize} = $xml->{authorize} || [];
+    $xml->{authorize} = [$xml->{authorize}] unless ref $xml->{authorize} eq 'ARRAY';
     my @authorize = @{$xml->{authorize}};
     my $last_elem = $#authorize;
     my @del_indexes = grep { $authorize[$_]{username} =~ /$user/o } 0..$last_elem;
