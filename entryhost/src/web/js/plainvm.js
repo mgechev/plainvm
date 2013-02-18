@@ -506,8 +506,8 @@ var plainvm = (function () {
                         vms[vm.uid] = vm;
                     }
                 }
+                return vms;
             }
-            return vms;
         },
 
         getEndPoints = function (hosts) {
@@ -852,7 +852,7 @@ plainvm.register('ui.vms-list', (function () {
             if (type === 'menu') {
                 sandbox.publish('ui-show-menu-clicked', vmId);
             } else {
-                vm = sandbox.getVmByUid(vmId)
+                vm = sandbox.getVmByUid(vmId);
                 params.vm = vm.id;
                 params.endpoint = vm.endpoint;
                 switch (type) {
@@ -1195,7 +1195,7 @@ plainvm.register('ui.vm_settings', (function () {
                     message: 'Invalid name', 
                     action: 'keyup, keydown', 
                     rule: function (input) {
-                        return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._-]{1,}$/).test(input.val());
+                        return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._\-]{1,}$/).test(input.val());
                     }
                 }
             ]
@@ -2034,9 +2034,9 @@ plainvm.register('ui.install_wizard', (function () {
                     message: 'Invalid name.',
                     action: 'keyup,blur',
                     rule: function (input) {
-                        return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._-]{1,}$/).test(input.val());
+                        return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._\-]{1,}$/).test(input.val());
                     }
-                },
+                }
             ]
         });
         $('#plainvm-install-wizard-first-next').bind('click', function () {
@@ -2044,7 +2044,7 @@ plainvm.register('ui.install_wizard', (function () {
                 sandbox.publish('ui-install-wizard-first-section', {
                     name: $('#plainvm-install-wizard-vm-name').val(),
                     os: $('#plainvm-install-wizard-vm-os').jqxDropDownList('getSelectedItem').value,
-                    endpoint: $('#plainvm-install-wizard-endpoint').jqxDropDownList('getSelectedItem').value,
+                    endpoint: $('#plainvm-install-wizard-endpoint').jqxDropDownList('getSelectedItem').value
                 });
                 selectItem(1);
             }
