@@ -407,7 +407,6 @@ var plainvm = (function () {
     sandbox.getRemotingPort = getRemotingPort;
     sandbox.getOperatingSystems = getOperatingSystems;
     sandbox.getEndPoints = getEndPoints;
-//    sandbox.setTheme = setTheme;
 
 
     /* * * * * * * * * End of the sandbox initialization * * * * * * * * */
@@ -716,6 +715,7 @@ plainvm.register('system.connection_handler', (function () {
     return {
         init: init
     };
+
 }()));
 
 /**
@@ -1054,6 +1054,9 @@ plainvm.register('ui.vm_details', (function () {
     };
 }()));
 
+/**
+ * Shows the current status of the virtual machine
+ */
 plainvm.register('ui.vm_status_pic', (function () {
 
     var sandbox,
@@ -1962,6 +1965,9 @@ plainvm.register('layout.install_wizard', (function () {
 
 }()));
 
+/**
+ * Initializes the install wizard
+ */
 plainvm.register('ui.install_wizard', (function () {
 
     var tabs,
@@ -2156,6 +2162,10 @@ plainvm.register('layout.index_side_panel_structure', (function () {
 
 }()));
 
+/**
+ * The module which is responsible for the system communication
+ * for the virtual machine creation.
+ */
 plainvm.register('system.install_vm', (function () {
 
     var sandbox,
