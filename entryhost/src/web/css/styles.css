@@ -144,6 +144,9 @@
 .plainvm-linux-icon {
     background-image: url(images/linux-icon.png);
 }
+.plainvm-mac-icon {
+    background-image: url(images/mac-icon.png);
+}
 .plainvm-vm-item-name {
     font-size: 26px;
     color: #333;

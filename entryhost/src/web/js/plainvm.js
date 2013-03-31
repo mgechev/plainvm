@@ -200,6 +200,10 @@ var plainvm = (function () {
                 'value': 'Oracle_64'
             },
             {
+                'key': 'Mac OS X',
+                'value': 'MacOS'
+            },
+            {
                 'key': 'Other Linux',
                 'value': 'OtherLinux'
             }
@@ -380,6 +384,8 @@ var plainvm = (function () {
             return 'linux';
         } else if ((/(windows)/i).test(name)) {
             return 'win';
+        } else if ((/(mac)/i).test(name)) {
+            return 'mac';
         } else {
             return undefined;
         }

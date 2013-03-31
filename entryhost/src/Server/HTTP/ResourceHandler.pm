@@ -12,6 +12,7 @@ my %_resources = (
     'css/images/header.gif' => 'image/gif',
     'css/images/windows-icon.png' => 'image/png',
     'css/images/linux-icon.png' => 'image/png',
+    'css/images/mac-icon.png' => 'image/png',
     'css/images/subheader.png' => 'image/png',
     'css/images/check_black.png' => 'image/png',
 
