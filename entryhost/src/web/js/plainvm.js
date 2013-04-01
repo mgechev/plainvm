@@ -204,6 +204,10 @@ var plainvm = (function () {
                 'value': 'MacOS'
             },
             {
+                'key': 'Mac OS X (x64)',
+                'value': 'MacOS'
+            },
+            {
                 'key': 'Other Linux',
                 'value': 'OtherLinux'
             }
