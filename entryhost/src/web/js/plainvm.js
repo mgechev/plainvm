@@ -2436,7 +2436,6 @@ plainvm.register('system.install_vm', (function () {
     };
 }()));
 
-
 plainvm.start('ui.preloader');
 
 $(window).load(function () {
