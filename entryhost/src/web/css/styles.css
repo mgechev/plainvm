@@ -356,3 +356,6 @@ body, html {
 #plainvm-vm-screenstate {
     height: 200px;
 }
+#plainvm-machine-control .jqx-widget-content {
+    overflow: hidden;
+}
