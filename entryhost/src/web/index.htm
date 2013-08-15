@@ -3,10 +3,27 @@
     <head>
         <meta charset="utf-8"/>
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+
+        <!-- Bad practice but because of the preloader modules need to be initialized earlier -->
         <script src="js/jquery-1.8.2.min.js"></script>
 
         <!-- Application's main JavaScript file -->
-        <script src="js/plainvm.js"></script>
+        <script src="js/plainvm/core.js"></script>
+        <script src="js/plainvm/ui/preloader.js"></script>
+        <script src="js/plainvm/system/connection_handler.js"></script>
+        <script src="js/plainvm/ui/vms_list.js"></script>
+        <script src="js/plainvm/ui/vm_details.js"></script>
+        <script src="js/plainvm/ui/vm_status_pic.js"></script>
+        <script src="js/plainvm/ui/vm_settings.js"></script>
+        <script src="js/plainvm/ui/vm_control.js"></script>
+        <script src="js/plainvm/system/remote_command_bridge.js"></script>
+        <script src="js/plainvm/ui/vm_statistics.js"></script>
+        <script src="js/plainvm/layout/main_content_structure.js"></script>
+        <script src="js/plainvm/layout/install_wizard.js"></script>
+        <script src="js/plainvm/ui/install_wizard.js"></script>
+        <script src="js/plainvm/layout/index_side_panel_structure.js"></script>
+        <script src="js/plainvm/system/install_vm.js"></script>
+        <script src="js/plainvm/init.js"></script>
 
         <!-- Widget's theme -->
         <link rel="stylesheet" type="text/css" href="css/jqx.base.css" />
@@ -137,7 +154,7 @@
 
                         <!-- Wizard content -->
                         <div>
-                            <form id="plainvm-vm-install-wizard-section-1">
+                            <form id="plainvm-vm-install-wizard-section-1" action="">
                                 <table>
                                     <tr>
                                         <td colspan="2">
@@ -170,7 +187,7 @@
                             class="plainvm-install-wizard-next">Next</button>
                         </div>
                         <div>
-                            <form id="plainvm-vm-install-wizard-section-2">
+                            <form id="plainvm-vm-install-wizard-section-2" action="">
                                 <table>
                                     <tr>
                                         <td colspan="2">
@@ -199,7 +216,7 @@
                             class="plainvm-install-wizard-back">Back</button>
                         </div>
                         <div>
-                            <form id="plainvm-vm-install-wizard-section-3">
+                            <form id="plainvm-vm-install-wizard-section-3" action="">
                                 <table>
                                     <tr>
                                         <td colspan="2">
@@ -252,3 +269,5 @@
         <script src="js/jqxchart.js"></script>
         <script src="js/jqxcheckbox.js"></script>
         <script src="js/mustache.js"></script>
+    </body>
+</html>
