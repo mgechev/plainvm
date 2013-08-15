@@ -50,7 +50,7 @@ sub _subscribe_to_events {
     PublishSubscribe::subscribe('update-clients', sub {
         my ($data) = @_;
         my $websocket_connections = $self->{_websocket_connections};
-        for my $client_key (keys($websocket_connections)) {
+        for my $client_key (keys(%$websocket_connections)) {
             $self->_send_frame($websocket_connections->{$client_key}, $data->{data});
         }
     });

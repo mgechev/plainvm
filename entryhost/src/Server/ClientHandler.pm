@@ -34,7 +34,7 @@ sub new {
 sub update_clients($) {
     my ($self, $current_vms) = @_;
     my $websocket_connections = $self->{_websocket_connections};
-    for my $client_key (keys($websocket_connections)) {
+    for my $client_key (keys(%$websocket_connections)) {
         $self->send_frame($websocket_connections->{$client_key}, $current_vms);
     }
 }

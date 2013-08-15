@@ -94,7 +94,7 @@ sub push_command($ $ $) {
     my ($self, $ep, $command) = @_;
     lock(%command_queue);
     share($command);
-    push($command_queue{$ep}, $command);
+    push(@{$command_queue{$ep}}, $command);
 }
 
 sub get_responses($) {

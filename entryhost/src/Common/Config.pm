@@ -40,7 +40,7 @@ sub load_endpoints {
         @socket = split(/:/, $_);
         $socket[0] =~ s/\s//g;
         $socket[1] =~ s/\s//g if defined $socket[1]; #the port may not be specified
-        push($endpoints, {
+        push(@$endpoints, {
             host => $socket[0],
             port => $socket[1]
         });

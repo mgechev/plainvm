@@ -33,7 +33,7 @@ sub create_vm($ $) {
 sub get_running_vms($) {
     my $self = shift;
     my @running_vms = ();
-    for my $id (keys($self->{_vms})) {
+    for my $id (keys(%{$self->{_vms}})) {
         if ($self->{_vms}{$id}->is_running) {
             push(@running_vms, $self->{_vms}{$id});
         }

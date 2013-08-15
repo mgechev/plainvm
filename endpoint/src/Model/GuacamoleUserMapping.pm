@@ -36,7 +36,7 @@ sub add_user($ $ $ $) {
     my $xml = XML::Simple::XMLin($self->{_file}) or die('Cannot open!');
     $xml->{authorize} = $xml->{authorize} || [];
     $xml->{authorize} = [$xml->{authorize}] unless ref $xml->{authorize} eq 'ARRAY';
-    push $xml->{authorize}, $mapping;
+    push @{$xml->{authorize}}, $mapping;
     $xml->{authorize} = $self->_format_xml($xml->{authorize});
     $xml = { 'user-mapping' => $xml };
     $mapping = XML::Simple::XMLout($xml, KeepRoot => 1);
