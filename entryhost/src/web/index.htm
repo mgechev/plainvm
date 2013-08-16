@@ -7,7 +7,8 @@
         <!-- Bad practice but because of the preloader modules need to be initialized earlier -->
         <script src="js/libs/jquery-1.8.2.min.js"></script>
 
-        <!-- Application's main JavaScript file 
+        <!-- Application's main JavaScript file -->
+        <!-- build:js ./js/build/plainvm.js-->
         <script src="js/plainvm/core.js"></script>
         <script src="js/plainvm/ui/preloader.js"></script>
         <script src="js/plainvm/system/connection_handler.js"></script>
@@ -23,8 +24,8 @@
         <script src="js/plainvm/ui/install_wizard.js"></script>
         <script src="js/plainvm/layout/index_side_panel_structure.js"></script>
         <script src="js/plainvm/system/install_vm.js"></script>
-        <script src="js/plainvm/init.js"></script> -->
-        <script src="js/build/plainvm.js"></script>
+        <script src="js/plainvm/init.js"></script>
+        <!-- endbuild -->
 
         <!-- Widget's theme -->
         <link rel="stylesheet" type="text/css" href="css/jqx.base.css" />
@@ -252,7 +253,8 @@
             <div style="clear:both;"></div>
 
         </div>
-<!--        <script src="js/libs/jqxcore.js"></script>
+        <!-- build:js ./js/build/libs.js-->
+        <script src="js/libs/jqxcore.js"></script>
         <script src="js/libs/jqxdata.js"></script>
         <script src="js/libs/jqxbuttons.js"></script>
         <script src="js/libs/jqxscrollbar.js"></script>
@@ -269,7 +271,7 @@
         <script src="js/libs/jqxtabs.js"></script>
         <script src="js/libs/jqxchart.js"></script>
         <script src="js/libs/jqxcheckbox.js"></script>
-        <script src="js/libs/mustache.js"></script> -->
-        <script src="js/build/libs.js"></script>
+        <script src="js/libs/mustache.js"></script>
+        <!-- endbuild -->
     </body>
 </html>

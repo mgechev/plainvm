@@ -7,6 +7,7 @@ module.exports = function (grunt) {
             build: {
                 files: {
                     './js/plainvm.js': [
+                                'js/libs/jquery-1.8.2.min.js',
                                 'js/plainvm/core.js',
                                 'js/plainvm/ui/preloader.js',
                                 'js/plainvm/system/connection_handler.js',
