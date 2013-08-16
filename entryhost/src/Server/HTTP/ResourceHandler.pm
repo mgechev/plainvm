@@ -36,8 +36,8 @@ my %_resources = (
     'js/libs/jqxchart.js' => 'application/x-javascript',
     'js/libs/jqxdata.js' => 'application/x-javascript',
 
-    'js/libs.js' => 'application/x-javascript',
-    'js/plainvm.js' => 'application/x-javascript',
+    'js/build/libs.js' => 'application/x-javascript',
+    'js/build/plainvm.js' => 'application/x-javascript',
 
     'js/plainvm/core.js' => 'application/javascript',
     'js/plainvm/ui/preloader.js' => 'application/javascript',
