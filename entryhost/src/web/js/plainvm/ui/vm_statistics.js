@@ -219,7 +219,7 @@ plainvm.register('ui.vm_statistics', (function () {
         for (var osProp in osCount) {
             result.push({ os: osProp, count: osCount[osProp] });
         }
-        return result;    
+        return result;
     }
 
     /**
@@ -228,7 +228,7 @@ plainvm.register('ui.vm_statistics', (function () {
      * @private
      * @param {object} vms Actually hash with keys the machine's ids and values the vms.
      * @return {object} readable result
-     */ 
+     */
     function getRAMSource(vms) {
         var result = [],
             vm;
@@ -256,5 +256,3 @@ plainvm.register('ui.vm_statistics', (function () {
         init: init
     };
 }()));
-
-

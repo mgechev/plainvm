@@ -110,9 +110,9 @@ plainvm.register('layout.install_wizard', (function () {
         sandbox = sndbx;
         $(window).load(function () {
             tabs = $('#plainvm-vm-installation');
-            tabs.jqxTabs({ 
+            tabs.jqxTabs({
                 keyboardNavigation: false,
-                theme: sandbox.getTheme(), 
+                theme: sandbox.getTheme(),
                 width: '600',
                 height: '400',
                 enabledHover: false,
@@ -122,7 +122,7 @@ plainvm.register('layout.install_wizard', (function () {
             tabs.bind('selected', function (e) {
                 if (e.args.item === 1) {
                     var ramSlider = $('#plainvm-install-wizard-ram-slider'),
-                        hddSlider = $('#plainvm-install-wizard-hdd-slider'); 
+                        hddSlider = $('#plainvm-install-wizard-hdd-slider');
                     ramSlider.jqxSlider('value', ramSlider.jqxSlider('value'));
                     hddSlider.jqxSlider('value', hddSlider.jqxSlider('value'));
                 }
@@ -143,5 +143,3 @@ plainvm.register('layout.install_wizard', (function () {
 
 
 }()));
-
-

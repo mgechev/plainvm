@@ -3,7 +3,7 @@
  */
 plainvm.register('ui.vm_details', (function () {
     
-    var template, 
+    var template,
         container,
         sandbox;
 

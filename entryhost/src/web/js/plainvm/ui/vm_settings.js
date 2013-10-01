@@ -46,9 +46,9 @@ plainvm.register('ui.vm_settings', (function () {
         validator.jqxValidator({
             rules: [
                 {
-                    input: '#machine-name', 
-                    message: 'Invalid name', 
-                    action: 'keyup, keydown', 
+                    input: '#machine-name',
+                    message: 'Invalid name',
+                    action: 'keyup, keydown',
                     rule: function (input) {
                         return (/^[a-zA-Z]{2,}[\sa-zA-Z0-9._\-]{1,}$/).test(input.val());
                     }
@@ -65,13 +65,13 @@ plainvm.register('ui.vm_settings', (function () {
     function initSettingsMenu() {
         var dialog = $(Mustache.to_html(template, currentVm)),
             theme = sandbox.getTheme();
-        dialog.jqxWindow({ 
+        dialog.jqxWindow({
             theme: theme,
             isModal: true,
-            width: 400, 
+            width: 400,
             height: 300,
-            animationType: 'fade', 
-            draggable: false, 
+            animationType: 'fade',
+            draggable: false,
             resizable: false,
             autoOpen: false,
             showCloseButton: false
@@ -80,25 +80,25 @@ plainvm.register('ui.vm_settings', (function () {
         dialog.bind('closed', function () {
             dialog.remove();
         });
-        $('#cpu-slider').jqxSlider({ 
-            value: parseInt(currentVm.cpu, 10), 
-            min: 1, 
-            max: 100, 
-            width: 150, 
-            showTicks: false, 
+        $('#cpu-slider').jqxSlider({
+            value: parseInt(currentVm.cpu, 10),
+            min: 1,
+            max: 100,
+            width: 150,
+            showTicks: false,
             mode: 'fixed',
             theme: theme
         });
-        $('#ram-slider').jqxSlider({ 
-            value: parseInt(currentVm.ram, 10), 
-            min: 1, 
-            max: 4096, 
-            width: 150, 
-            showTicks: false, 
+        $('#ram-slider').jqxSlider({
+            value: parseInt(currentVm.ram, 10),
+            min: 1,
+            max: 4096,
+            width: 150,
+            showTicks: false,
             mode: 'fixed',
-            theme: theme 
+            theme: theme
         });
-        $('#video-slider').jqxSlider({ 
+        $('#video-slider').jqxSlider({
             value: parseInt(currentVm.vram, 10),
             min: 1,
             max: 128,
@@ -161,7 +161,7 @@ plainvm.register('ui.vm_settings', (function () {
         currentVm.vram = $('#video-slider').jqxSlider('value');
         sandbox.publish('ui-update-vms', [currentVm]);
         sandbox.publish('system-send-frame', {
-            type: 'machine-edited', 
+            type: 'machine-edited',
             data: currentVm
         });
     }

@@ -250,7 +250,7 @@ plainvm.register('system.install_vm', (function () {
             'need-response': true
         };
         sandbox.publish('system-send-frame', {
-            type: 'system-iso-chunk', 
+            type: 'system-iso-chunk',
             data: data,
             needResponse: true
         });

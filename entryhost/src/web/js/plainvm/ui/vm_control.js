@@ -37,7 +37,7 @@ plainvm.register('ui.vm_control', (function () {
         });
         $('#plainvm-machine-screenshot').dblclick(function () {
             if (!selectedMachine.is_running) return;
-            while (clickTimeout.length) 
+            while (clickTimeout.length)
                 clearTimeout(clickTimeout.pop());
             logout(function () {
                 window.open(getRemotingUrl(), 'fullscreen=yes');
@@ -76,12 +76,12 @@ plainvm.register('ui.vm_control', (function () {
         if (selectedMachine && selectedMachine.is_running) {
             var dialogObject = $(Mustache.to_html(template, getTemplateObject(selectedMachine)));
             $(document.body).append(dialogObject);
-            dialogObject.jqxWindow({ 
-                width: 810, 
-                height: 640, 
-                maxWidth: 900, 
-                maxHeight: 700, 
-                autoOpen: false, 
+            dialogObject.jqxWindow({
+                width: 810,
+                height: 640,
+                maxWidth: 900,
+                maxHeight: 700,
+                autoOpen: false,
                 isModal: true,
                 animationType: 'fade',
                 showAnimationDuration: 1000,
@@ -129,7 +129,7 @@ plainvm.register('ui.vm_control', (function () {
      * @return {string} The url of Guacamole's index page
      */
     function getRemotingUrl() {
-        return 'http://' + selectedMachine.endpoint + ':' + sandbox.getRemotingPort() + 
+        return 'http://' + selectedMachine.endpoint + ':' + sandbox.getRemotingPort() +
                 '/guacamole/index.xhtml?autologin=1&username=' + selectedMachine.id;
     }
 

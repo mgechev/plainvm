@@ -255,7 +255,7 @@ var plainvm = (function () {
                     callbacks[i].call(null, args);
                 }
                 return true;
-            } 
+            }
             console.log('No subscribtions for ' + event);
             return false;
         }

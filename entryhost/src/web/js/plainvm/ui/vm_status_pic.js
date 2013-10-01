@@ -64,7 +64,7 @@ plainvm.register('ui.vm_status_pic', (function () {
         if (pic) {
             screenContainer.css('background-image', 'url(' + pic + ')');
             if (!activeTooltip) {
-                screenContainer.jqxTooltip({ 
+                screenContainer.jqxTooltip({
                     content: 'Click to control the machine',
                     position: 'mouse',
                     theme: sandbox.getTheme()
@@ -72,7 +72,7 @@ plainvm.register('ui.vm_status_pic', (function () {
                 activeTooltip = true;
             }
         } else {
-            if (!screenContainer[0].style.backgroundImage || 
+            if (!screenContainer[0].style.backgroundImage ||
                 screenContainer[0].style.backgroundImage.indexOf(NOT_RUNNING_PIC) < 0) {
                 screenContainer.css('background-image', 'url(' + NOT_RUNNING_PIC + ')');
             }

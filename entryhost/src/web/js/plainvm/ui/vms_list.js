@@ -205,25 +205,25 @@ plainvm.register('ui.vms_list', (function () {
     function addTooltips(machine) {
         var theme = sandbox.getTheme();
         machine = machine || '';
-        $(machine + '.plainvm-vm-menu-icon-menu').jqxTooltip({ 
-            content: 'Menu', 
-            position: 'mouse', 
+        $(machine + '.plainvm-vm-menu-icon-menu').jqxTooltip({
+            content: 'Menu',
+            position: 'mouse',
             theme: theme
         });
-        $(machine + '.plainvm-vm-menu-icon-start').jqxTooltip({ 
-            content: 'Start', 
-            position: 'mouse', 
-            theme: theme 
+        $(machine + '.plainvm-vm-menu-icon-start').jqxTooltip({
+            content: 'Start',
+            position: 'mouse',
+            theme: theme
         });
-        $(machine + '.plainvm-vm-menu-icon-shutdown').jqxTooltip({ 
-            content: 'Shutdown', 
-            position: 'mouse', 
-            theme: theme 
+        $(machine + '.plainvm-vm-menu-icon-shutdown').jqxTooltip({
+            content: 'Shutdown',
+            position: 'mouse',
+            theme: theme
         });
-        $(machine + '.plainvm-vm-menu-icon-poweroff').jqxTooltip({ 
-            content: 'Poweroff', 
-            position: 'mouse', 
-            theme: theme 
+        $(machine + '.plainvm-vm-menu-icon-poweroff').jqxTooltip({
+            content: 'Poweroff',
+            position: 'mouse',
+            theme: theme
         });
     }
 
@@ -256,7 +256,7 @@ plainvm.register('ui.vms_list', (function () {
      */
     function selectVM(vmId) {
        $('.plainvm-vm-item').removeClass('plainvm-vm-item-selected');
-       $('#' + vmId).addClass('plainvm-vm-item-selected'); 
+       $('#' + vmId).addClass('plainvm-vm-item-selected');
        sandbox.publish('ui-vm-selected', vmId);
        selectedMachine = vmId;
     }
@@ -293,5 +293,3 @@ plainvm.register('ui.vms_list', (function () {
         init: init
     };
 }()));
-
-
