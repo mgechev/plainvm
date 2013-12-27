@@ -125,7 +125,7 @@ sub _create_tcp_connection($ $ $) {
             $fh = AnyEvent::Handle->new(fh => $fh);
             $self->_endpoint_connection_established($fh, $host);
             $timeout = $self->_start_poll(Config::get_option('poll_interval'), $host, $fh);
-            $screenshot_timeout = 
+            $screenshot_timeout =
                 $self->_start_screenshot_poll(Config::get_option('screenshot_poll_interval'), $fh);
         };
         if ($@) {
@@ -171,10 +171,10 @@ sub _endpoint_connection_established($ $ $) {
         });
         $fh->on_error(sub {
             my ($m, $f, $msg) = @_;
-            Common::error('Error in the connection with endpoint ' . $endpoint . ': ' . $msg); 
+            Common::error('Error in the connection with endpoint ' . $endpoint . ': ' . $msg);
         });
         $fh->on_eof(sub {
-            Common::warn('Unexpected end of file with endpoint ' . $endpoint); 
+            Common::warn('Unexpected end of file with endpoint ' . $endpoint);
         });
         $self->{_endpoint_connections}{$endpoint} = $fh;
     }
@@ -232,7 +232,7 @@ sub _validate_vms($ $ $) {
 
 # Returns array of key-value pairs
 # Each VM entity is returned as pair: "id": "data"
-# In some cases the id can be found also in the data (like if 
+# In some cases the id can be found also in the data (like if
 # a screenshot validation is made) it may look a little dumb
 # but it helps a lot when cheching whether a machine's status or screenshot
 # is changed. In this way the check is done in O(1) instead of O(n)

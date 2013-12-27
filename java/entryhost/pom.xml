@@ -6,15 +6,15 @@
   <packaging>war</packaging>
   <name>plainvm</name>
   <dependencies>
-  	<!-- <dependency>
+  	<dependency>
 	  <groupId>org.apache.tomcat</groupId>
-	  <artifactId>servlet-api</artifactId>
-	  <version>6.0.37</version>
-    </dependency> -->
+	  <artifactId>tomcat-catalina</artifactId>
+	  <version>8.0.0-RC5</version>
+    </dependency>
     <dependency>
-	  <groupId>javax.servlet</groupId>
-	  <artifactId>servlet-api</artifactId>
-	  <version>3.0-alpha-1</version>
+	  <groupId>javax.websocket</groupId>
+	  <artifactId>javax.websocket-api</artifactId>
+	  <version>1.0</version>
     </dependency>
   </dependencies>
 </project>
