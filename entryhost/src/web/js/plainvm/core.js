@@ -14,8 +14,8 @@ var plainvm = (function () {
         screenshots = {},
         endpoints = [],
         firstConnectionEstablished = false,
-        VM_SERVER = window.location.hostname,
-        VM_SERVER_PORT = parseInt(window.location.port, 10),
+        VM_SERVER = "localhost{{port}}/plainvm-entryhost/plainvm",//window.location.hostname,
+        VM_SERVER_PORT = 8025,//parseInt(window.location.port, 10),
         REMOTING_PORT = 8080,
         currentTheme = 'fresh',
         OPERATING_SYSTEMS = [
@@ -294,6 +294,16 @@ var plainvm = (function () {
     function getRemotingPort() {
         return REMOTING_PORT;
     }
+    
+    /**
+     * Returns the entry host
+     * 
+     * @public
+     * @return {string}
+     */
+    function getEntryHost() {
+    	return VM_SERVER.replace(/\{\{\w+\}\}/, ':' + VM_SERVER_PORT);
+    }
 
     /**
      * This method is used for getting a specific VM by it's id.
@@ -417,6 +427,7 @@ var plainvm = (function () {
     sandbox.getRemotingPort = getRemotingPort;
     sandbox.getOperatingSystems = getOperatingSystems;
     sandbox.getEndPoints = getEndPoints;
+    sandbox.getEntryHost = getEntryHost;
 
 
     /* * * * * * * * * End of the sandbox initialization * * * * * * * * */

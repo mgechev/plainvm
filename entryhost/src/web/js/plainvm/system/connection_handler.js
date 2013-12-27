@@ -30,7 +30,7 @@ plainvm.register('system.connection_handler', (function () {
      * @private
      */
     function connect() {
-        var connectionUrl = schema + sandbox.getVMServer() + ':' + sandbox.getVMServerPort();
+        var connectionUrl = schema + sandbox.getEntryHost();
         ws = new WebSocket(connectionUrl);
         console.log('Connecting to ' + connectionUrl);
         addWebSocketHandlers();

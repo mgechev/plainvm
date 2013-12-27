@@ -1,24 +1,44 @@
 package org.mgechev.plainvm.entryhost.servlets;
 
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.LinkedList;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.websocket.CloseReason;
+import javax.websocket.EndpointConfig;
+import javax.websocket.OnClose;
+import javax.websocket.OnError;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value="websocket/endpoint")
-public class EntryHost extends HttpServlet {
+@ServerEndpoint(value="/plainvm/entryhost")
+public class EntryHost {
 
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) 
-            throws ServletException, IOException {
-        PrintWriter writer = res.getWriter();
-        res.setContentType("text/plain");
-        writer.println("Hello, World!");
+    private static LinkedList<Session> clients = new LinkedList<Session>();
+    
+    public EntryHost() {
+        
     }
     
+    @OnOpen
+    public void onOpen(Session client, EndpointConfig conf) {
+        clients.add(client);
+    }
+    
+    @OnClose
+    public void onClose(Session client, CloseReason reason) {
+        clients.remove(client);
+    }
+    
+    @OnMessage
+    public void onMessage(Session session, String message) {
+        System.out.println(message);
+    }
+    
+    @OnError
+    public void onError(Session session, Throwable error) throws Throwable {
+        System.out.println("Error");
+    }
 }
