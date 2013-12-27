@@ -55,7 +55,7 @@ my %_resources = (
     'js/plainvm/layout/index_side_panel_structure.js' => 'application/javascript',
     'js/plainvm/system/install_vm.js' => 'application/javascript',
     'js/plainvm/init.js' => 'application/javascript',
-        
+
     'css/jqx.base.css' => 'text/css',
     'css/jqx.fresh.css' => 'text/css',
     'css/styles.css' => 'text/css',

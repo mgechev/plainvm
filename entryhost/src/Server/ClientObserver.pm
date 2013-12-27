@@ -13,7 +13,7 @@ sub new {
         _entryhost => $entryhost
     };
     bless $self, $class;
-    return $self; 
+    return $self;
 }
 
 sub command_received {

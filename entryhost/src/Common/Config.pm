@@ -58,7 +58,7 @@ sub _get_file($ $) {
 
 sub get_option($) {
     my $option = shift;
-    return $config{lc $option}; 
+    return $config{lc $option};
 }
 
 sub get_endpoints {

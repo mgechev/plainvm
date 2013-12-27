@@ -74,7 +74,7 @@ sub _client_connection_callback($) {
 
     Common::log("Client with socket $host:$port connected.");
     $currentHandle->on_read(sub {
-        $self->_request_callback($currentHandle); 
+        $self->_request_callback($currentHandle);
     });
     $currentHandle->on_eof(sub {
         Common::warn('Unexpected end-of-file.');
@@ -135,7 +135,7 @@ sub _get_http_response($) {
     $response->code($status);
     $response->content($content);
     $response->header('content-type' => $type);
-    return $response; 
+    return $response;
 }
 
 sub _is_websocket($ $) {
@@ -149,7 +149,7 @@ sub _is_websocket($ $) {
             $hash{$key} = lc $temp[1];
         }
     }
-    return exists($hash{'upgrade'}) and exists($hash{'connection'}) and 
+    return exists($hash{'upgrade'}) and exists($hash{'connection'}) and
            index('websocket', $hash{'upgrade'}) >= 0 and index('upgrade', $hash{'connection'}) >= 0;
 }
 

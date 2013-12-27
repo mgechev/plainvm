@@ -72,7 +72,7 @@ sub send_command($ $ $) {
             };
             $parsed_command->{uid} = $unique_id;
         }
-        $self->{_ep_handler}->push_command($parsed_command->{data}{endpoint}, 
+        $self->{_ep_handler}->push_command($parsed_command->{data}{endpoint},
                 JSON::to_json($parsed_command));
     };
     if ($@) {
@@ -108,11 +108,11 @@ sub start($ $) {
     threads->new(sub {
         my $client_handler = ClientHandler->new(ClientObserver->new($self));
         $self->{_client_handler} = $client_handler;
-  
+
         my $ep_handler = EndPointConnectionHandler->new(Config::get_endpoints);
         $ep_handler->connect_to_endpoints;
         $self->{_ep_handler} = $ep_handler;
-   
+
         my $timer = $self->_start_endpoint_data_check($ep_handler, $client_handler);
         $client_handler->listen(Config::get_option('http_port'), Config::get_option('address'));
 
