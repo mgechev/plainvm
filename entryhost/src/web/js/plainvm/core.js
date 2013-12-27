@@ -1,6 +1,6 @@
 /**
  * Creates the core of plainvm. This self-invoking function
- * defines the core methods of the "sandbox" plus the publish/subscribe 
+ * defines the core methods of the "sandbox" plus the publish/subscribe
  * implementation used by all client modules.
  *
  * @author Minko Gechev (@mgechev)
@@ -8,7 +8,7 @@
  *
  */
 var plainvm = (function () {
-    
+
     var modules = {},
         vms = {},
         screenshots = {},
@@ -276,7 +276,7 @@ var plainvm = (function () {
     }
 
     /**
-     * Returns the VM server port. 
+     * Returns the VM server port.
      *
      * @public
      * @return {number}
@@ -338,7 +338,7 @@ var plainvm = (function () {
     function getTheme() {
         return currentTheme;
     }
-    
+
     /**
      * Sets the current theme. The method notifies with "ui-theme-changed" event.
      *
@@ -404,7 +404,7 @@ var plainvm = (function () {
     function getOperatingSystems() {
         return OPERATING_SYSTEMS;
     }
- 
+
     var sandbox = pubSub;
     sandbox.getVMServer = getVMServer;
     sandbox.getVMServerPort = getVMServerPort;
@@ -485,7 +485,7 @@ var plainvm = (function () {
             return result;
         }
         console.log('Cannot remove module "' + name + '" because it\'s not registered');
-        return false; 
+        return false;
     }
 
     /**
