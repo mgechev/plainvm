@@ -1,6 +1,7 @@
 package org.mgechev.plainvm.entryhost;
 
-import java.util.LinkedList;
+import java.io.IOException;
+import java.util.UUID;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
@@ -11,26 +12,30 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.apache.log4j.Logger;
+
 @ServerEndpoint(value="/plainvm/entryhost")
-public class EntryHost {
+public class Client {
 
     @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
-    private static LinkedList<Session> clients = new LinkedList<Session>();
+    private UUID uid;
+    private Session session;
+    private Logger log = Logger.getLogger(Client.class);
     
+    public Client() {
+        uid = UUID.randomUUID();
+    }
     
     @OnOpen
     public void onOpen(Session client, EndpointConfig conf) {
-        synchronized (clients) {
-            clients.add(client);   
-        }
+        session = client;
+        ClientCollection.INSTANCE.registerClient(uid, this);
     }
     
     @OnClose
     public void onClose(Session client, CloseReason reason) {
-        synchronized (clients) {
-            clients.remove(client);   
-        }
+        ClientCollection.INSTANCE.removeClient(uid);
     }
     
     @OnMessage
@@ -41,5 +46,13 @@ public class EntryHost {
     @OnError
     public void onError(Session session, Throwable error) throws Throwable {
         System.out.println("Error");
+    }
+    
+    public void sendMessage(String message) {
+        try {
+            session.getBasicRemote().sendText(message);
+        } catch (IOException e) {
+            log.error("Cant send message to the client");
+        }
     }
 }
