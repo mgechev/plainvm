@@ -1,6 +1,5 @@
 package org.mgechev.plainvm.entryhost.endpoints;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +42,7 @@ public class EndPoint extends Thread {
     private void startReading() {
         try {
             reader = new Thread(new SocketReader(socket.getInputStream()));
+            reader.start();
         } catch (IOException e) {
             log.error("Error while reading from the socket");
         }
@@ -65,10 +65,11 @@ public class EndPoint extends Thread {
         public SocketReader(InputStream stream) {
             this.stream = stream;
             this.reader = new JsonReader(new InputStreamReader(stream));
-            this.gson = new Gson();    
+            this.gson = new Gson();
         }
 
         public void run() {
+            log.info("Start reading from the given input stream");
             try {
                 while (stream.available() >= 0) {
                     while (reader.hasNext()) {

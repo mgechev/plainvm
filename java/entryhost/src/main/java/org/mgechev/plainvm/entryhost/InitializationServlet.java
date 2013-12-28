@@ -4,6 +4,7 @@ import java.net.InetSocketAddress;
 
 import javax.servlet.http.HttpServlet;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 
@@ -17,6 +18,7 @@ public class InitializationServlet extends HttpServlet {
 
     @Override
     public void init(){
+        BasicConfigurator.configure();
         for (String client : clients) {
             InetSocketAddress address = null;
             address = InetSocketAddress.createUnresolved(client, port);
