@@ -10,5 +10,11 @@
         This application is responsible for proxying the connection between
         the client and the endpoint.
     </description>
+    
+    <servlet>
+    	<servlet-name>InitializationServlet</servlet-name>
+    	<servlet-class>org.mgechev.plainvm.entryhost.InitializationServlet</servlet-class>
+    	<load-on-startup>0</load-on-startup>
+	</servlet> 
 
 </web-app>

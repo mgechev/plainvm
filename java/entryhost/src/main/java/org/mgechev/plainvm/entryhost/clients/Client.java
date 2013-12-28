@@ -1,4 +1,4 @@
-package org.mgechev.plainvm.entryhost;
+package org.mgechev.plainvm.entryhost.clients;
 
 import java.io.IOException;
 import java.util.UUID;
