@@ -1,4 +1,4 @@
-package org.mgechev.plainvm.entryhost.servlets;
+package org.mgechev.plainvm.entryhost;
 
 import java.util.LinkedList;
 
@@ -18,18 +18,19 @@ public class EntryHost {
     private static final long serialVersionUID = 1L;
     private static LinkedList<Session> clients = new LinkedList<Session>();
     
-    public EntryHost() {
-        
-    }
     
     @OnOpen
     public void onOpen(Session client, EndpointConfig conf) {
-        clients.add(client);
+        synchronized (clients) {
+            clients.add(client);   
+        }
     }
     
     @OnClose
     public void onClose(Session client, CloseReason reason) {
-        clients.remove(client);
+        synchronized (clients) {
+            clients.remove(client);   
+        }
     }
     
     @OnMessage
