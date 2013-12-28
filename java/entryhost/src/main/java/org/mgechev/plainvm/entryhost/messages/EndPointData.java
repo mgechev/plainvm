@@ -2,7 +2,8 @@ package org.mgechev.plainvm.entryhost.messages;
 
 import java.util.ArrayList;
 
-public class ActionResponse {
+public class EndPointData {
     public String type;
     public ArrayList<Object> data;
+    public boolean isResponse;
 }

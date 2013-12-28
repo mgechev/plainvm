@@ -40,7 +40,7 @@ public class Client {
     
     @OnMessage
     public void onMessage(Session session, String message) {
-        System.out.println(message);
+        ClientCollection.INSTANCE.receiveMessage(uid, message);
     }
     
     @OnError

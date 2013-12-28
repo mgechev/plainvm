@@ -16,7 +16,8 @@ public enum ClientCollection {
     
     public void registerClient(UUID uid, Client client) {
         synchronized (clients) {
-            clients.put(uid, client);   
+            clients.put(uid, client);
+            
         }
     }
 
