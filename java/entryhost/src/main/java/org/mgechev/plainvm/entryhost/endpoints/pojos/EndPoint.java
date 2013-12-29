@@ -1,5 +1,6 @@
 package org.mgechev.plainvm.entryhost.endpoints.pojos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EndPoint {
@@ -10,13 +11,20 @@ public class EndPoint {
         this.host = host;
     }
     
-    public void updateVms(List<VirtualMachine> vms) {
+    public List<VirtualMachine> updateVms(List<VirtualMachine> vms) {
         if (this.vms == null) {
             this.vms = vms;
+            return vms;
         } else {
+            ArrayList<VirtualMachine> changed = new ArrayList<VirtualMachine>();
             for (VirtualMachine vm : vms) {
-                updateVm(vm);
+                VirtualMachine currentVm = getVmById(vm.id);
+                if (!currentVm.equals(vm)) {
+                    changed.add(vm);
+                    updateVm(vm);
+                }
             }
+            return changed;
         }
     }
     

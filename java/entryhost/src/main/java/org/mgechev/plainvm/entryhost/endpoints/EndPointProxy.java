@@ -80,7 +80,13 @@ public class EndPointProxy extends Thread {
     
     private void handleMessage(EndPointData message) {
         if (message.type.equals("update")) {
-            endPointPojo.updateVms(message.data);
+            List<VirtualMachine> changed = endPointPojo.updateVms(message.data);
+            if (changed.size() > 0) {
+                EndPoint endpoint = new EndPoint(this.address.getHostName());
+                endpoint.vms = changed;
+                EndPointCollection.INSTANCE.endPointChanged(endpoint);
+                log.info("End point status changed, updating the client");
+            }
         } else {
             EndPointCollection.INSTANCE.messageReceived(message);
         }

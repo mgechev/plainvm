@@ -1,10 +1,12 @@
 package org.mgechev.plainvm.entryhost.clients;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.messages.Action;
 import org.mgechev.plainvm.entryhost.messages.ClientData;
 
@@ -36,6 +38,15 @@ public enum ClientCollection {
         }
     }
     
+    public void updateClients(EndPoint endpoint) {
+        ClientData message = new ClientData();
+        message.type = "system-update";
+        ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+        endpoints.add(endpoint);
+        message.data = endpoints;
+        broadcastMessage(message);
+    }
+    
     public void receiveMessage(UUID uid, String message) {
         Action action = gson.fromJson(message, Action.class);
         actionFacade.handleAction(uid, action);
@@ -43,6 +54,13 @@ public enum ClientCollection {
     
     public void sendMessage(UUID uid, String message) {
         clients.get(uid).sendMessage(message);
+    }
+    
+    public void broadcastMessage(ClientData data) {
+        String message = gson.toJson(data);
+        for (Client client : clients.values()) {
+            client.sendMessage(message);
+        }
     }
     
     public void sendMessage(String message) {
