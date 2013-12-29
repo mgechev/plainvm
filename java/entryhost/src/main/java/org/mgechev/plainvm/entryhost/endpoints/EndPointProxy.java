@@ -34,7 +34,7 @@ public class EndPointProxy extends Thread {
     public EndPointProxy(InetSocketAddress address) {
         this.address = address;
         this.gson = new Gson();
-        this.endPointPojo = new EndPoint();
+        this.endPointPojo = new EndPoint(address.getHostName());
     }
     
     public EndPoint getEndPointPojo() {

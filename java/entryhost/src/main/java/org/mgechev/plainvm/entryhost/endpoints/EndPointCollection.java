@@ -3,9 +3,12 @@ package org.mgechev.plainvm.entryhost.endpoints;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.messages.Action;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
@@ -31,6 +34,14 @@ public enum EndPointCollection {
     public void startPolling() {
         poller = new Thread(new Poller());
         poller.start();
+    }
+    
+    public List<EndPoint> getEndPoints() {
+        ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+        for (EndPointProxy proxy : this.endpoints.values()) {
+            endpoints.add(proxy.getEndPointPojo());
+        }
+        return endpoints;
     }
     
     public void handleAction(Action action) {

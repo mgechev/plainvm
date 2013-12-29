@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.messages.Action;
-import org.mgechev.plainvm.entryhost.messages.EndPointData;
+import org.mgechev.plainvm.entryhost.messages.ClientData;
 
 import com.google.gson.Gson;
 
@@ -19,14 +19,14 @@ public enum ClientCollection {
     public void registerClient(UUID uid, Client client) {
         synchronized (clients) {
             clients.put(uid, client);
-            
+            client.sendMessage(gson.toJson(getInitMessage()));
         }
     }
     
-    public EndPointData getInitMessage() {
-        EndPointData message = new EndPointData();
+    public ClientData getInitMessage() {
+        ClientData message = new ClientData();
         message.type = "system-startup-init";
-        
+        message.data = EndPointCollection.INSTANCE.getEndPoints();
         return message;
     }
 

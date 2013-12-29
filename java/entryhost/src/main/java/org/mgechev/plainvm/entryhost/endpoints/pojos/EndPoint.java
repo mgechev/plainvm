@@ -4,10 +4,19 @@ import java.util.List;
 
 public class EndPoint {
     public List<VirtualMachine> vms;
+    public String host;
+    
+    public EndPoint(String host) {
+        this.host = host;
+    }
     
     public void updateVms(List<VirtualMachine> vms) {
-        for (VirtualMachine vm : vms) {
-            updateVm(vm);
+        if (this.vms == null) {
+            this.vms = vms;
+        } else {
+            for (VirtualMachine vm : vms) {
+                updateVm(vm);
+            }
         }
     }
     
