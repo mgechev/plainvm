@@ -41,7 +41,7 @@ plainvm.register('system.connection_handler', (function () {
      *
      * @private
      * @param {string} command A string which is the actual command.
-     * @return {boolean} true/false depending on the whether the command is valid. 
+     * @return {boolean} true/false depending on the whether the command is valid.
      * */
     function isValidCommand(command) {
         try {

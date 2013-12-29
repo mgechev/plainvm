@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.messages.Action;
+import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 import com.google.gson.Gson;
 
@@ -19,6 +21,13 @@ public enum ClientCollection {
             clients.put(uid, client);
             
         }
+    }
+    
+    public EndPointData getInitMessage() {
+        EndPointData message = new EndPointData();
+        message.type = "system-startup-init";
+        
+        return message;
     }
 
     public void removeClient(UUID uid) {

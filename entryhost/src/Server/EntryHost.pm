@@ -207,7 +207,7 @@ sub _prepare_client_response($ $ $) {
         for my $vm_id (keys(%$ep_vms)) {
             push(@vms, $ep_vms->{$vm_id});
         }
-        push(@$eps_vms, [$ep, \@vms]);
+        push(@$eps_vms, { host => $ep, vms => \@vms });
     }
     $result = {
         type => $type,

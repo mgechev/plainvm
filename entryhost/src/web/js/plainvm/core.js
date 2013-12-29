@@ -294,10 +294,10 @@ var plainvm = (function () {
     function getRemotingPort() {
         return REMOTING_PORT;
     }
-    
+
     /**
      * Returns the entry host
-     * 
+     *
      * @public
      * @return {string}
      */
@@ -516,9 +516,9 @@ var plainvm = (function () {
                     vmHostUid,
                     vms = {};
                 for (var i = 0; i < hosts.length; i += 1) {
-                    host = hosts[i][0];
+                    host = hosts[i].host;
                     vmHostUid = host.replace(/\./g, '-');
-                    vmsArray = hosts[i][1];
+                    vmsArray = hosts[i].vms;
                     for (var j = 0; j < vmsArray.length; j += 1) {
                         vm = vmsArray[j];
                         vm.uid = vm.id + '-' + vmHostUid;
@@ -533,7 +533,7 @@ var plainvm = (function () {
         getEndPoints = function (hosts) {
             var ep = [];
             for (var i = 0; i < hosts.length; i += 1)
-                ep.push(hosts[i][0]);
+                ep.push(hosts[i].host);
             return ep;
         };
 
