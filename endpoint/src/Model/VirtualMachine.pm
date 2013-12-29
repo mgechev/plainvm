@@ -73,6 +73,7 @@ sub remote_port {
             GuacamoleUserMapping->new->add_user($id, $self->{_remote_address}, $port);
         }
         $self->{_remote_port} = $port;
+        $self->{_remote_port} = 111 if $self->{_remote_port} <= 0;
     }
     return $self->{_remote_port};
 }

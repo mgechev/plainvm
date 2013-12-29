@@ -18,9 +18,11 @@ public class VirtualMachine {
     public String endpoint;
     
     public boolean equals(VirtualMachine vm) {
+        if (vm == null) return false;
         return vm.is_running == is_running && vm.cpu == cpu &&
                 vm.name.equals(name) && vm.remote_port == remote_port &&
-                vm.os.equals(os) && vm.remote_address.equals(remote_address) &&
+                ((vm.remote_address == null && vm.remote_address == null) || vm.remote_address.equals(remote_address)) &&
+                vm.os.equals(os) && 
                 vm.id.equals(id) && vm.vram == vram && vm.ram == ram &&
                 vm.remoting_enabled == remoting_enabled;
     }
