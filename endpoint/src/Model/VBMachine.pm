@@ -138,7 +138,7 @@ sub remote_port($ $) {
             chop $vrdeStr[4];
             $port = $vrdeStr[4];
         } else {
-            $port = 'null';
+            $port = -1;
         }
     }
     no warnings 'numeric';

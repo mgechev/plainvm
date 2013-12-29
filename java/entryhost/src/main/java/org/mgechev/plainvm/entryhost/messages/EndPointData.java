@@ -1,9 +1,11 @@
 package org.mgechev.plainvm.entryhost.messages;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
 
 public class EndPointData {
     public String type;
-    public ArrayList<Object> data;
+    public List<VirtualMachine> data;
     public boolean isResponse;
 }

@@ -1,23 +1,34 @@
 package org.mgechev.plainvm.entryhost.endpoints.pojos;
 
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
-
-import com.google.gson.internal.LinkedTreeMap;
+import java.util.List;
 
 public class EndPoint {
-    public ArrayList<VirtualMachine> vms;
-    private Logger log = Logger.getLogger(getClass());
+    public List<VirtualMachine> vms;
     
-    @SuppressWarnings("unchecked")
-    public EndPoint(ArrayList<Object> vms) {
-        try {
-            for (Object vm : vms) {
-                this.vms.add(new VirtualMachine((LinkedTreeMap<Object, Object>)vm));
-            }
-        } catch (RuntimeException e) {
-            log.error("Error while parsing the virtual machines of the end point");
+    public void updateVms(List<VirtualMachine> vms) {
+        for (VirtualMachine vm : vms) {
+            updateVm(vm);
         }
+    }
+    
+    private void updateVm(VirtualMachine vm) {
+        VirtualMachine currentVm = getVmById(vm.id);
+        currentVm.cpu = vm.cpu;
+        currentVm.is_running = vm.is_running;
+        currentVm.name = vm.name;
+        currentVm.os = vm.os;
+        currentVm.ram = vm.ram;
+        currentVm.remote_address = vm.remote_address;
+        currentVm.remote_port = vm.remote_port;
+        currentVm.vram = vm.vram;
+    }
+    
+    private VirtualMachine getVmById(String id) {
+        for (VirtualMachine vm : vms) {
+            if (vm.id.equals(id)) {
+                return vm;
+            }
+        }
+        return null;
     }
 }

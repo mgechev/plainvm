@@ -86,7 +86,7 @@ sub check_for_updates($) {
             return $vms;
         }
     }
-    return undef;
+    return '[]';
 }
 
 sub check_for_screenshots() {
