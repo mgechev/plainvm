@@ -28,6 +28,7 @@ sub new($) {
 
 sub add_user($ $ $ $) {
     my ($self, $user, $host, $port, $pass) = @_;
+    return if not -e $self->{_file};
     if ($self->_user_exists($user)) {
         Common::warn('Replacing an existing user ' . $user);
         $self->remove_user($user);
@@ -57,7 +58,7 @@ sub get_user_mapping($ $ $ $) {
             port => { content => $port }
         }
     };
-    return $data, 
+    return $data;
 }
 
 sub _format_xml($ $) {
@@ -72,6 +73,7 @@ sub _format_xml($ $) {
 
 sub remove_user($ $ $) {
     my ($self, $user) = @_;
+    return if not -e $self->{_file};
     my $xml = XML::Simple::XMLin($self->{_file}) or die('Cannot open!');
     $xml->{authorize} = $xml->{authorize} || [];
     $xml->{authorize} = [$xml->{authorize}] unless ref $xml->{authorize} eq 'ARRAY';

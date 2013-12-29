@@ -40,11 +40,11 @@ public class RequestBuilder {
     private ClientRequest buildChangeStateRequest() {
         ClientRequest changeStateRequest = new ClientRequest();
         changeStateRequest.type = request.type;
-        LinkedTreeMap<String, String> actionMap = (LinkedTreeMap<String, String>)request.data;
+        LinkedTreeMap<Object, Object> actionMap = (LinkedTreeMap<Object, Object>)request.data;
         Action action = new Action();
-        action.action = actionMap.get("action");
-        this.host = action.endpoint = actionMap.get("endpoint");
-        action.vm = actionMap.get("vm");
+        action.action = actionMap.get("action").toString();
+        this.host = action.endpoint = actionMap.get("endpoint").toString();
+        action.vm = actionMap.get("vm").toString();
         changeStateRequest.data = action;
         return changeStateRequest;
     }
@@ -52,23 +52,23 @@ public class RequestBuilder {
     private ClientRequest buildEditVmRequest() {
         ClientRequest editRequest = new ClientRequest();
         editRequest.type = request.type;
-        LinkedTreeMap<String, String> changeMap = (LinkedTreeMap<String, String>)request.data;
+        LinkedTreeMap<Object, Object> changeMap = (LinkedTreeMap<Object, Object>)request.data;
         VirtualMachine vm = new VirtualMachine();
-        vm.is_running = Boolean.parseBoolean(changeMap.get("is_running"));
-        vm.cpu = Double.parseDouble(changeMap.get("cpu"));
-        vm.name = changeMap.get("name");
-        vm.remote_port = Integer.parseInt(changeMap.get("remote_port"));
-        vm.os = changeMap.get("os");
+        vm.is_running = Boolean.parseBoolean(changeMap.get("is_running").toString());
+        vm.cpu = Double.parseDouble(changeMap.get("cpu").toString());
+        vm.name = changeMap.get("name").toString();
+        vm.remote_port = (int) Double.parseDouble(changeMap.get("remote_port").toString());
+        vm.os = changeMap.get("os").toString();
         try {
-            vm.remote_address = InetAddress.getByName(changeMap.get("remote_address"));
+            vm.remote_address = InetAddress.getByName(changeMap.get("remote_address").toString());
         } catch (UnknownHostException e) {
             
         }
-        vm.id = changeMap.get("id");
-        vm.vram = Double.parseDouble(changeMap.get("vram"));
-        vm.ram = Double.parseDouble(changeMap.get("ram"));
-        vm.remoting_enabled = Boolean.parseBoolean(changeMap.get("remoting_enabled"));
-        vm.endpoint = changeMap.get("endpoint");
+        vm.id = changeMap.get("id").toString();
+        vm.vram = Double.parseDouble(changeMap.get("vram").toString());
+        vm.ram = Double.parseDouble(changeMap.get("ram").toString());
+        vm.remoting_enabled = Boolean.parseBoolean(changeMap.get("remoting_enabled").toString());
+        this.host = vm.endpoint = changeMap.get("endpoint").toString();
         editRequest.data = vm;
         return editRequest;
     }

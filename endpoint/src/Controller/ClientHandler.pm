@@ -76,7 +76,6 @@ sub _handle_request {
     my $msg = $request->{message};
     my $client = $request->{client};
     my $type = $msg->{type};
-    print $msg->{type} . "\n";
     if ($type eq 'update') {
         $self->check_for_updates($client);
     } elsif ($type eq 'screenshot-update') {
@@ -103,8 +102,9 @@ sub _handle_request {
 
 sub _validate_data($ $) {
     my ($self, $vm) = @_;
-    $vm->{id} = $self->_escape_quotes($vm->{id}); 
-    $vm->{name} = $self->_escape_quotes($vm->{name}); 
+    $vm->{id} = $self->_escape_quotes($vm->{id});
+    $vm->{name} = $self->_escape_quotes($vm->{name});
+    $vm->{remote_port} = undef if $vm->{remote_port} <= 100;
     $vm->{remote_address} = $self->_escape_quotes($vm->{remote_address});
     return $vm;
 }
