@@ -14,6 +14,9 @@ public class VirtualMachine {
     public double ram;
     public boolean remoting_enabled;
     
+    //Currently I'm not checking whether the endpoints are equal
+    public String endpoint;
+    
     public boolean equals(VirtualMachine vm) {
         return vm.is_running == is_running && vm.cpu == cpu &&
                 vm.name.equals(name) && vm.remote_port == remote_port &&

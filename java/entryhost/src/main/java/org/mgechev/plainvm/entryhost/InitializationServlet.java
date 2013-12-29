@@ -17,12 +17,10 @@ public class InitializationServlet extends HttpServlet {
     private String[] clients = { "127.0.0.1" };
 
     @Override
-    public void init(){
+    public void init() {
         BasicConfigurator.configure();
         for (String client : clients) {
-            InetSocketAddress address = null;
-            address = InetSocketAddress.createUnresolved(client, port);
-            EndPointCollection.INSTANCE.connectEndPoint(address);
+            EndPointCollection.INSTANCE.connectEndPoint(client, port);
         }
         EndPointCollection.INSTANCE.startPolling();
         log.info("Initializing the entry host, connecting to end points.");

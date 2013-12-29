@@ -10,17 +10,18 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.clients.ClientCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
-import org.mgechev.plainvm.entryhost.messages.Action;
+import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 public enum EndPointCollection {
 
     INSTANCE;
-    private HashMap<InetSocketAddress, EndPointProxy> endpoints = new HashMap<InetSocketAddress, EndPointProxy>();
+    private HashMap<String, EndPointProxy> endpoints = new HashMap<String, EndPointProxy>();
     private Logger log = Logger.getLogger(getClass());
     private Thread poller;
     
-    public void connectEndPoint(InetSocketAddress address) {
+    public void connectEndPoint(String host, int port) {
+        InetSocketAddress address = InetSocketAddress.createUnresolved(host, port);
         EndPointProxy endPoint = new EndPointProxy(address);
         try {
             endPoint.connect();
@@ -29,7 +30,7 @@ public enum EndPointCollection {
         } catch (IOException e) {
             log.error("IO error from the End Point");
         }
-        endpoints.put(address, endPoint);
+        endpoints.put(host, endPoint);
     }
     
     public void startPolling() {
@@ -49,8 +50,13 @@ public enum EndPointCollection {
         ClientCollection.INSTANCE.updateClients(endpoint);
     }
     
-    public void handleAction(Action action) {
-        
+    public void handleAction(String address, ClientRequest action) {
+        log.info("Sending action to end point ");
+        try {
+            endpoints.get(address).sendMessage(action);
+        } catch (IOException e) {
+            log.error("Error while sending request to " + address);
+        }
     }
     
     public void messageReceived(EndPointData data) {

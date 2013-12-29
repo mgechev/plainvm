@@ -14,7 +14,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
-import org.mgechev.plainvm.entryhost.messages.Action;
+import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 import com.google.gson.Gson;
@@ -47,17 +47,17 @@ public class EndPointProxy extends Thread {
         startReading();
     }
     
-    public void writeMessage(Action message) throws IOException {
+    public void sendMessage(ClientRequest message) throws IOException {
         OutputStream os = socket.getOutputStream();
         os.write(gson.toJson(message).getBytes());
         os.flush();
     }
     
     public void pollForUpdate() throws IOException {
-        Action action = new Action();
+        ClientRequest action = new ClientRequest();
         action.needResponse = false;
         action.type = "update";
-        writeMessage(action);
+        sendMessage(action);
     }
     
     private void startReading() {

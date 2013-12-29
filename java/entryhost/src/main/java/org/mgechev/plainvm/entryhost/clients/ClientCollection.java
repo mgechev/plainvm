@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
-import org.mgechev.plainvm.entryhost.messages.Action;
+import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.ClientData;
 
 import com.google.gson.Gson;
@@ -48,8 +48,7 @@ public enum ClientCollection {
     }
     
     public void receiveMessage(UUID uid, String message) {
-        Action action = gson.fromJson(message, Action.class);
-        actionFacade.handleAction(uid, action);
+        actionFacade.handleAction(uid, message);
     }
     
     public void sendMessage(UUID uid, String message) {
