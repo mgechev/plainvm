@@ -24,6 +24,7 @@ public class InitializationServlet extends HttpServlet {
             address = InetSocketAddress.createUnresolved(client, port);
             EndPointCollection.INSTANCE.connectEndPoint(address);
         }
+        EndPointCollection.INSTANCE.startPolling();
         log.info("Initializing the entry host, connecting to end points.");
     }
 }

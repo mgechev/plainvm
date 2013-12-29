@@ -7,8 +7,12 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
+import org.mgechev.plainvm.entryhost.messages.Action;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 import com.google.gson.Gson;
@@ -16,15 +20,22 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-public class EndPoint extends Thread {
+public class EndPointProxy extends Thread {
 
     private InetSocketAddress address;
     private Socket socket;
     private Thread reader;
+    private Gson gson;
     private Logger log = Logger.getLogger(getClass());
+    private EndPoint endPointPojo;
     
-    public EndPoint(InetSocketAddress address) {
+    public EndPointProxy(InetSocketAddress address) {
         this.address = address;
+        this.gson = new Gson();
+    }
+    
+    public EndPoint getEndPointPojo() {
+        return endPointPojo;
     }
     
     public void connect() throws UnknownHostException, IOException {
@@ -33,10 +44,17 @@ public class EndPoint extends Thread {
         startReading();
     }
     
-    public void writeMessage(String message) throws IOException {
+    public void writeMessage(Action message) throws IOException {
         OutputStream os = socket.getOutputStream();
-        os.write(message.getBytes());
+        os.write(gson.toJson(message).getBytes());
         os.flush();
+    }
+    
+    public void pollForUpdate() throws IOException {
+        Action action = new Action();
+        action.needResponse = false;
+        action.type = "update";
+        writeMessage(action);
     }
     
     private void startReading() {
@@ -57,6 +75,14 @@ public class EndPoint extends Thread {
         }
     }
     
+    private void handleMessage(EndPointData message) {
+        if (message.type.equals("update")) {
+            endPointPojo = new EndPoint((ArrayList<Object>)message.data);
+        } else {
+            EndPointCollection.INSTANCE.messageReceived(message);
+        }
+    }
+    
     private class SocketReader implements Runnable {
         private InputStream stream;
         private JsonReader reader;
@@ -74,7 +100,7 @@ public class EndPoint extends Thread {
                 while (stream.available() >= 0) {
                     while (reader.hasNext()) {
                         EndPointData data = gson.fromJson(reader, EndPointData.class);
-                        EndPointCollection.INSTANCE.messageReceived(data);
+                        handleMessage(data);
                     }   
                 }
             } catch (JsonIOException e) {

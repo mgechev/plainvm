@@ -12,11 +12,12 @@ import org.mgechev.plainvm.entryhost.messages.EndPointData;
 public enum EndPointCollection {
 
     INSTANCE;
-    private HashMap<InetSocketAddress, EndPoint> endpoints = new HashMap<InetSocketAddress, EndPoint>();
+    private HashMap<InetSocketAddress, EndPointProxy> endpoints = new HashMap<InetSocketAddress, EndPointProxy>();
     private Logger log = Logger.getLogger(getClass());
+    private Thread poller;
     
     public void connectEndPoint(InetSocketAddress address) {
-        EndPoint endPoint = new EndPoint(address);
+        EndPointProxy endPoint = new EndPointProxy(address);
         try {
             endPoint.connect();
         } catch (UnknownHostException e) {
@@ -27,12 +28,34 @@ public enum EndPointCollection {
         endpoints.put(address, endPoint);
     }
     
+    public void startPolling() {
+        poller = new Thread(new Poller());
+        poller.start();
+    }
+    
     public void handleAction(Action action) {
         
     }
     
     public void messageReceived(EndPointData data) {
         
+    }
+    
+    private class Poller implements Runnable {
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(5000);
+                    for (EndPointProxy endpoint : endpoints.values()) {
+                        endpoint.pollForUpdate();
+                    }
+                } catch (InterruptedException e) {
+                    log.error("Error while sleeping - thread interrupted");
+                } catch (IOException e) {
+                    log.error("Error while polling");
+                }
+            }
+        }
     }
 
 }

@@ -76,6 +76,7 @@ sub _handle_request {
     my $msg = $request->{message};
     my $client = $request->{client};
     my $type = $msg->{type};
+    print $msg->{type} . "\n";
     if ($type eq 'update') {
         $self->check_for_updates($client);
     } elsif ($type eq 'screenshot-update') {
