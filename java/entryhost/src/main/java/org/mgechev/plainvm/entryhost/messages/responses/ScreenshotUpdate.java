@@ -3,8 +3,8 @@ package org.mgechev.plainvm.entryhost.messages.responses;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachineScreenshot;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VmData;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VirtualMachineScreenshot;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

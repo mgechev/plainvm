@@ -1,6 +1,6 @@
 package org.mgechev.plainvm.entryhost.messages.actions;
 
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VirtualMachine;
 import org.mgechev.plainvm.entryhost.messages.actions.changestate.Action;
 
 import com.google.gson.Gson;

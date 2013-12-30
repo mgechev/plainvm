@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.messages.ClientData;

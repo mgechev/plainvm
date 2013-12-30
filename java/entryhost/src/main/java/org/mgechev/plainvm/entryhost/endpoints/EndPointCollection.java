@@ -19,7 +19,8 @@ public enum EndPointCollection {
     INSTANCE;
     private HashMap<String, EndPointProxy> endpoints = new HashMap<String, EndPointProxy>();
     private Logger log = Logger.getLogger(getClass());
-    private Thread poller;
+    private Thread updatePoller;
+    private Thread screenshotUpdatePoller;
     
     public void connectEndPoint(String host, int port) {
         InetSocketAddress address = InetSocketAddress.createUnresolved(host, port);
@@ -35,8 +36,11 @@ public enum EndPointCollection {
     }
     
     public void startPolling() {
-        poller = new Thread(new Poller());
-        poller.start();
+        updatePoller = new Thread(new UpdatePoller());
+        updatePoller.start();
+        
+        screenshotUpdatePoller = new Thread(new ScreenshotUpdatePoller());
+        screenshotUpdatePoller.start();
     }
     
     public List<org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData> getEndPoints() {
@@ -64,17 +68,30 @@ public enum EndPointCollection {
         }
     }
     
-    public void messageReceived(EndPointData data) {
-        
-    }
-    
-    private class Poller implements Runnable {
+    private class UpdatePoller implements Runnable {
         public void run() {
             while (true) {
                 try {
                     Thread.sleep(10000);
                     for (EndPointProxy endpoint : endpoints.values()) {
                         endpoint.pollForUpdate();
+                    }
+                } catch (InterruptedException e) {
+                    log.error("Error while sleeping - thread interrupted");
+                } catch (IOException e) {
+                    log.error("Error while polling");
+                }
+            }
+        }
+    }
+    
+    private class ScreenshotUpdatePoller implements Runnable {
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(10000);
+                    for (EndPointProxy endpoint : endpoints.values()) {
+                        endpoint.pollForScreenshotUpdate();
                     }
                 } catch (InterruptedException e) {
                     log.error("Error while sleeping - thread interrupted");

@@ -1,4 +1,4 @@
-package org.mgechev.plainvm.entryhost.endpoints.pojos;
+package org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

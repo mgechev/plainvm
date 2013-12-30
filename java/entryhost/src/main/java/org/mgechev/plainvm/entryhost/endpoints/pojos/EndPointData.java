@@ -3,6 +3,8 @@ package org.mgechev.plainvm.entryhost.endpoints.pojos;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
+
 public abstract class EndPointData {
     
     public List<VmData> vms;

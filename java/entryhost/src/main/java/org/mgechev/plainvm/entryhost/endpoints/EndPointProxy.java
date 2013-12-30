@@ -12,7 +12,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VmData;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.responses.ScreenshotUpdate;
 import org.mgechev.plainvm.entryhost.messages.responses.Update;
@@ -39,6 +39,7 @@ public class EndPointProxy extends Thread {
         this.address = address;
         this.gson = new Gson();
         this.endPointPojo = new EndPoint(address.getHostName());
+        this.endPointScreenshotsPojo = new EndPointScreenshots(address.getHostName());
     }
     
     public EndPoint getEndPointPojo() {
@@ -61,6 +62,13 @@ public class EndPointProxy extends Thread {
         ClientRequest action = new ClientRequest();
         action.needResponse = false;
         action.type = "update";
+        sendMessage(action);
+    }
+    
+    public void pollForScreenshotUpdate() throws IOException {
+        ClientRequest action = new ClientRequest();
+        action.needResponse = false;
+        action.type = "screenshot-update";
         sendMessage(action);
     }
     

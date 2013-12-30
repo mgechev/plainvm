@@ -1,5 +1,8 @@
 package org.mgechev.plainvm.entryhost.endpoints.pojos;
 
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VirtualMachine;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
+
 public class EndPoint extends EndPointData {
 
     public EndPoint(String host) {
