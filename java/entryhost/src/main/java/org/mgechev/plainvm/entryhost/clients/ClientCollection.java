@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.ClientData;
 
@@ -38,13 +39,17 @@ public enum ClientCollection {
         }
     }
     
-    public void updateClients(EndPoint endpoint) {
+    public void sendUpdate(EndPoint endpoint) {
         ClientData message = new ClientData();
         message.type = "system-update";
         ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
         endpoints.add(endpoint);
         message.data = endpoints;
         broadcastMessage(message);
+    }
+    
+    public void sendScreenshotUpdate(EndPointScreenshots screenshots) {
+        
     }
     
     public void receiveMessage(UUID uid, String message) {

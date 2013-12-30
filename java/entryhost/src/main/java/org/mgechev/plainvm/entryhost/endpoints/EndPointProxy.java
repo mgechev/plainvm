@@ -12,13 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mgechev.plainvm.entryhost.clients.ClientCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachineScreenshot;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
+import org.mgechev.plainvm.entryhost.messages.responses.ScreenshotUpdate;
+import org.mgechev.plainvm.entryhost.messages.responses.Update;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
@@ -30,11 +39,14 @@ public class EndPointProxy extends Thread {
     private Gson gson;
     private Logger log = Logger.getLogger(getClass());
     private EndPoint endPointPojo;
+    private EndPointScreenshots endPointScreenshotsPojo;
+    private boolean initialized;
     
     public EndPointProxy(InetSocketAddress address) {
         this.address = address;
         this.gson = new Gson();
         this.endPointPojo = new EndPoint(address.getHostName());
+        this.initialized = false;
     }
     
     public EndPoint getEndPointPojo() {
@@ -69,103 +81,50 @@ public class EndPointProxy extends Thread {
         }
     }
     
-    private void destroyEndPoint() {
-        reader = null;
-        try {
-            socket.close();
-        } catch (IOException e) {
-            log.error("Error while closing the socket");
-        }
+//    private void destroyEndPoint() {
+//        reader = null;
+//        try {
+//            socket.close();
+//        } catch (IOException e) {
+//            log.error("Error while closing the socket");
+//        }
+//    }
+    
+    public void handleUpdate(JsonObject data) {
+        Update result = new Update(data);
+        endPointPojo.updateVms(result.data);
+        ClientCollection.INSTANCE.sendUpdate(endPointPojo);
     }
     
-    private void handleMessage(EndPointData message) {
-        if (message.type.equals("update")) {
-            List<VirtualMachine> changed = endPointPojo.updateVms(message.data);
-            if (changed.size() > 0) {
-                EndPoint endpoint = new EndPoint(this.address.getHostName());
-                endpoint.vms = changed;
-                EndPointCollection.INSTANCE.endPointChanged(endpoint);
-                log.info("End point status changed, updating the client");
-            }
-        } else {
-            EndPointCollection.INSTANCE.messageReceived(message);
-        }
+    public void handleScreenshotUpdate(JsonObject data) {
+        ScreenshotUpdate result = new ScreenshotUpdate(data);
+        endPointScreenshotsPojo.updateVms(result.data);
+        ClientCollection.INSTANCE.sendScreenshotUpdate(endPointScreenshotsPojo);
     }
     
     private class SocketReader implements Runnable {
         private InputStream stream;
         private JsonReader reader;
-        private Gson gson;
         
         public SocketReader(InputStream stream) {
             this.stream = stream;
-            this.gson = new Gson();
-        }
-
-        public List<VirtualMachine> readVmsArray(JsonReader reader) throws IOException {
-            List<VirtualMachine> vms = new ArrayList<VirtualMachine>();
-            
-            reader.beginArray();
-            while (reader.hasNext()) {
-                vms.add(readVm(reader));
-            }
-            reader.endArray();
-            return vms;
-        }
-        
-        public VirtualMachine readVm(JsonReader reader) throws IOException {
-            VirtualMachine vm = new VirtualMachine();
-            reader.beginObject();
-            while (reader.hasNext()) {
-                String name = reader.nextName();
-                if (name.equals("is_running")) {
-                    vm.is_running = reader.nextBoolean();
-                } else if (name.equals("cpu")) {
-                    vm.cpu = reader.nextDouble();
-                } else if (name.equals("name")) {
-                    vm.name = reader.nextString();
-                } else if (name.equals("os")) {
-                    vm.os = reader.nextString();
-                } else if (name.equals("id")) {
-                    vm.id = reader.nextString();
-                } else if (name.equals("vram")) {
-                    vm.vram = reader.nextDouble();
-                } else if (name.equals("ram")) {
-                    vm.ram = reader.nextDouble();
-                } else if (name.equals("remote_port")) {
-                    vm.remote_port = reader.nextInt();
-                } else if (name.equals("remote_address")) {
-                    String host = reader.nextString();
-                    try {
-                        vm.remote_address = InetAddress.getByName(host);
-                    } catch (UnknownHostException e) {
-                        log.error("Error while reading the remote address of the virtual machine " + host);
-                    }
-                } else if (name.equals("remoting_enabled")) {
-                    vm.remoting_enabled = reader.nextBoolean();
-                }
-            }
-            reader.endObject();
-            return vm;
         }
         
         public void run() {
             log.info("Start reading from the given input stream");
             try {
-                EndPointData data = new EndPointData();
                 while (socket.isBound()) {
                     this.reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
-                    reader.beginObject();
-                    while (reader.hasNext()) {
-                        String name = reader.nextName();
-                        if (name.equals("type")) {
-                            data.type = reader.nextString();
-                        } else if (name.equals("data")) {
-                            data.data = readVmsArray(reader);
-                        }
-                    }   
-                    reader.endObject();
-                    handleMessage(data);
+                    JsonParser parser = new JsonParser();
+                    JsonElement root = parser.parse(reader);
+                    JsonObject obj = root.getAsJsonObject();
+                    String type = obj.get("type").getAsString();
+                    if (type.equals("update")) {
+                        handleUpdate(obj);
+                    } else if (type.equals("screenshot-update")) {
+                        handleScreenshotUpdate(obj);
+                    }
+                    initialized = true;
                 }
             } catch (JsonIOException e) {
                 //destroyEndPoint();

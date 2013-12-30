@@ -53,22 +53,8 @@ public class RequestBuilder {
         ClientRequest editRequest = new ClientRequest();
         editRequest.type = request.type;
         LinkedTreeMap<Object, Object> changeMap = (LinkedTreeMap<Object, Object>)request.data;
-        VirtualMachine vm = new VirtualMachine();
-        vm.is_running = Boolean.parseBoolean(changeMap.get("is_running").toString());
-        vm.cpu = Double.parseDouble(changeMap.get("cpu").toString());
-        vm.name = changeMap.get("name").toString();
-        vm.remote_port = (int) Double.parseDouble(changeMap.get("remote_port").toString());
-        vm.os = changeMap.get("os").toString();
-        try {
-            vm.remote_address = InetAddress.getByName(changeMap.get("remote_address").toString());
-        } catch (UnknownHostException e) {
-            
-        }
-        vm.id = changeMap.get("id").toString();
-        vm.vram = Double.parseDouble(changeMap.get("vram").toString());
-        vm.ram = Double.parseDouble(changeMap.get("ram").toString());
-        vm.remoting_enabled = Boolean.parseBoolean(changeMap.get("remoting_enabled").toString());
-        this.host = vm.endpoint = changeMap.get("endpoint").toString();
+        VirtualMachine vm = new VirtualMachine(changeMap);
+        this.host = vm.endpoint;
         editRequest.data = vm;
         return editRequest;
     }

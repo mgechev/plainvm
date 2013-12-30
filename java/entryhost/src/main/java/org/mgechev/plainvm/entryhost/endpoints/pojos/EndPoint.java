@@ -1,35 +1,15 @@
 package org.mgechev.plainvm.entryhost.endpoints.pojos;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class EndPoint {
-    public List<VirtualMachine> vms;
+public class EndPoint extends EndPointData {
     public String host;
     
     public EndPoint(String host) {
         this.host = host;
     }
     
-    public List<VirtualMachine> updateVms(List<VirtualMachine> vms) {
-        if (this.vms == null) {
-            this.vms = vms;
-            return vms;
-        } else {
-            ArrayList<VirtualMachine> changed = new ArrayList<VirtualMachine>();
-            for (VirtualMachine vm : vms) {
-                VirtualMachine currentVm = getVmById(vm.id);
-                if (!currentVm.equals(vm)) {
-                    changed.add(vm);
-                    updateVm(vm);
-                }
-            }
-            return changed;
-        }
-    }
-    
-    private void updateVm(VirtualMachine vm) {
-        VirtualMachine currentVm = getVmById(vm.id);
+    void updateVm(VmData virtualMachine) {
+        VirtualMachine currentVm = (VirtualMachine)getVmById(virtualMachine.id);
+        VirtualMachine vm = (VirtualMachine)virtualMachine;
         currentVm.cpu = vm.cpu;
         currentVm.is_running = vm.is_running;
         currentVm.name = vm.name;
@@ -40,12 +20,4 @@ public class EndPoint {
         currentVm.vram = vm.vram;
     }
     
-    private VirtualMachine getVmById(String id) {
-        for (VirtualMachine vm : vms) {
-            if (vm.id.equals(id)) {
-                return vm;
-            }
-        }
-        return null;
-    }
 }

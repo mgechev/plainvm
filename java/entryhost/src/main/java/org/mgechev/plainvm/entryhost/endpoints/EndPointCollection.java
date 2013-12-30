@@ -47,7 +47,7 @@ public enum EndPointCollection {
     }
     
     public void endPointChanged(EndPoint endpoint) {
-        ClientCollection.INSTANCE.updateClients(endpoint);
+        ClientCollection.INSTANCE.sendUpdate(endpoint);
     }
     
     public void handleAction(String address, ClientRequest action) {

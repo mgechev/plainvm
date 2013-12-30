@@ -80,7 +80,6 @@ plainvm.register('ui.vm_status_pic', (function () {
                 screenContainer.jqxTooltip('destroy');
                 activeTooltip = false;
             }
-            
         }
     }
 
@@ -89,5 +88,3 @@ plainvm.register('ui.vm_status_pic', (function () {
     };
 
 }()));
-
-
