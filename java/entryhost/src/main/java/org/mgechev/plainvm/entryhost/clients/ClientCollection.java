@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
-import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.ClientData;
 
 import com.google.gson.Gson;
@@ -39,10 +39,10 @@ public enum ClientCollection {
         }
     }
     
-    public void sendUpdate(EndPoint endpoint) {
+    public void sendUpdate(String type, EndPointData endpoint) {
         ClientData message = new ClientData();
-        message.type = "system-update";
-        ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+        message.type = type;
+        ArrayList<EndPointData> endpoints = new ArrayList<EndPointData>();
         endpoints.add(endpoint);
         message.data = endpoints;
         broadcastMessage(message);

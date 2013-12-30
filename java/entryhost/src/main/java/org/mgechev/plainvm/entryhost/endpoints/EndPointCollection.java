@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.clients.ClientCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
@@ -38,16 +39,12 @@ public enum EndPointCollection {
         poller.start();
     }
     
-    public List<EndPoint> getEndPoints() {
-        ArrayList<EndPoint> endpoints = new ArrayList<EndPoint>();
+    public List<org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData> getEndPoints() {
+        ArrayList<org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData> endpoints = new ArrayList<org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData>();
         for (EndPointProxy proxy : this.endpoints.values()) {
             endpoints.add(proxy.getEndPointPojo());
         }
         return endpoints;
-    }
-    
-    public void endPointChanged(EndPoint endpoint) {
-        ClientCollection.INSTANCE.sendUpdate(endpoint);
     }
     
     public void handleAction(String address, ClientRequest action) {
@@ -59,6 +56,14 @@ public enum EndPointCollection {
         }
     }
     
+    public void updateEndPoint(org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData data) {
+        if (data instanceof EndPoint) {
+            ClientCollection.INSTANCE.sendUpdate("system-update", data);
+        } else if (data instanceof EndPointScreenshots) {
+            ClientCollection.INSTANCE.sendUpdate("system-screenshot-update", data);
+        }
+    }
+    
     public void messageReceived(EndPointData data) {
         
     }
@@ -67,7 +72,7 @@ public enum EndPointCollection {
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(10000);
                     for (EndPointProxy endpoint : endpoints.values()) {
                         endpoint.pollForUpdate();
                     }

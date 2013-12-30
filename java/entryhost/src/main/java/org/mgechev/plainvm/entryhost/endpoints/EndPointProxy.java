@@ -4,26 +4,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.mgechev.plainvm.entryhost.clients.ClientCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachineScreenshot;
+import org.mgechev.plainvm.entryhost.endpoints.pojos.VmData;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.responses.ScreenshotUpdate;
 import org.mgechev.plainvm.entryhost.messages.responses.Update;
-import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
@@ -40,13 +34,11 @@ public class EndPointProxy extends Thread {
     private Logger log = Logger.getLogger(getClass());
     private EndPoint endPointPojo;
     private EndPointScreenshots endPointScreenshotsPojo;
-    private boolean initialized;
     
     public EndPointProxy(InetSocketAddress address) {
         this.address = address;
         this.gson = new Gson();
         this.endPointPojo = new EndPoint(address.getHostName());
-        this.initialized = false;
     }
     
     public EndPoint getEndPointPojo() {
@@ -81,25 +73,22 @@ public class EndPointProxy extends Thread {
         }
     }
     
-//    private void destroyEndPoint() {
-//        reader = null;
-//        try {
-//            socket.close();
-//        } catch (IOException e) {
-//            log.error("Error while closing the socket");
-//        }
-//    }
-    
     public void handleUpdate(JsonObject data) {
         Update result = new Update(data);
-        endPointPojo.updateVms(result.data);
-        ClientCollection.INSTANCE.sendUpdate(endPointPojo);
+        List<VmData> changed = endPointPojo.updateVms(result.data);
+        if (changed.size() > 0) {
+            EndPoint changedEndPoint = new EndPoint(endPointPojo.host);
+            changedEndPoint.vms = changed;
+            EndPointCollection.INSTANCE.updateEndPoint(changedEndPoint);
+        }
     }
     
     public void handleScreenshotUpdate(JsonObject data) {
         ScreenshotUpdate result = new ScreenshotUpdate(data);
-        endPointScreenshotsPojo.updateVms(result.data);
-        ClientCollection.INSTANCE.sendScreenshotUpdate(endPointScreenshotsPojo);
+        List<VmData> changed = endPointScreenshotsPojo.updateVms(result.data);
+        EndPointScreenshots changedScreenShots = new EndPointScreenshots(endPointScreenshotsPojo.host);
+        changedScreenShots.vms = changed;
+        EndPointCollection.INSTANCE.updateEndPoint(changedScreenShots);
     }
     
     private class SocketReader implements Runnable {
@@ -124,7 +113,6 @@ public class EndPointProxy extends Thread {
                     } else if (type.equals("screenshot-update")) {
                         handleScreenshotUpdate(obj);
                     }
-                    initialized = true;
                 }
             } catch (JsonIOException e) {
                 //destroyEndPoint();

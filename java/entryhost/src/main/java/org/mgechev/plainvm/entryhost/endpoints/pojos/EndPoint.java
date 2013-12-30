@@ -1,12 +1,11 @@
 package org.mgechev.plainvm.entryhost.endpoints.pojos;
 
 public class EndPoint extends EndPointData {
-    public String host;
-    
+
     public EndPoint(String host) {
-        this.host = host;
+        super(host);
     }
-    
+
     void updateVm(VmData virtualMachine) {
         VirtualMachine currentVm = (VirtualMachine)getVmById(virtualMachine.id);
         VirtualMachine vm = (VirtualMachine)virtualMachine;

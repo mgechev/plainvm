@@ -6,6 +6,11 @@ import java.util.List;
 public abstract class EndPointData {
     
     public List<VmData> vms;
+    public String host;
+    
+    public EndPointData(String host) {
+        this.host = host;
+    }
     
     abstract void updateVm(VmData vm);
     

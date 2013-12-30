@@ -1,10 +1,5 @@
 package org.mgechev.plainvm.entryhost.messages.actions;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.UUID;
-
-import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.VirtualMachine;
 import org.mgechev.plainvm.entryhost.messages.actions.changestate.Action;
 
@@ -15,18 +10,15 @@ public class RequestBuilder {
 
     private Gson gson;
     private ClientRequest request;
-    private String message;
     private String host;
     
     public RequestBuilder(String message) {
         gson = new Gson();
         request = gson.fromJson(message, ClientRequest.class);
-        this.message = message;
     }
     
     public RequestBuilder(ClientRequest request) {
         this.request = request;
-        this.message = gson.toJson(request);
     }
     
     public ClientRequest build() {
