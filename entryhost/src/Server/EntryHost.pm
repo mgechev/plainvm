@@ -58,14 +58,14 @@ sub update_clients($ $) {
 #Sends command to any end point.
 #Actually the command is not explicitly send, it's being pushed into a
 #queue and send when the EndPointConnectionHandler is ready.
-#The method checks whether the request will wait for response (if the need-response
+#The method checks whether the request will wait for response (if the needResponse
 #flag is set) if so we generate unique id for the request and put it into a hash
 sub send_command($ $ $) {
     my ($self, $command, $client) = @_;
     eval {
         my $parsed_command = JSON::from_json($command);
         my $unique_id = $self->_get_uid();
-        if (defined $parsed_command->{'need-response'}) {
+        if (defined $parsed_command->{'needResponse'}) {
             $responses{$unique_id} = {
                 timeout => 0,
                 client => $client

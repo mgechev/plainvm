@@ -14,7 +14,7 @@ var plainvm = (function () {
         screenshots = {},
         endpoints = [],
         firstConnectionEstablished = false,
-        VM_SERVER = "localhost{{port}}/plainvm-entryhost/plainvm/entryhost",//window.location.hostname,
+        VM_SERVER = "localhost:{{port}}/plainvm-entryhost/plainvm/entryhost",//window.location.hostname,
         VM_SERVER_PORT = 8080,//parseInt(window.location.port, 10),
         REMOTING_PORT = 8080,
         currentTheme = 'fresh',
@@ -302,7 +302,7 @@ var plainvm = (function () {
      * @return {string}
      */
     function getEntryHost() {
-    	return VM_SERVER.replace(/\{\{\w+\}\}/, ':' + VM_SERVER_PORT);
+    	return VM_SERVER.replace(/\{\{\w+\}\}/, VM_SERVER_PORT);
     }
 
     /**

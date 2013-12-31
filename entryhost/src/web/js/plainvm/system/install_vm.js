@@ -247,7 +247,7 @@ plainvm.register('system.install_vm', (function () {
             id: config.id,
             endpoint: config.destination,
             force: true,
-            'need-response': true
+            needResponse: true
         };
         sandbox.publish('system-send-frame', {
             type: 'system-iso-chunk',

@@ -44,7 +44,7 @@ plainvm.register('system.remote_command_bridge', (function () {
             command.data = data;
         }
         if (needResponse) {
-            command['need-response'] = true;
+            command.needResponse = true;
         }
         sandbox.publish('system-send-command', JSON.stringify(command));
     }
