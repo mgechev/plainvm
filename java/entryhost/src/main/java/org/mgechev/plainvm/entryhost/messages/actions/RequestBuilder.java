@@ -3,10 +3,14 @@ package org.mgechev.plainvm.entryhost.messages.actions;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VirtualMachine;
 import org.mgechev.plainvm.entryhost.messages.actions.changestate.Action;
 import org.mgechev.plainvm.entryhost.messages.actions.filetransfer.Chunk;
-import org.mgechev.plainvm.entryhost.messages.actions.filetransfer.SendChunkRequest;
+import org.mgechev.plainvm.entryhost.messages.createvm.CreateVm;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+
+/**
+ * TODO: implement the builders with template method
+ */
 
 public class RequestBuilder {
 
@@ -30,6 +34,8 @@ public class RequestBuilder {
             return buildEditVmRequest();
         } else if (request.type.equals("system-iso-chunk")) {
             return buildIsoChunkRequest();
+        } else if (request.type.endsWith("system-create-vm")) {
+            return buildCreateVmRequest();
         }
         return null;
     }
@@ -69,6 +75,21 @@ public class RequestBuilder {
         chunk.id = (int)Double.parseDouble(actionMap.get("id").toString());
         isoRequest.data = chunk;
         return isoRequest;
+    }
+    
+    private ClientRequest buildCreateVmRequest() {
+        ClientRequest createVmRequest = new ClientRequest();
+        createVmRequest.type = request.type;
+        createVmRequest.needResponse = true;
+        LinkedTreeMap<Object, Object> actionMap = (LinkedTreeMap<Object, Object>)request.data;
+        CreateVm requestData = new CreateVm();
+        this.host = requestData.endpoint = actionMap.get("endpoint").toString();
+        requestData.hdds = Double.parseDouble(actionMap.get("hdds").toString());
+        requestData.name = actionMap.get("name").toString();
+        requestData.os = actionMap.get("os").toString();
+        requestData.ram = Double.parseDouble(actionMap.get("ram").toString());
+        createVmRequest.data = requestData;
+        return createVmRequest;
     }
     
     public String getTarget() {

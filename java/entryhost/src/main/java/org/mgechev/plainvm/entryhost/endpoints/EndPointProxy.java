@@ -17,6 +17,7 @@ import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
 import org.mgechev.plainvm.entryhost.messages.responses.IsoResponse;
 import org.mgechev.plainvm.entryhost.messages.responses.ScreenshotUpdate;
 import org.mgechev.plainvm.entryhost.messages.responses.Update;
+import org.mgechev.plainvm.entryhost.messages.responses.VmCreation;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -105,6 +106,11 @@ public class EndPointProxy extends Thread {
         IsoResponse result = new IsoResponse(data);
         EndPointCollection.INSTANCE.updateEndPoint(address.getHostName(), result);
     }
+    
+    public void handleVmCreationResponse(JsonObject obj) {
+        VmCreation result = new VmCreation(obj);
+        EndPointCollection.INSTANCE.updateEndPoint(address.getHostName(), result);
+    }
 
     private class SocketReader implements Runnable {
         private InputStream stream;
@@ -130,17 +136,20 @@ public class EndPointProxy extends Thread {
                         handleScreenshotUpdate(obj);
                     } else if (type.equals("response-iso-chunk")) {
                         handleIsoResponse(obj);
+                    } else if (type.equals("create-vm-success")) {
+                        handleVmCreationResponse(obj);
+                    } else if (type.equals("create-vm-fail")) {
+                        handleVmCreationResponse(obj);
                     }
                 }
             } catch (JsonIOException e) {
-                // destroyEndPoint();
                 log.error("Json IO exception while reading from the socket");
             } catch (JsonSyntaxException e) {
-                // destroyEndPoint();
                 log.error("Json syntax exception while reading from the socket");
             } catch (IOException e) {
-                // destroyEndPoint();
                 log.error("Error while reading from the socket");
+            } catch (IllegalStateException e) {
+                log.error("Json syntax exception while reading from the socket");
             }
         }
     }

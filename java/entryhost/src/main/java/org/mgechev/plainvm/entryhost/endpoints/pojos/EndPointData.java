@@ -24,7 +24,8 @@ public abstract class EndPointData {
             ArrayList<VmData> changed = new ArrayList<VmData>();
             for (VmData vm : vms) {
                 VmData currentVm = getVmById(vm.id);
-                if (!currentVm.equals(vm)) {
+                //currentVm might be just created
+                if (currentVm != null && !currentVm.equals(vm)) {
                     changed.add(vm);
                     updateVm(vm);
                 }

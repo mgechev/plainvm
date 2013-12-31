@@ -1,7 +1,5 @@
 package org.mgechev.plainvm.entryhost;
 
-import java.net.InetSocketAddress;
-
 import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.BasicConfigurator;
