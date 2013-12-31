@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.mgechev.plainvm.entryhost.Config;
 import org.mgechev.plainvm.entryhost.clients.ClientCollection;
 import org.mgechev.plainvm.entryhost.messages.EndPointMessage;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
@@ -66,7 +67,7 @@ public enum EndPointCollection {
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(Config.UPDATE_POLL_TIMEOUT);
                     for (EndPointProxy endpoint : endpoints.values()) {
                         endpoint.pollForUpdate();
                     }
@@ -83,7 +84,7 @@ public enum EndPointCollection {
         public void run() {
             while (true) {
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(Config.SCREENSHOT_UPDATE_POLL_TIMEOUT);
                     for (EndPointProxy endpoint : endpoints.values()) {
                         endpoint.pollForScreenshotUpdate();
                     }

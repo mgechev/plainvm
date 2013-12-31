@@ -22,14 +22,18 @@ public abstract class EndPointData {
             return vms;
         } else {
             ArrayList<VmData> changed = new ArrayList<VmData>();
+            ArrayList<VmData> newVms = new ArrayList<VmData>();
             for (VmData vm : vms) {
                 VmData currentVm = getVmById(vm.id);
-                //currentVm might be just created
-                if (currentVm != null && !currentVm.equals(vm)) {
+                if (currentVm == null) {
+                    newVms.add(currentVm);
+                    changed.add(vm);
+                } else if (!currentVm.equals(vm)) {
                     changed.add(vm);
                     updateVm(vm);
                 }
             }
+            vms.addAll(newVms);
             return changed;
         }
     }
