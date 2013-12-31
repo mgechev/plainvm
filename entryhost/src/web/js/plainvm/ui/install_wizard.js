@@ -68,7 +68,7 @@ plainvm.register('ui.install_wizard', (function () {
         var sectionOne = $('#plainvm-vm-install-wizard-section-1').jqxValidator();
         sectionOne.jqxValidator({
             rules: [
-                { 
+                {
                     input: '#plainvm-install-wizard-vm-name',
                     message: 'Invalid name.',
                     action: 'keyup,blur',
@@ -89,7 +89,7 @@ plainvm.register('ui.install_wizard', (function () {
             }
         });
     }
-    
+
     /**
      * Adds event handlers to the second section of the wizard
      *
@@ -109,8 +109,8 @@ plainvm.register('ui.install_wizard', (function () {
         $('#plainvm-install-wizard-second-next').bind('click', function () {
             if (sectionTwo.jqxValidator('validate')) {
                 sandbox.publish('ui-install-wizard-second-section', {
-                    ram :      $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
-                    hdds:      $('#plainvm-install-wizard-hdd-slider').jqxSlider('value'),
+                    ram : $('#plainvm-install-wizard-ram-slider').jqxSlider('value'),
+                    hdds: $('#plainvm-install-wizard-hdd-slider').jqxSlider('value'),
                     file: document.getElementById('plainvm-install-wizard-file').files[0]
                 });
                 selectItem(2);

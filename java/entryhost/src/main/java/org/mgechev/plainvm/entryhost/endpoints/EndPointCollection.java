@@ -9,10 +9,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.mgechev.plainvm.entryhost.clients.ClientCollection;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
+import org.mgechev.plainvm.entryhost.messages.EndPointMessage;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
-import org.mgechev.plainvm.entryhost.messages.EndPointData;
 
 public enum EndPointCollection {
 
@@ -60,12 +58,8 @@ public enum EndPointCollection {
         }
     }
     
-    public void updateEndPoint(org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData data) {
-        if (data instanceof EndPoint) {
-            ClientCollection.INSTANCE.sendUpdate("system-update", data);
-        } else if (data instanceof EndPointScreenshots) {
-            ClientCollection.INSTANCE.sendUpdate("system-screenshot-update", data);
-        }
+    public void updateEndPoint(String hostname, EndPointMessage data) {
+        ClientCollection.INSTANCE.getActionHandler().handleResponse(hostname, data);
     }
     
     private class UpdatePoller implements Runnable {
@@ -101,5 +95,4 @@ public enum EndPointCollection {
             }
         }
     }
-
 }

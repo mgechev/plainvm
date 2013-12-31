@@ -17,7 +17,7 @@ plainvm.register('system.install_vm', (function () {
         FileTransfer = {
 
             //Size of the chunks which should be send
-            CHUNK_SIZE: 10008,
+            CHUNK_SIZE: 108,
 
             //The file which should be transfered
             file: undefined,

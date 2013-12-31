@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
 
-public class EndPointData {
+public class EndPointMessage {
     public String type;
-    public List<VmData> data;
     public boolean isResponse;
+    public String uid;
 }

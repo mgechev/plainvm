@@ -45,6 +45,7 @@ sub _subscribe_to_events {
     PublishSubscribe::subscribe('update-client', sub {
         my $ref = shift;
         my %data = %{$ref};
+        print %data;
         $self->_send_frame($data{client}, $data{data});
     });
     PublishSubscribe::subscribe('update-clients', sub {

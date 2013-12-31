@@ -2,6 +2,8 @@ package org.mgechev.plainvm.entryhost.messages.actions;
 
 import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VirtualMachine;
 import org.mgechev.plainvm.entryhost.messages.actions.changestate.Action;
+import org.mgechev.plainvm.entryhost.messages.actions.filetransfer.Chunk;
+import org.mgechev.plainvm.entryhost.messages.actions.filetransfer.SendChunkRequest;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
@@ -24,9 +26,12 @@ public class RequestBuilder {
     public ClientRequest build() {
         if (request.type.equals("change-vm-state")) {
             return buildChangeStateRequest();
-        } else {//if (request.type.equals("machine-edited")) {
+        } else if (request.type.equals("machine-edited")) {
             return buildEditVmRequest();
+        } else if (request.type.equals("system-iso-chunk")) {
+            return buildIsoChunkRequest();
         }
+        return null;
     }
     
     private ClientRequest buildChangeStateRequest() {
@@ -49,6 +54,21 @@ public class RequestBuilder {
         this.host = vm.endpoint;
         editRequest.data = vm;
         return editRequest;
+    }
+    
+    private ClientRequest buildIsoChunkRequest() {
+        ClientRequest isoRequest = new ClientRequest();
+        LinkedTreeMap<Object, Object> actionMap = (LinkedTreeMap<Object, Object>)request.data;
+        isoRequest.needResponse = request.needResponse;
+        isoRequest.type = request.type;
+        Chunk chunk = new Chunk();
+        chunk.chunk = actionMap.get("chunk").toString();
+        this.host = chunk.endpoint = actionMap.get("endpoint").toString();
+        chunk.filename = actionMap.get("filename").toString();
+        chunk.force = Boolean.parseBoolean(actionMap.get("force").toString());
+        chunk.id = (int)Double.parseDouble(actionMap.get("id").toString());
+        isoRequest.data = chunk;
+        return isoRequest;
     }
     
     public String getTarget() {

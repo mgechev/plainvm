@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.mgechev.plainvm.entryhost.actionhandlers.ActionFacade;
 import org.mgechev.plainvm.entryhost.endpoints.EndPointCollection;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointData;
-import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.messages.ClientData;
 
 import com.google.gson.Gson;
@@ -47,16 +46,16 @@ public enum ClientCollection {
         broadcastMessage(message);
     }
     
-    public void sendScreenshotUpdate(EndPointScreenshots screenshots) {
-        
+    public ActionFacade getActionHandler() {
+        return this.actionFacade;
     }
     
     public void receiveMessage(UUID uid, String message) {
         actionFacade.handleAction(uid, message);
     }
     
-    public void sendMessage(UUID uid, String message) {
-        clients.get(uid).sendMessage(message);
+    public void sendMessage(UUID uid, Object message) {
+        clients.get(uid).sendMessage(gson.toJson(message, message.getClass()));
     }
     
     public void broadcastMessage(ClientData data) {

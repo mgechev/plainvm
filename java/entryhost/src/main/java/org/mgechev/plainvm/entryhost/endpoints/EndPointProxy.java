@@ -14,6 +14,7 @@ import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPoint;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.EndPointScreenshots;
 import org.mgechev.plainvm.entryhost.endpoints.pojos.virtualmachine.VmData;
 import org.mgechev.plainvm.entryhost.messages.actions.ClientRequest;
+import org.mgechev.plainvm.entryhost.messages.responses.IsoResponse;
 import org.mgechev.plainvm.entryhost.messages.responses.ScreenshotUpdate;
 import org.mgechev.plainvm.entryhost.messages.responses.Update;
 
@@ -34,44 +35,45 @@ public class EndPointProxy extends Thread {
     private Logger log = Logger.getLogger(getClass());
     private EndPoint endPointPojo;
     private EndPointScreenshots endPointScreenshotsPojo;
-    
+
     public EndPointProxy(InetSocketAddress address) {
         this.address = address;
         this.gson = new Gson();
         this.endPointPojo = new EndPoint(address.getHostName());
-        this.endPointScreenshotsPojo = new EndPointScreenshots(address.getHostName());
+        this.endPointScreenshotsPojo = new EndPointScreenshots(
+                address.getHostName());
     }
-    
+
     public EndPoint getEndPointPojo() {
         return endPointPojo;
     }
-    
+
     public void connect() throws UnknownHostException, IOException {
         socket = new Socket(address.getHostName(), address.getPort());
         socket.setKeepAlive(true);
         startReading();
     }
-    
+
     public void sendMessage(ClientRequest message) throws IOException {
         OutputStream os = socket.getOutputStream();
         os.write(gson.toJson(message).getBytes());
         os.flush();
     }
-    
+
     public void pollForUpdate() throws IOException {
         ClientRequest action = new ClientRequest();
         action.needResponse = false;
         action.type = "update";
         sendMessage(action);
     }
-    
+
     public void pollForScreenshotUpdate() throws IOException {
         ClientRequest action = new ClientRequest();
         action.needResponse = false;
         action.type = "screenshot-update";
         sendMessage(action);
     }
-    
+
     private void startReading() {
         try {
             reader = new Thread(new SocketReader(socket.getInputStream()));
@@ -80,38 +82,44 @@ public class EndPointProxy extends Thread {
             log.error("Error while reading from the socket");
         }
     }
-    
+
     public void handleUpdate(JsonObject data) {
         Update result = new Update(data);
         List<VmData> changed = endPointPojo.updateVms(result.data);
         if (changed.size() > 0) {
-            EndPoint changedEndPoint = new EndPoint(endPointPojo.host);
-            changedEndPoint.vms = changed;
-            EndPointCollection.INSTANCE.updateEndPoint(changedEndPoint);
+            result.data = changed;
+            EndPointCollection.INSTANCE.updateEndPoint(address.getHostName(), result);
         }
     }
-    
+
     public void handleScreenshotUpdate(JsonObject data) {
         ScreenshotUpdate result = new ScreenshotUpdate(data);
         List<VmData> changed = endPointScreenshotsPojo.updateVms(result.data);
-        EndPointScreenshots changedScreenShots = new EndPointScreenshots(endPointScreenshotsPojo.host);
-        changedScreenShots.vms = changed;
-        EndPointCollection.INSTANCE.updateEndPoint(changedScreenShots);
+        if (changed.size() > 0) {
+            result.data = changed;
+            EndPointCollection.INSTANCE.updateEndPoint(address.getHostName(), result);
+        }
     }
-    
+
+    public void handleIsoResponse(JsonObject data) {
+        IsoResponse result = new IsoResponse(data);
+        EndPointCollection.INSTANCE.updateEndPoint(address.getHostName(), result);
+    }
+
     private class SocketReader implements Runnable {
         private InputStream stream;
         private JsonReader reader;
-        
+
         public SocketReader(InputStream stream) {
             this.stream = stream;
         }
-        
+
         public void run() {
             log.info("Start reading from the given input stream");
             try {
                 while (socket.isBound()) {
-                    this.reader = new JsonReader(new InputStreamReader(stream, "UTF-8"));
+                    this.reader = new JsonReader(new InputStreamReader(stream,
+                            "UTF-8"));
                     JsonParser parser = new JsonParser();
                     JsonElement root = parser.parse(reader);
                     JsonObject obj = root.getAsJsonObject();
@@ -120,19 +128,21 @@ public class EndPointProxy extends Thread {
                         handleUpdate(obj);
                     } else if (type.equals("screenshot-update")) {
                         handleScreenshotUpdate(obj);
+                    } else if (type.equals("response-iso-chunk")) {
+                        handleIsoResponse(obj);
                     }
                 }
             } catch (JsonIOException e) {
-                //destroyEndPoint();
+                // destroyEndPoint();
                 log.error("Json IO exception while reading from the socket");
             } catch (JsonSyntaxException e) {
-                //destroyEndPoint();
+                // destroyEndPoint();
                 log.error("Json syntax exception while reading from the socket");
             } catch (IOException e) {
-                //destroyEndPoint();
+                // destroyEndPoint();
                 log.error("Error while reading from the socket");
             }
         }
     }
-    
+
 }
