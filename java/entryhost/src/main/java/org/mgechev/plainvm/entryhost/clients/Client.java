@@ -1,5 +1,6 @@
 package org.mgechev.plainvm.entryhost.clients;
 
+import java.nio.charset.CoderMalfunctionError;
 import java.util.UUID;
 
 import javax.websocket.CloseReason;
@@ -48,7 +49,11 @@ public class Client {
     }
     
     public void sendMessage(String message) {
-        session.getAsyncRemote().sendText(message);
-        log.info("Sending message to the client " + message);
+        try {
+            session.getAsyncRemote().sendText(message);
+            log.info("Sending message to the client " + message);
+        } catch (CoderMalfunctionError e) {
+            
+        }
     }
 }

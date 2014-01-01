@@ -12,7 +12,7 @@ public class InitializationServlet extends HttpServlet {
     private Logger log = Logger.getLogger(getClass());
     
     private int port = 5000;
-    private String[] clients = { "127.0.0.1" };
+    private String[] clients = { "127.0.0.1", "localhost" };
 
     @Override
     public void init() {

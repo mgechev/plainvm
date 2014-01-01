@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -124,37 +123,38 @@ public class EndPointProxy extends Thread {
         public void run() {
             log.info("Start reading from the given input stream");
             try {
-                read();
+                while (socket.isBound()) {
+                    this.reader = new JsonReader(new InputStreamReader(stream,
+                            "UTF-8"));
+                    log.info("Message received from " + address.getHostName());
+                    JsonParser parser = new JsonParser();
+                    JsonElement root = parser.parse(reader);
+                    JsonObject obj = root.getAsJsonObject();
+                    String type = obj.get("type").getAsString();
+                    if (type.equals("update")) {
+                        handleUpdate(obj);
+                    } else if (type.equals("screenshot-update")) {
+                        handleScreenshotUpdate(obj);
+                    } else if (type.equals("response-iso-chunk")) {
+                        handleIsoResponse(obj);
+                    } else if (type.equals("create-vm-success")) {
+                        handleVmCreationResponse(obj);
+                    } else if (type.equals("create-vm-fail")) {
+                        handleVmCreationResponse(obj);
+                    }
+                }
             } catch (JsonIOException e) {
                 log.error("Json IO exception while reading from the socket");
+                run();
             } catch (JsonSyntaxException e) {
                 log.error("Json syntax exception while reading from the socket");
+                run();
             } catch (IOException e) {
                 log.error("Error while reading from the socket");
+                run();
             } catch (IllegalStateException e) {
                 log.error("Json syntax exception while reading from the socket");
-            }
-        }
-        
-        private void read() throws UnsupportedEncodingException {
-            while (socket.isBound()) {
-                this.reader = new JsonReader(new InputStreamReader(stream,
-                        "UTF-8"));
-                JsonParser parser = new JsonParser();
-                JsonElement root = parser.parse(reader);
-                JsonObject obj = root.getAsJsonObject();
-                String type = obj.get("type").getAsString();
-                if (type.equals("update")) {
-                    handleUpdate(obj);
-                } else if (type.equals("screenshot-update")) {
-                    handleScreenshotUpdate(obj);
-                } else if (type.equals("response-iso-chunk")) {
-                    handleIsoResponse(obj);
-                } else if (type.equals("create-vm-success")) {
-                    handleVmCreationResponse(obj);
-                } else if (type.equals("create-vm-fail")) {
-                    handleVmCreationResponse(obj);
-                }
+                run();
             }
         }
     }

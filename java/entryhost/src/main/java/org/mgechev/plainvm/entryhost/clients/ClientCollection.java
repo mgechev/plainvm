@@ -55,21 +55,23 @@ public enum ClientCollection {
     }
     
     public void sendMessage(UUID uid, Object message) {
-        clients.get(uid).sendMessage(gson.toJson(message, message.getClass()));
+        synchronized (clients) {
+            clients.get(uid).sendMessage(gson.toJson(message, message.getClass()));   
+        }
     }
     
     public void broadcastMessage(ClientData data) {
-        String message = gson.toJson(data);
-        for (Client client : clients.values()) {
-            client.sendMessage(message);
+        synchronized (clients) {
+            String message = gson.toJson(data);
+            for (Client client : clients.values()) {
+                client.sendMessage(message);
+            }   
         }
     }
     
     public void sendMessage(String message) {
-        synchronized (clients) {
-            for (Client client : clients.values()) {
-                client.sendMessage(message);
-            }   
+        for (Client client : clients.values()) {
+            client.sendMessage(message);
         }
     }
 }
