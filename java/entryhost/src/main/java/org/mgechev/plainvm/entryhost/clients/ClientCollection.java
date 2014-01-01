@@ -66,8 +66,10 @@ public enum ClientCollection {
     }
     
     public void sendMessage(String message) {
-        for (Client client : clients.values()) {
-            client.sendMessage(message);
+        synchronized (clients) {
+            for (Client client : clients.values()) {
+                client.sendMessage(message);
+            }   
         }
     }
 }

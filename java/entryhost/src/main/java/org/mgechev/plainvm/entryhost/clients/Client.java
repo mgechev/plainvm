@@ -1,6 +1,5 @@
 package org.mgechev.plainvm.entryhost.clients;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import javax.websocket.CloseReason;
@@ -49,10 +48,7 @@ public class Client {
     }
     
     public void sendMessage(String message) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (IOException e) {
-            log.error("Cant send message to the client");
-        }
+        session.getAsyncRemote().sendText(message);
+        log.info("Sending message to the client " + message);
     }
 }
