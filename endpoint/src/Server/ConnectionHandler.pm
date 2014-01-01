@@ -88,7 +88,7 @@ sub _client_connection_callback($) {
         my $fh = shift;
         my @obj = $parser->incr_parse($fh->{rbuf});
         $fh->{rbuf} = undef;
-        $self->_handle_request($fh, $_) for @obj;
+        $self->_handle_request($fh, $host, $port, $_) for @obj;
     });
     $currentHandle->on_eof(sub {
         Common::warn('Unexpected end-of-file.');
@@ -109,10 +109,10 @@ sub _release_handle ($ $) {
     }
 }
 
-sub _handle_request($ $ $) {
-    my ($self, $handle, $json) = @_;
+sub _handle_request($ $ $ $ $) {
+    my ($self, $handle, $host, $port, $json) = @_;
     $handle->{rbuf} = undef;
-    PublishSubscribe::publish('message-received', { message => $json, client => $handle });
+    PublishSubscribe::publish('message-received', { message => $json, client => $handle, host => $host, port => $port });
 }
 
 1;

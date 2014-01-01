@@ -59,8 +59,12 @@ sub instance($) {
 
 #Checks for updates and update the local cache.
 #This method handles the virtual machine's information (properties).
-sub check_for_updates($) {
+sub check_for_updates($ $ $) {
     my $self = shift;
+    my $host = shift;
+    my $port = shift;
+    my $data = "$host:$port";
+    $self->{_last_vms_state}->{$data} = $self->{_last_vms_state}->{$data} || {};
     if (time() - $self->{_last_check} >= $update_interval) {
         $self->{_last_check} = time();
         my $vmm = $self->{_vmm};
@@ -69,17 +73,17 @@ sub check_for_updates($) {
         my @changed = ();
         for my $id (keys(%vms)) {
             my $serialized_machine = $vms{$id}->serialize;
-            if (!exists($self->{_last_vms_state}->{$id})) {
+            if (!exists($self->{_last_vms_state}->{$data}->{$id})) {
                 push(@changed, $serialized_machine);
             } else {
-                my $machine = $self->{_last_vms_state}->{$id};
+                my $machine = $self->{_last_vms_state}->{$data}->{$id};
                 if ($serialized_machine ne $machine) {
                     push(@changed, $serialized_machine);
                 }
             }
             $last_state{$id} = $serialized_machine;
         }
-        $self->{_last_vms_state} = \%last_state;
+        $self->{_last_vms_state}->{$data} = \%last_state;
         if (scalar(@changed) > 0) {
             Common::log(@changed . " vms changed since last check.");
             $vms = $self->_prepare_data(\@changed);
@@ -91,6 +95,8 @@ sub check_for_updates($) {
 
 sub check_for_screenshots() {
     my $self = shift;
+    my $host = shift;
+    my $port = shift;
     if (time() - $self->{_last_screenshot_check} >= $screenshot_update_interval) {
         $self->{_last_screenshot_check} = time();
         $self->{_last_screenshots} = $self->{_vmm}->take_screenshots();

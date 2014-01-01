@@ -30,22 +30,22 @@ sub instance($) {
     return $INSTANCE;
 }
 
-sub check_for_updates($ $) {
-    my ($self, $client) = @_;
+sub check_for_updates($ $ $ $) {
+    my ($self, $client, $host, $port) = @_;
     #my $theData = $self->{_vm_status_verifier}->get_updates();
-    my $theData = $self->{_vm_status_verifier}->check_for_updates();
+    my $theData = $self->{_vm_status_verifier}->check_for_updates($host, $port);
     if (defined($theData)) {
         $theData = "{ \"type\": \"update\", \"data\": $theData}";
-        PublishSubscribe::publish('update-client', {client => $client, data => $theData});
+        PublishSubscribe::publish('update-client', { client => $client, data => $theData });
     } else {
         $theData = "{ \"type\": \"update\", \"data\": null}";
-        PublishSubscribe::publish('update-client', {client => $client, data => $theData});
+        PublishSubscribe::publish('update-client', { client => $client, data => $theData });
     }
 }
 
 sub check_for_screenshot_updates($ $) {
-    my ($self, $client) = @_;
-    my $theData = $self->{_vm_status_verifier}->check_for_screenshots();
+    my ($self, $client, $host, $port) = @_;
+    my $theData = $self->{_vm_status_verifier}->check_for_screenshots($host, $port);
     $theData = "{ \"type\": \"screenshot-update\", \"data\": $theData }";
     PublishSubscribe::publish('update-client', { client => $client, data => $theData });
 }
@@ -65,7 +65,7 @@ sub _subscribe($) {
         $self->{_vmm}->load_vms();
         my $machines = $self->{_vmm}->serialize();
         my $theData = "{ \"type\": \"update\", \"data\": $machines }";
-        PublishSubscribe::publish('update-client', {client => $data{client}, data => $theData});
+        PublishSubscribe::publish('update-client', { client => $data{client}, data => $theData });
     });
 }
 
@@ -77,9 +77,9 @@ sub _handle_request {
     my $client = $request->{client};
     my $type = $msg->{type};
     if ($type eq 'update') {
-        $self->check_for_updates($client);
+        $self->check_for_updates($client, $request->{host}, $request->{port});
     } elsif ($type eq 'screenshot-update') {
-        $self->check_for_screenshot_updates($client);
+        $self->check_for_screenshot_updates($client, $request->{host}, $request->{port});
     } elsif ($type eq 'change-vm-state') {
         my $action = $msg->{data}{action};
         my $current_vm = $self->{_vmm}->get_vm($msg->{data}{vm});
