@@ -25,6 +25,8 @@ After that edit `/etc/guacamole/user-mapping.xml` and create account for each ma
 
 Further instructions can be found in the project's [wiki](https://github.com/mgechev/plainvm/wiki/Installation).
 
+Note that there is port to Java of the proxy. You can take a look at the `java` folder.
+
 ##How to contribute?
 Just fork the project. Here are some ideas what can be improved:
 
