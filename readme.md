@@ -34,6 +34,5 @@ Just fork the project. Here are some ideas what can be improved:
 2. Managing snapshots
 3. Control over more properties of the virtual machine
 4. Better integration with Guacamole
-5. Installation of virtual machines through the browser
 
 For more ideas and essential features you can check the issue tracker or the project's [wiki](https://github.com/mgechev/plainvm/wiki).
