@@ -35,6 +35,6 @@ Just fork the project. Here are some ideas what can be improved:
 3. Control over more properties of the virtual machine
 4. Better integration with Guacamole
 5. Stable file transfer (of the iso files, required for installing the VMs)
-6. Installer. Shell script which will install plainvm within just a few steps.
+6. Installer. Shell script which will install plainvm within just a few steps
 
 For more ideas and essential features you can check the issue tracker or the project's [wiki](https://github.com/mgechev/plainvm/wiki).
