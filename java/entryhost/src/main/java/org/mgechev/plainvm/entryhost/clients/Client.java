@@ -37,7 +37,7 @@ public class Client {
     public void onClose(Session client, CloseReason reason) {
         ClientCollection.INSTANCE.removeClient(uid);
     }
-    
+     
     @OnMessage
     public void onMessage(Session session, String message) {
         ClientCollection.INSTANCE.receiveMessage(uid, message);
